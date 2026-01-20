@@ -92,25 +92,27 @@
                                                 <th>BL No</th>
                                                 <th>Cont. No</th>
                                                 <th>LC No</th>
+                                                <th>LC Date</th>
                                                 <th>G.W</th>
                                                 <th>ETA. Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
-                                            <tr class="new_enty_tr">
-                                                <td>1</td>
-                                                <td> s. ali weaving factory ltd</td>
-                                                <td class="font-weight-bold">ARTIFICIAL LEATHER</td>
-                                                <td>1250 bales</td>
-                                                <td>maersk vladivostok</td>
-                                                <td>sitgzpbgx2536597</td>
-                                                <td>msku1598756x40fcl</td>
-                                                <td>127224010105</td>
-                                                <td>28500.00 kg</td>
-                                                <td>11/12/2024</td>
-                                            </tr>
-
+                                            @foreach ($enty as $enty)
+                                                <tr class="new_enty_tr">
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $enty->importer_name }}</td>
+                                                    <td class="font-weight-bold">{{ $enty->goods_name }}</td>
+                                                    <td>{{ $enty->quantity }} {{ $enty->pkgs_code }}</td>
+                                                    <td>{{ $enty->vessel }}</td>
+                                                    <td>{{ $enty->bl_no }}</td>
+                                                    <td>{{ $enty->container_no }}x{{ $enty->container_size }}</td>
+                                                    <td>{{ $enty->lc_number }}</td>
+                                                    <td>{{ $enty->lc_date }}</td>
+                                                    <td>{{ number_format($enty->gross_weight ?? 0, 2) }} KGS</td>
+                                                    <td>{{ $enty->arivel_date }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -141,29 +143,39 @@
                                                 <th>Importer Name</th>
                                                 <th>Goods Name</th>
                                                 <th>Quantity</th>
+                                                <th>Vessel</th>
+                                                <th>BL. No</th>
+                                                <th>Rot. No</th>
+                                                <th>Yard</th>
                                                 <th>Value</th>
                                                 <th>Invoice No</th>
                                                 <th>IV. Date</th>
-                                                <th>Cont. No</th>
-                                                <th>G.W</th>
                                                 <th>N.W</th>
-                                                <th>Rec. Date</th>
+                                                <th>Rec. Doc</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="document_received">
-                                                <td>1</td>
-                                                <td>s ali weaving factory ltd</td>
-                                                <td class="font-weight-bold">ARTIFICIAL LEATHER</td>
-                                                <td>1209 Pkgs</td>
-                                                <td>$21272.00</td>
-                                                <td>vbncn562415</td>
-                                                <td>01/11/2024</td>
-                                                <td>msku5554267x40fcl</td>
-                                                <td>28500.00 kg</td>
-                                                <td>27800.00 kg</td>
-                                                <td>11/12/2024</td>
-                                            </tr>
+                                            @foreach ($receiveds as $receive)
+                                                <tr class="document_received">
+                                                    <td> {{ $loop->iteration }} </td>
+                                                    <td>{{ $receive->importer_name }}</td>
+                                                    <td class="font-weight-bold">{{ $receive->goods_name }}</td>
+                                                    <td>{{ $receive->quantity }} {{ $receive->pkgs_code }}</td>
+                                                    <td>{{ $receive->vessel }}</td>
+                                                    <td>{{ $receive->bl_no }}</td>
+                                                    <td>{{ $receive->rot_no ? date('Y') . '/' . $receive->rot_no : '' }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $receive->container_location ? 'Y- ' . $receive->container_location : '' }}
+                                                    </td>
+                                                    <td>$ {{ number_format($receive->invoice_value ?? 0, 2) }}</td>
+                                                    <td>{{ $receive->invoice_no }}</td>
+                                                    <td>{{ $receive->invoice_date }}</td>
+                                                    <td>{{ number_format($receive->net_weight ?? 0, 2) }} KGS</td>
+                                                    <td>{{ $receive->document_receiver }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -181,6 +193,8 @@
             <div class="col-md-12">
                 <div class="white_shd full p-4">
                     <div class="heading1 m-0 p-0">
+                        <div>
+                        </div>
                         <h2 class="">All Registered Documents</h2>
                     </div>
                     <div class="row column1">
@@ -193,65 +207,49 @@
                                             <tr class="register_enty">
                                                 <th>#</th>
                                                 <th>Importer Name</th>
-                                                <th>Lc No</th>
                                                 <th>Goods Name</th>
                                                 <th>Quantity</th>
+                                                <th>Vessel</th>
+                                                <th>BL No</th>
+                                                <th>Rot No</th>
+                                                <th>Cont No</th>
+                                                <th>Yard</th>
                                                 <th>B/E No</th>
                                                 <th>B/E Date</th>
+                                                <th>G.W</th>
+                                                <th>N.W</th>
                                                 <th>B/E Lane</th>
-                                                <th>BL No</th>
-                                                <th>Cont. No</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="register_enty">
-                                                <td>1</td>
-                                                <td>s ali weaving factory ltd</td>
-                                                <td>127224010198</td>
-                                                <td class="font-weight-bold">ARTIFICIAL LEATHER</td>
-                                                <td>1209 Pkgs</td>
-                                                <td>c- 1258695</td>
-                                                <td>01/11/2024</td>
-                                                <td>Yellow Lane</td>
-                                                <td>231154326121</td>
-                                                <td>msku5554267x40fcl</td>
-                                            </tr>
-                                            <tr class="register_enty">
-                                                <td>1</td>
-                                                <td>s ali weaving factory ltd</td>
-                                                <td>127224010198</td>
-                                                <td class="font-weight-bold">ARTIFICIAL LEATHER</td>
-                                                <td>1234 Pkgs</td>
-                                                <td>c- 1258695</td>
-                                                <td>01/11/2024</td>
-                                                <td>Yellow Lane</td>
-                                                <td>231154326121</td>
-                                                <td>msku5554267x40fcl</td>
-                                            </tr>
-                                            <tr class="register_enty">
-                                                <td>1</td>
-                                                <td>s ali weaving factory ltd</td>
-                                                <td>127224010198</td>
-                                                <td class="font-weight-bold">ARTIFICIAL LEATHER</td>
-                                                <td>134 Pkgs</td>
-                                                <td>c- 1258695</td>
-                                                <td>01/11/2024</td>
-                                                <td>Yellow Lane</td>
-                                                <td>231154326121</td>
-                                                <td>msku5554267x40fcl</td>
-                                            </tr>
-                                            <tr class="register_enty">
-                                                <td>1</td>
-                                                <td>s ali weaving factory ltd</td>
-                                                <td>127224010198</td>
-                                                <td class="font-weight-bold">ARTIFICIAL LEATHER</td>
-                                                <td>1236 Pkgs</td>
-                                                <td>c- 1258695</td>
-                                                <td>01/11/2024</td>
-                                                <td>Yellow Lane</td>
-                                                <td>231154326121</td>
-                                                <td>msku5554267x40fcl</td>
-                                            </tr>
+                                            @foreach ($registers as $register)
+                                                <tr class="register_enty">
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $register->importer_name }}</td>
+                                                    <td class="font-weight-bold">{{ $register->goods_name }}</td>
+                                                    <td>{{ $register->quantity }} {{ $register->pkgs_code }}</td>
+                                                    <td>{{ $register->vessel }}</td>
+                                                    <td>{{ $register->bl_no }}</td>
+                                                    <td>{{ $register->rot_no }}</td>
+                                                    <td>{{ $register->container_no }} x
+                                                        {{ $register->container_size }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $register->container_location ? 'Y- ' . $register->container_location : '' }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $register->be_no ? 'C- ' . $register->be_no : '' }}
+                                                    </td>
+                                                    <td>{{ $register->be_date }}</td>
+                                                    <td>{{ number_format($register->gross_weight ?? 0, 2) }} KGS</td>
+                                                    <td>{{ number_format($register->net_weight ?? 0, 2) }} KGS</td>
+                                                    <td
+                                                        class="font-weight-bold {{ $register->be_lane === 'RED' ? 'text-danger' : '' }}
+                                                            {{ $register->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
+                                                        {{ $register->be_lane }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -284,24 +282,47 @@
                                                 <th>Quantity</th>
                                                 <th>B/E No</th>
                                                 <th>B/E Date</th>
+                                                <th>Ass. Date</th>
                                                 <th>R No</th>
                                                 <th>G. W</th>
                                                 <th>Cont. No</th>
+                                                <th>Yard</th>
+                                                <th>Doc</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="assessment">
-                                                <td>1</td>
-                                                <td>s ali weaving factory ltd</td>
-                                                <td>127224010198</td>
-                                                <td class="font-weight-bold">ARTIFICIAL LEATHER</td>
-                                                <td>1209 Pkgs</td>
-                                                <td>c- 1258695</td>
-                                                <td>01/11/2024</td>
-                                                <td>R1256421</td>
-                                                <td>28500.00 kgs</td>
-                                                <td>msku5554267x40fcl</td>
-                                            </tr>
+                                            @foreach ($assessments as $assessment)
+                                                <tr class="assessment">
+                                                    <td> {{ $loop->iteration }} </td>
+                                                    <td>{{ $assessment->importer_name }}</td>
+                                                    <td>{{ $assessment->lc_number }}</td>
+                                                    <td class="font-weight-bold">{{ $assessment->goods_name }}</td>
+                                                    <td>{{ $assessment->quantity }} {{ $assessment->pkgs_code }}</td>
+                                                    <td>
+                                                        {{ $assessment->be_no ? 'C- ' . $assessment->be_no : '' }}
+                                                    </td>
+                                                    <td>{{ $assessment->be_date }}</td>
+                                                    <td>{{ $assessment->assessment_date }}</td>
+                                                    <td>
+                                                        {{ $assessment->r_no ? 'R- ' . $assessment->r_no : '' }}
+                                                    </td>
+                                                    <td>{{ number_format($assessment->gross_weight ?? 0, 2) }} KGS</td>
+                                                    <td>{{ $assessment->container_no }} x
+                                                        {{ $assessment->container_size }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $assessment->container_location ? 'Y- ' . $assessment->container_location : '' }}
+                                                    </td>
+                                                    <td>
+                                                        @if ($assessment->document)
+                                                            <a href="{{ Storage::url($assessment->document) }}"
+                                                                target="_blank" class="btn btn-sm btn-info">
+                                                                View
+                                                            </a>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -313,6 +334,4 @@
         </div>
     </div>
 </div>
-
-
 <!-- table end -->

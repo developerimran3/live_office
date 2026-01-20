@@ -103,7 +103,6 @@
                                                 <th>Ass. Date</th>
                                                 <th>R No</th>
                                                 <th>G. W</th>
-                                                <th>N. W</th>
                                                 <th>Cont. No</th>
                                                 <th>Yard</th>
                                                 <th>Doc</th>
@@ -127,7 +126,6 @@
                                                         {{ $assessment->r_no ? 'R- ' . $assessment->r_no : '' }}
                                                     </td>
                                                     <td>{{ number_format($assessment->gross_weight ?? 0, 2) }} KGS</td>
-                                                    <td>{{ number_format($assessment->net_weight ?? 0, 2) }} KGS</td>
                                                     <td>{{ $assessment->container_no }} x
                                                         {{ $assessment->container_size }}
                                                     </td>

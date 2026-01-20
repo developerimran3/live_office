@@ -199,6 +199,9 @@ legend {
 .assessment th:nth-child(4) {
     width: 9%;
 }
+.assessment th:nth-child(5) {
+    width: 7%;
+}
 .assessment th:nth-child(6) {
     width: 6%;
 }
@@ -211,13 +214,14 @@ legend {
     width: 7%;
 }
 .assessment th:nth-child(12) {
-    width: 9%;
+    width: 5%;
+}
+
+.assessment th:nth-child(14) {
+    width: 6%;
 }
 .assessment th:nth-child(13) {
     width: 6%;
-}
-.assessment th:nth-child(14) {
-    width: 5%;
 }
 
 /*------------------------------------------------------------------

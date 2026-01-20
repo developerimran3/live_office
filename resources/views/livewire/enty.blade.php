@@ -227,8 +227,6 @@
                 </div>
             </div>
         </div>
-
-
         <!-- table srart -->
         <div class="row column1 pt-lg-4">
             <div class="col-md-12">
@@ -304,3 +302,4 @@
                     </div>
                 </div>
             </div>
+        </div>
