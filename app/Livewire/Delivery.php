@@ -18,13 +18,13 @@ class Delivery extends Component
     public $be_no;
 
     public $deliveryId;
-
+    public $viewData;
     public $viewItem;
 
 
-    public function getViewData()
+    public function viewDocument($id)
     {
-        return  DeliveryDocument::find($this->viewItem);
+        $this->viewData = DeliveryDocument::find($id);
     }
 
 
@@ -36,11 +36,11 @@ class Delivery extends Component
     {
         $delivery = DeliveryDocument::findOrFail($id);
 
-        $this->document              = $delivery->document;
+        $this->document         = $delivery->document;
         $this->quantity         = $delivery->quantity . ' ' . $delivery->pkgs_code;
         $this->importer_name    = $delivery->importer_name;
         $this->be_no            = $delivery->be_no;
-        $this->deliveryId            = $id;
+        $this->deliveryId       = $id;
     }
 
     /**

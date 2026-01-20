@@ -127,7 +127,7 @@
                                                     <td>{{ $register->quantity }} {{ $register->pkgs_code }}</td>
                                                     <td>{{ $register->vessel }}</td>
                                                     <td>{{ $register->bl_no }}</td>
-                                                    <td>{{ date('Y') }}/{{ $register->rot_no }}</td>
+                                                    <td>{{ $register->rot_no }}</td>
                                                     <td>{{ $register->container_no }} x
                                                         {{ $register->container_size }}
                                                     </td>

@@ -123,10 +123,10 @@
                                                                 <i class="fa fa-edit"></i></a>
                                                         @endif
                                                         <a class="btn btn-sm btn-info"
-                                                            wire:click="$set('viewItem', {{ $item->id }})"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#viewDocumentModal"><i
-                                                                class="fa fa-eye"></i></a>
+                                                            wire:click="viewDocument({{ $item->id }})"
+                                                            data-bs-toggle="modal" data-bs-target="#viewDocumentModal">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -141,32 +141,28 @@
             <!-- table end -->
 
             <div wire:ignore.self class="modal fade" id="viewDocumentModal" tabindex="-1">
-                <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
-
                         <!-- Modal Header -->
                         <div class="modal-header bg-dark text-white">
-                            <h5 class="modal-title">
+                            <h5 class="modal-title text-white">
                                 📄 Document Full Details
                             </h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
 
                         <!-- Modal Body -->
                         <div class="modal-body">
-
                             @if ($this->viewData)
-
                                 <div class="row g-3">
-
                                     <!-- BASIC INFO -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="card shadow-sm">
                                             <div class="card-header fw-bold bg-primary text-white">
                                                 Basic Information
                                             </div>
                                             <div class="card-body">
-                                                <p><strong>Importer:</strong> {{ $this->viewData->importer_name }}</p>
+                                                <p><strong>Importer:</strong> {{ $this->viewData->importer_name }}
+                                                </p>
                                                 <p><strong>Goods:</strong> {{ $this->viewData->goods_name }}</p>
                                                 <p><strong>Quantity:</strong> {{ $this->viewData->quantity }}
                                                     {{ $this->viewData->pkgs_code }}</p>
@@ -175,103 +171,131 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- CONTAINER & LC -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="card shadow-sm">
                                             <div class="card-header fw-bold bg-secondary text-white">
                                                 Container & LC
                                             </div>
                                             <div class="card-body">
-                                                <p><strong>Container No:</strong> {{ $this->viewData->container_no }}
+                                                <p><strong>ROT No:</strong> {{ $this->viewData->rot_no }} </p>
+                                                <p><strong>Container No:</strong>
+                                                    {{ $this->viewData->container_no }} x
+                                                    {{ $this->viewData->container_size }}
                                                 </p>
-                                                <p><strong>Size:</strong> {{ $this->viewData->container_size }}</p>
+                                                <p><strong>Yard:</strong>
+                                                    {{ $this->viewData->container_location ? 'Y- ' . $this->viewData->container_location : '' }}
+                                                </p>
                                                 <p><strong>LC No:</strong> {{ $this->viewData->lc_number }}</p>
                                                 <p><strong>LC Date:</strong> {{ $this->viewData->lc_date }}</p>
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- RECEIVED -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="card shadow-sm">
                                             <div class="card-header fw-bold bg-warning">
                                                 Received Info
                                             </div>
                                             <div class="card-body">
-                                                <p><strong>ROT No:</strong> {{ $this->viewData->rot_no }}</p>
-                                                <p><strong>Invoice No:</strong> {{ $this->viewData->invoice_no }}</p>
-                                                <p><strong>Invoice Value:</strong> {{ $this->viewData->invoice_value }}
+                                                <p><strong>Gross Weight:</strong>
+                                                    {{ number_format($this->viewData->gross_weight ?? 0, 2) }} KGS
                                                 </p>
-                                                <p><strong>Invoice Date:</strong> {{ $this->viewData->invoice_date }}
+                                                <p><strong>Invoice No:</strong> {{ $this->viewData->invoice_no }} </p>
+                                                <p><strong>Invoice Date:</strong>
+                                                    {{ $this->viewData->invoice_date }}
+                                                </p>
+                                                <p><strong>Invoice Value:</strong> $
+                                                    {{ number_format($this->viewData->invoice_value ?? 0, 2) }}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- REGISTER -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="card shadow-sm">
                                             <div class="card-header fw-bold bg-success text-white">
                                                 Register Info
                                             </div>
                                             <div class="card-body">
-                                                <p><strong>BE No:</strong> {{ $this->viewData->be_no }}</p>
+                                                <p><strong>Net Weight:</strong>
+                                                    {{ number_format($this->viewData->net_weight ?? 0, 2) }} KGS
+                                                </p>
+                                                <p><strong>BE No:</strong>
+                                                    {{ $this->viewData->be_no ? 'C- ' . $this->viewData->be_no : '' }}
+                                                </p>
                                                 <p><strong>BE Date:</strong> {{ $this->viewData->be_date }}</p>
                                                 <p><strong>Lane:</strong>
                                                     <span
-                                                        class="badge bg-{{ $this->viewData->be_lane === 'RED' ? 'danger' : 'warning' }}">
+                                                        class="text-white badge bg-{{ $this->viewData->be_lane === 'RED' ? 'danger' : 'warning' }}">
                                                         {{ $this->viewData->be_lane }}
                                                     </span>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- ASSESSMENT -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="card shadow-sm">
                                             <div class="card-header fw-bold bg-info text-white">
                                                 Assessment
                                             </div>
                                             <div class="card-body">
-                                                <p><strong>R No:</strong> {{ $this->viewData->r_no }}</p>
                                                 <p><strong>Assessment Date:</strong>
                                                     {{ $this->viewData->assessment_date }}</p>
-                                                @if ($this->viewData->document)
-                                                    <a href="{{ asset('storage/' . $this->viewData->document) }}"
-                                                        target="_blank" class="btn btn-outline-primary btn-sm">
-                                                        📎 View PDF
-                                                    </a>
-                                                @endif
+                                                <p><strong>R No:</strong>
+                                                    {{ $this->viewData->r_no ? 'R- ' . $this->viewData->r_no : '' }}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- DELIVERY -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="card shadow-sm">
                                             <div class="card-header fw-bold bg-dark text-white">
                                                 Delivery
                                             </div>
                                             <div class="card-body">
-                                                <p><strong>Delivery Date:</strong> {{ $this->viewData->delivery_date }}
+                                                <p><strong>Delivery Date:</strong>
+                                                    {{ $this->viewData->delivery_date }}
                                                 </p>
-                                                <p><strong>Receiver:</strong> {{ $this->viewData->document_receiver }}
+                                                <p><strong>Receiver:</strong>
+                                                    {{ $this->viewData->document_receiver }}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <div class="col-md-12">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header fw-bold bg-info text-white">
+                                                Document
+                                            </div>
+                                            <div class="card-body">
+                                                @if ($this->viewData->document)
+                                                    <div class="border rounded mt-2" style="height: 500px;">
+                                                        <iframe
+                                                            src="{{ asset('storage/' . $this->viewData->document) }}"
+                                                            class="w-100 h-100" title="Assessment PDF">
+                                                        </iframe>
+                                                    </div>
+                                                    <a href="{{ asset('storage/' . $this->viewData->document) }}"
+                                                        target="_blank" class="btn btn-sm btn-outline-secondary mt-2">
+                                                        🔗 Open in New Tab
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">No PDF attached</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             @endif
                         </div>
-
                         <!-- Modal Footer -->
                         <div class="modal-footer">
                             <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
-
                     </div>
                 </div>
             </div>
