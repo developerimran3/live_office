@@ -20,4 +20,6 @@
              <span>Janata</span></a></li>
      <li><a id="janata" href="{{ url('/janata') }}" wire:navigate> <i class="fa fa-university bgreen_color"></i>
              <span>Bond Licence</span></a></li>
+     <li><a id="janata" href="{{ url('/port-bill') }}" wire:navigate> <i class="fa fa-university bgreen_color"></i>
+             <span>Port Bill</span></a></li>
  </ul>
