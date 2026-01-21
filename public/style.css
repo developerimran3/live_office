@@ -78,7 +78,25 @@
 /*------------------------------------------------------------------
     Port Bill
 -------------------------------------------------------------------*/
-
+.label-cell {
+    background: #cfe6b8;
+    font-weight: 600;
+    padding: 6px;
+    border-radius: 3px;
+}
+.highlight {
+    background: #fff3cd;
+    font-weight: 600;
+    color: #6f42c1;
+    padding: 6px;
+    border-radius: 3px;
+}
+.orange {
+    background: #f8c291;
+    font-weight: 600;
+    padding: 6px;
+    border-radius: 3px;
+}
 .port_bill {
     background-color: #b6c6d9;
     text-align: center;

@@ -14,113 +14,127 @@
 
 
 
+
         <div class="row column1">
 
-            <div class="col-md-6">
-
+            <div class="col-md-5">
                 <div class="full counter_section margin_bottom_30">
-                    <form wire:submit.prevent="createEnty" id="new_enty_form">
-                        <div class="row">
-                            <div class="col-md-3 ">
-                                <label for="importer_name">Importer Name</label>
-                                <input type="text" wire:model="importer_name" name="importer_name"
-                                    class="form-control text-uppercase">
-                                @error('importer_name')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label for="goods_name">Goods Name</label>
-                                <input type="text" wire:model="goods_name" name="goods_name"
-                                    class="form-control text-uppercase">
-                                @error('goods_name')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label for="quantity">Quantity</label>
-                                <input type="text" wire:model="quantity" name="quantity" class="form-control">
-                                @error('quantity')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label for="pkgs_code">Pkgs Code</label>
-                                <select wire:model="pkgs_code" class="form-control">
-                                    <option hidden></option>
-                                    <option value="ROLLS">ROLLS </option>
-                                    <option value="PKGS">PKGS </option>
-                                    <option value="BALES">BALES </option>
-                                    <option value="CTNS">CTNS </option>
-                                    <option value="BAGS">BAGS </option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="vessel">Vessel</label>
-                                <input type="text" wire:model="vessel" name="vessel"
-                                    class="form-control text-uppercase">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="bl_no">BL No</label>
-                                <input type="text" wire:model="bl_no" name="bl_no"
-                                    class="form-control text-uppercase">
-                                @error('bl_no')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label for="container_no">Container No</label>
-                                <input type="text" wire:model="container_no"
-                                    name="container_no"class="form-control text-uppercase">
-                                @error('container_no')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label for="container_size">Container Size</label>
-                                <select wire:model="container_size" class="form-control">
-                                    <option hidden></option>
-                                    <option value="20' FCL">20' FCL </option>
-                                    <option value="40' FCL">40' FCL </option>
-                                    <option value="20' LCL">20' LCL </option>
-                                    <option value="40' LCL">40' LCL </option>
-                                    <option value="BULK">BULK </option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for=" lc_number">Lc Number</label>
-                                <input type="text" wire:model="lc_number" name="lc_number" class="form-control">
-                                @error('lc_number')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label for="lc_date">LC Date</label>
-                                <input type="date" wire:model="lc_date" class="form-control">
+
+                    <form wire:submit.prevent="createEnty">
+
+                        <!-- ARRIVAL + 40FT -->
+                        <div class="form-row align-items-center mb-2">
+                            <div class="col-3 label-cell">ARRIVAL DT</div>
+                            <div class="col-3">
+                                <input type="date" class="form-control"
+                                    wire:model="arrival
+                                
+                                _dt">
                             </div>
 
-                            <div class="col-md-3">
-                                <label for="gross_weight">Gross Weight</label>
-                                <input type="text" wire:model="gross_weight" name="gross_weight"
-                                    class="form-control">
+                            <div class="col-3 label-cell text-center">CONT(s)</div>
+                            <div class="col-3">
+                                <input type="number" class="form-control" wire:model="cont_40">
                             </div>
 
-                            <div class="col-md-3 ">
-                                <label for="arivel_date">Arivel Date</label>
-                                <input type="date" wire:model="arivel_date" class="form-control">
+                        </div>
+
+                        <!-- C/L + 20FT -->
+                        <div class="form-row align-items-center mb-2">
+                            <div class="col-3 label-cell">C/L DT</div>
+                            <div class="col-3">
+                                <input type="date" class="form-control" wire:model="cl_dt">
                             </div>
 
-                            <div class="col-md-6 my-3">
-                                <button type="submit" class="main_bt">Create</button>
+                            <div class="col-1"></div>
+                            <div class="col-1">
+                                <input type="number" class="form-control" wire:model="cont_20">
+                            </div>
+                            <div class="col-1 text-center">×20×8.5</div>
+
+                            <div class="col-1 highlight text-right">TOTAL</div>
+                            <div class="col-2">
+                                <input type="text" class="form-control" wire:model="total_20" readonly>
                             </div>
                         </div>
+
+                        <!-- W/R + RATE + ADO -->
+                        <div class="form-row align-items-center mb-2">
+                            <div class="col-3 label-cell">W/R DT</div>
+                            <div class="col-3">
+                                <input type="date" class="form-control" wire:model="wr_dt">
+                            </div>
+
+                            <div class="col-2 label-cell">RATE ($)</div>
+                            <div class="col-2">
+                                <input type="number" step="0.01" class="form-control" wire:model="rate">
+                            </div>
+
+                            <div class="col-2 label-cell">ADO DT</div>
+                            <div class="col-2">
+                                <input type="date" class="form-control" wire:model="ado_dt">
+                            </div>
+                        </div>
+
+                        <!-- W/R UPTO + DAYS + DG -->
+                        <div class="form-row align-items-center mb-2">
+                            <div class="col-3 label-cell">W/R UP/TO DT</div>
+                            <div class="col-3">
+                                <input type="date" class="form-control" wire:model="wr_upto_dt">
+                            </div>
+
+                            <div class="col-2 label-cell">DAY(s)</div>
+                            <div class="col-2">
+                                <input type="number" class="form-control" wire:model="days">
+                            </div>
+
+                            <div class="col-2 orange">DG Status</div>
+                            <div class="col-2">
+                                <input type="text" class="form-control" wire:model="dg_status">
+                            </div>
+                        </div>
+
+                        <!-- EXTRA MOVEMENT -->
+                        <div class="form-row align-items-center mb-2">
+                            <div class="col-4 label-cell">EXTRA MOVEMENT</div>
+                            <div class="col-2">
+                                <input type="number" class="form-control" wire:model="extra_movement">
+                            </div>
+                            <div class="col-6">CONT(s)</div>
+                        </div>
+
+                        <!-- HOSTING -->
+                        <div class="form-row align-items-center mb-2">
+                            <div class="col-4 label-cell">HOSTING CHARGE</div>
+                            <div class="col-2">
+                                <input type="number" class="form-control" wire:model="hosting_charge">
+                            </div>
+                            <div class="col-6">TON</div>
+                        </div>
+
+                        <!-- RPC -->
+                        <div class="form-row align-items-center mb-3">
+                            <div class="col-4 label-cell">RPC</div>
+                            <div class="col-2">
+                                <input type="number" class="form-control" wire:model="rpc">
+                            </div>
+                            <div class="col-6">PCS</div>
+                        </div>
+
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Save Entry
+                            </button>
+                        </div>
+
+
                     </form>
 
                 </div>
             </div>
 
-            <div class="col-md-6">
 
+            <div class="col-md-7">
                 <div class="full counter_section margin_bottom_30">
                     <div class=" full">
                         <div class="table-responsive">
