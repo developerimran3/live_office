@@ -97,6 +97,7 @@
                 <!-- Page Content -->
                 <main class="container-fluid">
                     {{ $slot }}
+
                 </main>
                 <!-- Footer -->
                 <footer class="container-fluid">
@@ -128,6 +129,13 @@
     <script>
         $("#dataTable").DataTable();
     </script>
+
+    <script>
+        window.addEventListener('hide-modal', () => {
+            $('#portBillModal').modal('hide');
+        });
+    </script>
+
 </body>
 
 </html>
