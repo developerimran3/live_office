@@ -13,17 +13,22 @@ return new class extends Migration
     {
         Schema::create('bill_generates', function (Blueprint $table) {
             $table->id();
-            $table->string('cl_date')->nullable();
-            $table->string('wr_date')->nullable();
-            $table->string('upto_date')->nullable();
-            $table->string('unst_date')->nullable();
+
+            $table->foreignId('port_rate_id')->constrained()->onDelete('cascade');
+
+            $table->date('cl_date')->nullable();
+            $table->date('wr_date')->nullable();
+            $table->date('upto_date')->nullable();
+            $table->date('unstf_date')->nullable();
+
             $table->string('extra_mov')->nullable();
             $table->string('hc')->nullable();
             $table->string('rpc')->nullable();
-            $table->string('qty')->nullable();
-            $table->string('usd')->nullable();
-            $table->string('cont')->nullable();
-            $table->string('dg')->nullable();
+            $table->integer('qty')->nullable();
+            $table->decimal('usd_rate', 10, 2)->nullable();
+            $table->string('cont_select')->nullable(); // 20 / 40 / LCL
+            $table->boolean('dg_status')->default(false);
+
             $table->timestamps();
         });
     }

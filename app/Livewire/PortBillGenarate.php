@@ -6,7 +6,8 @@ namespace App\Livewire;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\PortRate;
-use App\Models\Bill_Generate;
+use App\Models\BillGenerate;
+
 
 
 
@@ -14,7 +15,7 @@ class PortBillGenarate extends Component
 
 {
     public $cl_date;
-    public $unst_date;
+    public $unstf_date;
     public $wr_date;
     public $upto_date;
     public $ado_dt;
@@ -23,9 +24,10 @@ class PortBillGenarate extends Component
     public $extra_mov;
     public $rpc;
     public $hc;
-    public $dg;
+    public $dg_status;
+    public $cont_select;
     public $days;
-    public $usd;
+    public $usd_rate;
 
     public $cont; // 20fcl, 40fcl, lockfast, warehouse
     public $portRates;
@@ -33,31 +35,38 @@ class PortBillGenarate extends Component
     public $calculated = []; // Calculated table values
 
     // CL_DT বা UNSTF_DT পরিবর্তন হলে W/R এবং ADO সেট করার জন্য
-    public function updatedClDt($value)
+
+    public function updatedClDate($value)
     {
         $this->setWrAndAdo($value);
     }
-    public function updatedUnstfDt($value)
+
+    public function updatedUnstDate($value)
     {
         $this->setWrAndAdo($value);
     }
     public function setWrAndAdo($value)
     {
         if ($value) {
-            $this->wr_date = Carbon::parse($value)->addDays(3)->format('Y-m-d');
+            $this->wr_date = Carbon::parse($value)
+                ->addDays(3)
+                ->format('Y-m-d');
+
             $this->ado_dt = $this->wr_date;
         }
     }
 
-    // UPTO_DT পরিবর্তন হলে দিন বের করা
-    public function updatedUptoDt($value)
+    public function updatedUptoDate($value)
     {
         if ($this->wr_date && $value) {
             $from = Carbon::parse($this->wr_date);
-            $to = Carbon::parse($value);
+            $to   = Carbon::parse($value);
+
             $this->days = $from->diffInDays($to);
         }
     }
+
+
 
     public function mount()
     {
@@ -69,20 +78,20 @@ class PortBillGenarate extends Component
     // Form submit
     public function createEnty()
     {
-        $this->calculate(); // হিসাব করা
+        // $this->calculate(); // হিসাব করা
 
-        Bill_Generate::create([
+        BillGenerate::create([
             'cl_date'        => $this->cl_date,
-            'wr_date'       => $this->wr_date,
+            'wr_date'        => $this->wr_date,
             'upto_date'      => $this->upto_date,
-            'unst_date' => $this->unst_date,
-            'extra_mov' => $this->extra_mov,
-            'hc'            => $this->hc,
+            'unstf_date'     => $this->unstf_date,
+            'extra_mov'      => $this->extra_mov,
+            'hc'             => $this->hc,
             'rpc'            => $this->rpc,
             'qty'            => $this->qty,
-            'usd'            => $this->usd,
-            'cont'           => $this->cont,
-            'dg'             => $this->dg,
+            'usd_rate'       => $this->usd_rate,
+            'cont_select'    => $this->cont_select,
+            'dg_status'      => $this->dg_status,
         ]);
     }
 

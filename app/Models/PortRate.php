@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\BillGenerate;
+
 use Illuminate\Database\Eloquent\Model;
 
 class PortRate extends Model
@@ -46,4 +48,9 @@ class PortRate extends Model
         'hc',
         'unstuffing',
     ];
+
+    public function bills()
+    {
+        return $this->hasMany(BillGenerate::class);
+    }
 }

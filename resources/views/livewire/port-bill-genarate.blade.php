@@ -26,8 +26,8 @@
 
                             <div class="col-2 label-cell">CONT(s)</div>
                             <div class="col-3">
-                                <select name="cont" class="form-control">
-                                    <option hidden></option>
+                                <select name="cont_select" class="form-control">
+                                    <option>--select--</option>
                                     <option value="20fcl">20' FCL</option>
                                     <option value="40fcl">40' FCL</option>
                                     <option value="lockfast">LOCKFAST</option>
@@ -40,7 +40,7 @@
                         <div class="form-row align-items-center mb-2">
                             <div class="col-2 label-cell">UNSTF DT</div>
                             <div class="col-3">
-                                <input type="date" class="form-control" wire:model.lazy="unst_date">
+                                <input type="date" class="form-control" wire:model.lazy="unstf_date">
                             </div>
 
                             <div class="col-2"></div>
@@ -63,7 +63,7 @@
 
                             <div class="col-2 label-cell">EXCH RATE</div>
                             <div class="col-3">
-                                <input type="text" class="form-control" wire:model.debounce.500ms="usd"
+                                <input type="text" class="form-control" wire:model.debounce.500ms="usd_rate"
                                     placeholder="122.70">
                             </div>
                         </div>
@@ -94,8 +94,8 @@
 
                             <div class="col-2 text-warning font-weight-bold">DG</div>
                             <div class="col-3">
-                                <select class="form-control">
-                                    <option hidden></option>
+                                <select name="dg_status" class="form-control">
+                                    <option>--select--</option>
                                     <option value="1">YES</option>
                                     <option value="0">NO</option>
                                 </select>
