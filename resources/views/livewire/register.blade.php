@@ -23,6 +23,11 @@
                                     <input type="text" wire:model="quantity" class="form-control"
                                         placeholder="Quantity" readonly>
                                 </div>
+                                <div class="col-md-3">
+                                    <label for="net_weight">Net Weight</label>
+                                    <input type="text" wire:model="net_weight" class="form-control"
+                                        placeholder="net_weight">
+                                </div>
                                 @if (!$container_location)
                                     <div class="col-md-3">
                                         <label for="container_location">Container Location</label>

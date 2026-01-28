@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('container_size')->nullable();
             $table->string('lc_number')->nullable();
             $table->date('lc_date')->nullable();
-            $table->string('gross_weight')->nullable();
+            $table->integer('gross_weight')->nullable();
             $table->date('arivel_date')->nullable();
 
             // Received Only
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('invoice_value')->nullable();
             $table->string('invoice_no')->unique()->nullable();
             $table->date('invoice_date')->nullable();
-            $table->string('net_weight')->nullable();
+            $table->integer('net_weight')->nullable();
             $table->timestamps();
         });
     }

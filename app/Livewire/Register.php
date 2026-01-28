@@ -17,6 +17,7 @@ class Register extends Component
     public $be_date;
     public $be_lane;
     public $container_location;
+    public $net_weight;
     public $quantity;
     public $pkgs_code;
     public $registerId;
@@ -32,6 +33,7 @@ class Register extends Component
         $this->be_lane            = $register->be_lane;
         $this->quantity           = $register->quantity . ' ' . $register->pkgs_code;
         $this->container_location = $register->container_location;
+        $this->net_weight         = $register->net_weight;
         $this->registerId         = $id;
     }
 
@@ -50,6 +52,7 @@ class Register extends Component
             'be_date'             => $this->be_date,
             'be_lane'             => $this->be_lane,
             'container_location'  => $this->container_location,
+            'net_weight'          => $this->net_weight,
         ]);
         $this->reset();
         $this->mount();
@@ -122,6 +125,8 @@ class Register extends Component
             return $this->redirect('/assessment', navigate: true);
         });
     }
+
+
 
     public function render()
     {
