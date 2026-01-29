@@ -3,7 +3,7 @@
         <div class="row column_title">
             <div class="col-md-12">
                 <div class="page_title">
-                    <h2>Bond Licence</h2>
+                    <h2>Sonali Bank</h2>
                 </div>
             </div>
         </div>
@@ -11,14 +11,13 @@
             <div class="col-md-5">
                 <div class="white_shd full p-4">
                     <div class="heading1 margin_0">
-                        <h2>Licence Details</h2>
+                        <h2>Sonali Bank Details</h2>
                         <hr class="m-0">
                     </div>
                     <form wire:submit.prevent="save">
                         <div class="row">
-
                             <!-- Type Selector -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label>Cash or B/E</label>
                                 <select class="form-control" wire:model.lazy="type">
                                     <option value="">Select</option>
@@ -29,15 +28,15 @@
 
                             <!-- CASH Section -->
                             @if ($type == 'CASH')
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Credit (Cash)</label>
-                                    <input type="number" wire:model="credit" class="form-control">
+                                    <input type="number" wire:model="credit" step="0.001" class="form-control">
                                     @error('credit')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Credit Date</label>
                                     <input type="date" wire:model="credit_date" class="form-control">
                                 </div>
@@ -45,27 +44,26 @@
 
                             <!-- B/E Section -->
                             @if ($type == 'BE')
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>B/E Number</label>
                                     <select wire:model.lazy="be_no" class="form-control">
                                         <option value="">select</option>
-                                        @foreach ($registers as $r)
-                                            <option value="{{ $r->be_no }}">{{ $r->be_no }}</option>
+                                        @foreach ($delivery as $d)
+                                            <option value="{{ $d->be_no }}">{{ $d->be_no }}</option>
                                         @endforeach
                                         @error('be_no')
                                             <p class="text-danger"> {{ $message }}</p>
                                         @enderror
                                     </select>
-
                                 </div>
 
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Date</label>
                                     <input type="date" wire:model="be_date" class="form-control" readonly>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Goods Name</label>
                                     <input type="text" wire:model="goods_name" class="form-control" readonly>
                                     @error('goods_name')
@@ -73,9 +71,10 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Debit</label>
-                                    <input type="number" wire:model="debit" class="form-control">
+                                    <input type="number" wire:model="debit" class="form-control" step="0.001">
+
                                     @error('debit')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
@@ -84,7 +83,7 @@
                             @endif
 
                             <div class="col-md-12 mt-3">
-                                <button class="btn btn-primary">Save sonali</button>
+                                <button type="submit" class="main_bt">Sonali Save</button>
                             </div>
 
                         </div>
@@ -107,9 +106,9 @@
 
                         <h2>All Availability</h2>
                     </div>
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped " id="dataTable">
                         <thead>
-                            <tr>
+                            <tr class="sonali">
                                 <th>#</th>
                                 <th>B/E No</th>
                                 <th>Date</th>
@@ -122,15 +121,13 @@
 
                         <tbody>
                             @foreach ($sonalis as $sonali)
-                                <tr>
+                                <tr class="sonali">
                                     <td>{{ $loop->iteration }} </td>
                                     <td>
                                         @if ($sonali->type == 'BE')
-                                            {{ $sonali->be_no }}
+                                            {{ $sonali->be_no ? 'C- ' . $sonali->be_no : '' }}
                                         @elseif($sonali->type == 'CASH')
                                             CASH
-                                        @else
-                                            -
                                         @endif
                                     </td>
 
@@ -146,15 +143,12 @@
                                     <td>{{ $sonali->credit ?? 0 }}</td>
 
                                     <!-- Balance -->
-                                    <td class="font-weight-bold">{{ $sonali->balance ?? 0, 2 }}</td>
-
+                                    <td class="font-weight-bold"> {{ number_format($sonali->balance ?? 0, 2) }}</td>
                                     <td>
                                         @if ($sonali->type == 'BE')
                                             {{ $sonali->goods_name }}
                                         @elseif($sonali->type == 'CASH')
                                             CASH
-                                        @else
-                                            -
                                         @endif
                                     </td>
                                 </tr>

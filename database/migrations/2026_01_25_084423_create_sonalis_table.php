@@ -24,8 +24,6 @@ return new class extends Migration
             // Cash fields
             $table->decimal('credit', 15, 2)->default(0);
             $table->date('credit_date')->nullable();
-            // Running balance
-            $table->decimal('balance', 15, 2)->default(0);
 
             $table->timestamps();
         });

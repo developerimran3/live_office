@@ -14,6 +14,5 @@ class Sonali extends Model
         'debit',
         'credit',
         'credit_date',
-        'balance',
     ];
 }

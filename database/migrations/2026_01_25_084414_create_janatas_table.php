@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('janatas', function (Blueprint $table) {
             $table->id();
+            // For Cash/B/E type
+            $table->string('type'); // CASH বা BE            
+            // B/E fields
+            $table->string('goods_name')->nullable();
+            $table->string('importer_name')->nullable();
+            $table->string('be_no')->nullable();
+            $table->date('be_date')->nullable();
+            $table->decimal('debit', 15, 2)->default(0);
+            // Cash fields
+            $table->decimal('credit', 15, 2)->default(0);
+            $table->date('credit_date')->nullable();
             $table->timestamps();
         });
     }

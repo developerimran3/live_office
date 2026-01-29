@@ -53,7 +53,7 @@ class Delivery extends Component
 
 
         $this->validate([
-            'document' => 'required|file|mimes:pdf|max:5120'
+            'document' => 'required|file|mimes:pdf'
         ]);
         // 🔥 BEST PRACTICE FILE HANDLING
         $path = $this->fileUpload(

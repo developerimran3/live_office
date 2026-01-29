@@ -202,9 +202,11 @@ legend {
 .table th {
     border-top: 0px;
 }
+
 /*------------------------------------------------------------------
     Register Enty table
 -------------------------------------------------------------------*/
+
 .assessment th {
     background-color: #b6c6d9;
     text-align: center;
@@ -442,46 +444,65 @@ legend {
       Janata Bank Page
 -------------------------------------------------------------------*/
 
-.janata_bank th {
+.janata th {
     background-color: #b6c6d9;
     text-align: center;
     padding: 5px;
 }
-.janata_bank td {
+.janata td {
     text-align: center;
     vertical-align: middle;
     padding: 0;
     text-transform: uppercase;
 }
-
-.janata_bank th:nth-child(2) {
-    width: 11%;
+.janata th:nth-child(2) {
+    width: 14%;
 }
-.janata_bank th:nth-child(3) {
-    width: 12%;
+.janata th:nth-child(3) {
+    width: 14%;
 }
-.janata_bank th:nth-child(5) {
-    width: 8%;
+.janata th:nth-child(7) {
+    width: 23%;
+}
+.janata td:nth-child(4),
+.janata td:nth-child(5),
+.janata td:nth-child(6) {
+    text-align: end;
 }
 
 /*------------------------------------------------------------------
     Sonali Bank Page
 -------------------------------------------------------------------*/
-.sonali_bank th {
+.sonali th {
     background-color: #b6c6d9;
     text-align: center;
     padding: 5px;
 }
-.sonali_bank td {
+.sonali td {
     text-align: center;
     vertical-align: middle;
     padding: 3px;
     text-transform: uppercase;
 }
 
-.sonali_bank th:nth-child(2) {
-    width: 20%;
+.sonali th:nth-child(2) {
+    width: 14%;
 }
+.sonali th:nth-child(3) {
+    width: 14%;
+}
+.sonali th:nth-child(7) {
+    width: 23%;
+}
+.sonali td:nth-child(4),
+.sonali td:nth-child(5),
+.sonali td:nth-child(6) {
+    text-align: end;
+}
+
+/*------------------------------------------------------------------
+   Body
+-------------------------------------------------------------------*/
 
 html,
 body {

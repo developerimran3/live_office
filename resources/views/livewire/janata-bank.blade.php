@@ -3,7 +3,7 @@
         <div class="row column_title">
             <div class="col-md-12">
                 <div class="page_title">
-                    <h2>Bond Licence</h2>
+                    <h2>janata Bank</h2>
                 </div>
             </div>
         </div>
@@ -11,27 +11,92 @@
             <div class="col-md-5">
                 <div class="white_shd full p-4">
                     <div class="heading1 margin_0">
-                        <h2>Licence Details</h2>
+                        <h2>janata Bank Details</h2>
                         <hr class="m-0">
                     </div>
-                    <form wire:submit.prevent="bondlicence()">
+                    <form wire:submit.prevent="save">
                         <div class="row">
-                            <div class="col-md-7">
-                                <label for="quantity">Goods Name</label>
-                                <input type="text" wire:model="goods_name" name="goods_name"
-                                    class="form-control text-uppercase">
+                            <!-- Type Selector -->
+                            <div class="col-md-4">
+                                <label>Cash or B/E</label>
+                                <select class="form-control" wire:model.lazy="type">
+                                    <option value="">Select</option>
+                                    <option value="BE">B/E</option>
+                                    <option value="CASH">CASH</option>
+                                </select>
                             </div>
 
-                            <div class="col-md-5">
-                                <label for="availability">M.T/GG SET</label>
-                                <input type="number" wire:model="availability" name="availability"
-                                    class="form-control">
+                            <!-- CASH Section -->
+                            @if ($type == 'CASH')
+                                <div class="col-md-4">
+                                    <label>Credit (Cash)</label>
+                                    <input type="number" wire:model="credit" step="0.001" class="form-control">
+                                    @error('credit')
+                                        <p class="text-danger"> {{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Credit Date</label>
+                                    <input type="date" wire:model="credit_date" class="form-control">
+                                </div>
+                            @endif
+
+                            <!-- B/E Section -->
+                            @if ($type == 'BE')
+                                <div class="col-md-4">
+                                    <label>B/E Number</label>
+                                    <select wire:model.lazy="be_no" class="form-control">
+                                        <option value="">select</option>
+                                        @foreach ($delivery as $d)
+                                            <option value="{{ $d->be_no }}">{{ $d->be_no }}</option>
+                                        @endforeach
+                                        @error('be_no')
+                                            <p class="text-danger"> {{ $message }}</p>
+                                        @enderror
+                                    </select>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <label>Date</label>
+                                    <input type="date" wire:model="be_date" class="form-control" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Goods Name</label>
+                                    <input type="text" wire:model="goods_name" class="form-control" readonly>
+                                    @error('goods_name')
+                                        <p class="text-danger"> {{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Importer Name</label>
+                                    <input type="text" wire:model="importer_name" class="form-control" readonly>
+                                    @error('importer_name')
+                                        <p class="text-danger"> {{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Debit</label>
+                                    <input type="number" wire:model="debit" class="form-control" step="0.001">
+
+                                    @error('debit')
+                                        <p class="text-danger"> {{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                            @endif
+
+                            <div class="col-md-12 mt-3">
+                                <button type="submit" class="main_bt">janata Save</button>
                             </div>
-                            <div class="col-md-6 my-3">
-                                <button type="submit" class="main_bt">Create</button>
-                            </div>
+
                         </div>
                     </form>
+
                 </div>
             </div>
             <!-- table srart -->
@@ -46,44 +111,60 @@
                                 </button>
                             </div>
                         @endif
-                        @error('r_no')
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ $message }}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        @enderror
+
                         <h2>All Availability</h2>
                     </div>
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped " id="dataTable">
                         <thead>
-                            <tr>
+                            <tr class="janata">
                                 <th>#</th>
-                                <th>Goods Name</th>
+                                <th>Importer Name</th>
                                 <th>B/E No</th>
-                                <th>B/E Date</th>
-                                <th>LC No</th>
-                                <th>Availability</th>
-                                <th>Total Minus</th>
+                                <th>Date</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
                                 <th>Balance</th>
-                                <th>% Used</th>
+                                <th>Remarks</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {{-- @foreach ($this->registers as $register)
-                                <tr>
-                                    <td>{{ $register->be_no }}</td>
-                                    <td>{{ $register->be_date }}</td>
-                                    <td>{{ $register->goods_name }}</td>
-                                    <td>{{ $register->lc_no }}</td>
-                                    <td>{{ $register->net_weight }}</td>
+                            @foreach ($janatas as $janata)
+                                <tr class="janata">
+                                    <td>{{ $loop->iteration }} </td>
+                                    <td>{{ $janata->importer_name }}</td>
+                                    <td>
+                                        @if ($janata->type == 'BE')
+                                            {{ $janata->be_no ? 'C- ' . $janata->be_no : '' }}
+                                        @elseif($janata->type == 'CASH')
+                                            CASH
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if ($janata->type == 'BE')
+                                            {{ $janata->be_date }}
+                                        @elseif($janata->type == 'CASH')
+                                            {{ $janata->credit_date }}
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $janata->debit ?? 0 }}</td>
+                                    <td>{{ $janata->credit ?? 0 }}</td>
+
+                                    <!-- Balance -->
+                                    <td class="font-weight-bold"> {{ number_format($janata->balance ?? 0, 2) }}</td>
+                                    <td>
+                                        @if ($janata->type == 'BE')
+                                            {{ $janata->goods_name }}
+                                        @elseif($janata->type == 'CASH')
+                                            CASH
+                                        @endif
+                                    </td>
                                 </tr>
-                            @endforeach --}}
+                            @endforeach
                         </tbody>
                     </table>
-
                 </div>
             </div>
             <!-- table end -->

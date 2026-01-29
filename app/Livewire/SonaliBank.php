@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Sonali;
-use App\Models\Register;
+use Livewire\Component;
+use App\Models\Delivery;
+
 
 class SonaliBank extends Component
 {
@@ -18,12 +19,13 @@ class SonaliBank extends Component
     public $credit_date;
     public $balance;
 
-    public $registers;
+    public $delivery;
     public $sonalis; // To show in table
 
     public function mount()
     {
-        $this->registers = Register::all();
+        $this->delivery = Delivery::all();
+
         $this->sonalis = Sonali::get();
         $this->calculateBalance();
     }
@@ -31,15 +33,13 @@ class SonaliBank extends Component
     // This will run automatically when be_no changes
     public function updatedBeNo($value)
     {
-        $register = $this->registers->where('be_no', $value)->first();
-        if ($register) {
-            $this->goods_name = $register->goods_name;
-            $this->be_date = $register->be_date;
-            $this->debit = $register->amount ?? 0;
+        $delivery = $this->delivery->where('be_no', $value)->first();
+        if ($delivery) {
+            $this->goods_name = $delivery->goods_name;
+            $this->be_date = $delivery->be_date;
         } else {
             $this->goods_name = '';
             $this->be_date = '';
-            $this->debit = 0;
         }
     }
 
@@ -101,6 +101,12 @@ class SonaliBank extends Component
 
     public function render()
     {
+        $usedBeNos = Sonali::whereNotNull('be_no')
+            ->pluck('be_no')
+            ->toArray();
+
+        $this->delivery = Delivery::whereNotIn('be_no', $usedBeNos)->get();
+
         return view('livewire.sonali-bank');
     }
 }
