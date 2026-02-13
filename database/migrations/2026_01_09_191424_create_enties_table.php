@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('enties', function (Blueprint $table) {
             $table->id();
 
-            //New Enty
             $table->string('importer_name');
-            $table->string('goods_name');
-            $table->string('quantity')->nullable();
             $table->string('pkgs_code')->nullable();
             $table->string('vessel')->nullable();
             $table->string('bl_no')->unique()->nullable();

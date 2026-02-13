@@ -13,28 +13,32 @@ return new class extends Migration
     {
         Schema::create('receiveds', function (Blueprint $table) {
             $table->id();
-            // New Entry Data (Copied)
+            //New Enty
             $table->string('importer_name');
-            $table->string('goods_name');
-            $table->string('quantity')->nullable();
-            $table->string('pkgs_code')->nullable();
             $table->string('vessel')->nullable();
-            $table->string('bl_no')->unique()->nullable();
-            $table->string('container_no')->nullable();
-            $table->string('container_size')->nullable();
+            $table->string('bl_no')->nullable();
+            $table->string('pkgs_code')->nullable();
             $table->string('lc_number')->nullable();
             $table->date('lc_date')->nullable();
-            $table->integer('gross_weight')->nullable();
+            $table->decimal('gross_weight', 15, 3)->nullable();
             $table->date('arivel_date')->nullable();
 
-            // Received Only
+            // FROM ENTY
+            $table->json('items')->nullable();
+            $table->json('containers')->nullable();
+
+            // RECEIVED ONLY
             $table->date('document_receiver')->nullable();
             $table->string('rot_no')->nullable();
-            $table->string('container_location')->nullable();
+
+            // MULTIPLE
+            $table->json('container_locations')->nullable();
+            $table->json('net_weights')->nullable();
+
             $table->string('invoice_value')->nullable();
-            $table->string('invoice_no')->unique()->nullable();
+            $table->string('invoice_no')->nullable()->unique();
             $table->date('invoice_date')->nullable();
-            $table->integer('net_weight')->nullable();
+
             $table->timestamps();
         });
     }

@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bonds', function (Blueprint $table) {
+        Schema::create('enty_containers', function (Blueprint $table) {
             $table->id();
-            $table->string('goods_name');   // Item Name
-            $table->decimal('availability', 15, 3);  // Allocation quantity    // Allocation / Opening
+            $table->foreignId('enty_id')->constrained()->cascadeOnDelete();
+            $table->string('container_no');
+            $table->string('container_size')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bonds');
+        Schema::dropIfExists('enty_containers');
     }
 };

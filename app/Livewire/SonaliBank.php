@@ -53,7 +53,7 @@ class SonaliBank extends Component
         // Conditional validation
         if ($this->type == 'CASH') {
             $this->validate([
-                'credit' => 'required|numeric|min:1',
+                'credit'      => 'required|numeric|min:1',
                 'credit_date' => 'required|date',
             ]);
         } elseif ($this->type == 'BE') {

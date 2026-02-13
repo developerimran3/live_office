@@ -113,29 +113,20 @@
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
-
-    <!-- DataTables JS -->
+    <script>
+        new PerfectScrollbar('#sidebar');
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
     <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.1.7/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="{{ asset('js/custom.js') }}"></script>
 
     @livewireScripts
     @stack('scripts')
 
     <script>
-        $(document).ready(function() {
-            // Initialize Perfect Scrollbar
-            if ($('#sidebar').length) {
-                new PerfectScrollbar('#sidebar');
-            }
-
-            // Initialize all DataTables
-            $("#dataTable").DataTable();
-
-            // Sidebar toggle
-            $('#sidebarCollapse').on('click', function() {
-                $('#sidebar').toggleClass('active');
-            });
-        });
+        $("#dataTable").DataTable();
     </script>
 </body>
 

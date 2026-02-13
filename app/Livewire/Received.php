@@ -2,84 +2,97 @@
 
 namespace App\Livewire;
 
-
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\Received as ReceiveDocument;
-use App\Models\Register;
 
 class Received extends Component
 {
+    public $items = [];
     public $receiveds;
-
-    public $invoice_value;
-    public $invoice_no;
-    public $invoice_date;
-    public $net_weight;
-    public $quantity;
-    public $pkgs_code;
-    public $container_location;
-    public $vessel;
-    public $rot_no;
-    public $bl_no;
     public $receivedId;
 
-
-    /**
-     * Edit Data (create ar jonno)
-     */
-
-    public function editToReceived($id)
-    {
-
-        $receive = ReceiveDocument::findOrFail($id);
-
-        $this->invoice_value      = $receive->invoice_value;
-        $this->invoice_no         = $receive->invoice_no;
-        $this->invoice_date       = $receive->invoice_date;
-        $this->net_weight         = $receive->net_weight;
-        $this->quantity           = $receive->quantity . ' ' . $receive->pkgs_code;
-        $this->container_location = $receive->container_location;
-        $this->vessel             = $receive->vessel;
-        $this->rot_no             = $receive->rot_no;
-        $this->receivedId         = $id;
-    }
-
-    /**
-     * Update Data (Create aj jonno data)
-     */
-    public function updateReceived($id)
-    {
-        $this->validate([
-            'invoice_value'       => 'required',
-            'invoice_no'          => 'required|unique:receiveds,invoice_no,' . $id,
-            'invoice_date'        => 'required',
-            'net_weight'          => 'required',
-            'rot_no'              => 'required',
-        ]);
-
-        $receive = ReceiveDocument::findOrFail($id);
-
-        $receive->update([
-            'invoice_value'       => $this->invoice_value,
-            'invoice_no'          => $this->invoice_no,
-            'invoice_date'        => $this->invoice_date,
-            'net_weight'          => $this->net_weight,
-            'container_location'  => $this->container_location,
-            'vessel'              => $this->vessel,
-            'rot_no'              => $this->rot_no,
-        ]);
-
-        $this->reset();
-        $this->mount();
-
-        session()->flash('success', 'Document Update Successful.');
-    }
-
+    public $invoice_value, $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no;
 
     public function mount()
     {
         $this->receiveds = ReceiveDocument::get();
+    }
+
+    public function editToReceived($id)
+    {
+        $receive = ReceiveDocument::findOrFail($id);
+
+        $this->receivedId = $id;
+
+        // Load basic fields
+        $this->invoice_value = $receive->invoice_value;
+        $this->invoice_no    = $receive->invoice_no;
+        $this->invoice_date  = $receive->invoice_date;
+        $this->rot_no        = $receive->rot_no;
+        $this->vessel        = $receive->vessel;
+        $this->bl_no         = $receive->bl_no;
+
+        // Load items JSON
+        $this->items = $receive->items ?? [];
+    }
+
+    public function addItem()
+    {
+        $this->items[] = [
+            'goods_name' => '',
+            'quantity' => '',
+            'containers' => [
+                ['container_no' => '', 'container_location' => '', 'net_weight' => '']
+            ]
+        ];
+    }
+
+    public function removeItem($i)
+    {
+        unset($this->items[$i]);
+        $this->items = array_values($this->items);
+    }
+
+    public function addContainer($i)
+    {
+        $this->items[$i]['containers'][] = [
+            'container_no' => '',
+            'container_location' => '',
+            'net_weight' => ''
+        ];
+    }
+
+    public function removeContainer($i, $j)
+    {
+        unset($this->items[$i]['containers'][$j]);
+        $this->items[$i]['containers'] = array_values($this->items[$i]['containers']);
+    }
+
+    public function updateReceived()
+    {
+        $this->validate([
+            'invoice_value' => 'required',
+            'invoice_no'    => 'required',
+            'invoice_date'  => 'required',
+            'rot_no'        => 'required',
+        ]);
+
+        $receive = ReceiveDocument::findOrFail($this->receivedId);
+
+        $receive->update([
+            'invoice_value' => $this->invoice_value,
+            'invoice_no'    => $this->invoice_no,
+            'invoice_date'  => $this->invoice_date,
+            'rot_no'        => $this->rot_no,
+            'vessel'        => $this->vessel,
+            'bl_no'         => $this->bl_no,
+            'items'         => $this->items, // JSON saved automatically
+        ]);
+
+        session()->flash('success', 'Document updated successfully!');
+        $this->mount();
+        $this->receivedId = null;
     }
 
 
@@ -132,6 +145,8 @@ class Received extends Component
                 'rot_no'             => $receive->rot_no,
 
             ]);
+
+
 
             //Delete from Recived Data
             $receive->delete();

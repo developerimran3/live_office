@@ -8,26 +8,31 @@ class Received extends Model
 {
     protected $fillable = [
         'importer_name',
-        'goods_name',
-        'quantity',
-        'pkgs_code',
         'vessel',
         'bl_no',
-        'container_no',
-        'container_size',
+        'pkgs_code',
         'lc_number',
         'lc_date',
         'gross_weight',
         'arivel_date',
+        'items',
+        'containers',
 
-        //Received doc create Data
         'document_receiver',
         'rot_no',
-        'container_location',
+
+        'container_locations',
+        'net_weights',
+
         'invoice_value',
         'invoice_no',
         'invoice_date',
-        'net_weight',
+    ];
 
+    protected $casts = [
+        'items' => 'array',
+        'containers' => 'array',
+        'container_locations' => 'array',
+        'net_weights' => 'array',
     ];
 }

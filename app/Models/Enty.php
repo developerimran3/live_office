@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Enty extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'importer_name',
-        'goods_name',
-        'quantity',
         'pkgs_code',
         'vessel',
         'bl_no',
@@ -20,4 +21,14 @@ class Enty extends Model
         'gross_weight',
         'arivel_date'
     ];
+
+    public function items()
+    {
+        return $this->hasMany(EntyItem::class, 'enty_id', 'id');
+    }
+
+    public function containers()
+    {
+        return $this->hasMany(EntyContainer::class, 'enty_id', 'id');
+    }
 }

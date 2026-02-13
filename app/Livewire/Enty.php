@@ -2,173 +2,255 @@
 
 namespace App\Livewire;
 
-
 use Livewire\Component;
+use App\Models\EntyItem;
 use App\Models\Received;
-use App\Rules\UniqueBlNo;
+use App\Models\EntyContainer;
 use Illuminate\Support\Facades\DB;
 use App\Models\Enty as EntyDocument;
-use Illuminate\Support\Facades\Validator;
 
 class Enty extends Component
 {
     public $enty = [];
+    public $items = [];
+    public $containers = [];
 
-    public $importer_name;
-    public $goods_name;
-    public $quantity;
-    public $pkgs_code;
-    public $vessel;
-    public $bl_no;
-    public $container_no;
-    public $container_size;
-    public $lc_number;
-    public $lc_date;
-    public $gross_weight;
-    public $arivel_date;
-    public $formShow = false;
+    public $importer_name, $pkgs_code, $vessel,
+        $bl_no,
+        $lc_number, $lc_date, $gross_weight, $arivel_date;
+
     public $updateId = null;
+    public $formShow = false;
 
-    /**
-     * Data Create
-     */
-    public function createEnty()
-    {
-        $this->validate([
-            'importer_name'  => 'required',
-            'goods_name'     => 'required',
-            'quantity'       => 'required',
-            'bl_no'          => 'nullable|unique:enties',
-            'lc_number'      => 'required'
-        ]);
-
-        EntyDocument::create([
-            "importer_name"      => $this->importer_name,
-            "goods_name"         => $this->goods_name,
-            "quantity"           => $this->quantity,
-            "pkgs_code"          => $this->pkgs_code,
-            "vessel"             => $this->vessel,
-            "bl_no"              => $this->bl_no,
-            "container_no"       => $this->container_no,
-            "container_size"     => $this->container_size,
-            "lc_number"          => $this->lc_number,
-            "lc_date"            => $this->lc_date,
-            "gross_weight"       => $this->gross_weight,
-            "arivel_date"        => $this->arivel_date,
-        ]);
-        $this->reset();
-        $this->mount();
-        session()->flash('success', 'Document Create Successful.');
-    }
-
-    /**
-     * All Data Show
-     */
+    /* ================= LOAD DATA ================= */
     public function mount()
     {
-        $this->enty = EntyDocument::get();
+        $this->enty = EntyDocument::with('items')->get();
+
+        $this->items = [
+            ['goods_name' => '', 'quantity' => '']
+        ];
+
+        $this->containers = [
+            ['container_no' => '', 'container_size' => '']
+        ];
+
+        $this->resetFormArrays();
     }
 
-    /**
-     * Edit Data 
-     */
+    /* ================= ITEMS ADD/REMOVE ================= */
+    public function addItem()
+    {
+        $this->items[] = ['goods_name' => '', 'quantity' => ''];
+    }
 
+    public function removeItem($index)
+    {
+        unset($this->items[$index]);
+        $this->items = array_values($this->items);
+    }
+
+    /* ================= CONTAINER ADD/REMOVE ================= */
+    public function addContainer()
+    {
+        $this->containers[] = ['container_no' => '', 'container_size' => ''];
+    }
+
+    public function removeContainer($index)
+    {
+        unset($this->containers[$index]);
+        $this->containers = array_values($this->containers);
+    }
+
+    private function resetFormArrays()
+    {
+        $this->items = [['goods_name' => '', 'quantity' => '']];
+        $this->containers = [['container_no' => '', 'container_size' => '']];
+    }
+
+
+
+    /* ================= CREATE ================= */
+    public function createEnty()
+    {
+
+        $enty = EntyDocument::create([
+            "importer_name"  => $this->importer_name,
+            "pkgs_code"      => $this->pkgs_code,
+            "vessel"         => $this->vessel,
+            "bl_no"          => $this->bl_no,
+            "lc_number"      => $this->lc_number,
+            "lc_date"        => $this->lc_date,
+            "gross_weight"   => $this->gross_weight,
+            "arivel_date"    => $this->arivel_date,
+        ]);
+
+        foreach ($this->items as $item) {
+            EntyItem::create([
+                'enty_id'    => $enty->id,
+                'goods_name' => $item['goods_name'],
+                'quantity'   => $item['quantity'],
+            ]);
+        };
+
+        foreach ($this->containers as $container) {
+            EntyContainer::create([
+                'enty_id'           => $enty->id,
+                'container_no'      => $container['container_no'],
+                'container_size'    => $container['container_size'],
+            ]);
+        };
+
+
+
+        $this->reset();
+        $this->mount();
+        session()->flash('success', 'Created successfully');
+    }
+
+    /* ================= EDIT ================= */
     public function editToEnty($id)
     {
         $this->formShow = true;
-        $enty = EntyDocument::findOrFail($id);
 
-        $this->importer_name        = $enty->importer_name;
-        $this->goods_name           = $enty->goods_name;
-        $this->quantity             = $enty->quantity;
-        $this->pkgs_code            = $enty->pkgs_code;
-        $this->vessel               = $enty->vessel;
-        $this->bl_no                = $enty->bl_no;
-        $this->container_no         = $enty->container_no;
-        $this->container_size       = $enty->container_size;
-        $this->lc_number            = $enty->lc_number;
-        $this->lc_date              = $enty->lc_date;
-        $this->gross_weight         = $enty->gross_weight;
-        $this->arivel_date          = $enty->arivel_date;
-        $this->updateId             = $id;
+        $enty = EntyDocument::with('items')->findOrFail($id);
+
+
+        $this->updateId = $id;
+
+        $this->importer_name = $enty->importer_name;
+        $this->pkgs_code = $enty->pkgs_code;
+        $this->vessel = $enty->vessel;
+        $this->bl_no = $enty->bl_no;
+        $this->lc_number = $enty->lc_number;
+        $this->lc_date = $enty->lc_date;
+        $this->gross_weight = $enty->gross_weight;
+        $this->arivel_date = $enty->arivel_date;
+
+        $this->items = [];
+        $this->containers = [];
+
+        foreach ($enty->items as $item) {
+            $this->items[] = [
+                'goods_name' => $item->goods_name,
+                'quantity' => $item->quantity
+            ];
+        }
+        //container
+        foreach ($enty->containers as $container) {
+            $this->containers[] = [
+                'container_no'   => $container->container_no,
+                'container_size' => $container->container_size
+            ];
+        }
     }
 
-    /**
-     * Update Data
-     */
-
-    public function updateEnty($id)
+    /* ================= UPDATE ================= */
+    public function updateEnty()
     {
-        $enty = EntyDocument::findOrFail($id);
+        DB::transaction(function () {
 
-        $enty->importer_name        = $this->importer_name;
-        $enty->goods_name           = $this->goods_name;
-        $enty->quantity             = $this->quantity;
-        $enty->pkgs_code            = $this->pkgs_code;
-        $enty->vessel               = $this->vessel;
-        $enty->bl_no                = $this->bl_no;
-        $enty->container_no         = $this->container_no;
-        $enty->container_size       = $this->container_size;
-        $enty->lc_number            = $this->lc_number;
-        $enty->lc_date              = $this->lc_date;
-        $enty->gross_weight         = $this->gross_weight;
-        $enty->arivel_date          = $this->arivel_date;
-        $enty->update();
-        $this->reset();
-        $this->mount();
-        session()->flash('success', 'Document Update Successful.');
+            $enty = EntyDocument::findOrFail($this->updateId);
+
+            $enty->update([
+                "importer_name"  => $this->importer_name,
+                "pkgs_code"      => $this->pkgs_code,
+                "vessel"         => $this->vessel,
+                "bl_no"          => $this->bl_no,
+                "lc_number"      => $this->lc_number,
+                "lc_date"        => $this->lc_date,
+                "gross_weight"   => $this->gross_weight,
+                "arivel_date"    => $this->arivel_date,
+            ]);
+
+            // delete old items
+            EntyItem::where('enty_id', $enty->id)->delete();
+
+            // insert new items
+            foreach ($this->items as $item) {
+                EntyItem::create([
+                    'enty_id' => $enty->id,
+                    'goods_name' => $item['goods_name'],
+                    'quantity' => $item['quantity'],
+                ]);
+            }
+
+            EntyContainer::where('enty_id', $enty->id)->delete();
+
+            // insert new containers
+            foreach ($this->containers as $container) {
+                EntyContainer::create([
+                    'enty_id'        => $enty->id,
+                    'container_no'   => $container['container_no'],
+                    'container_size' => $container['container_size'],
+                ]);
+            }
+        });
+
+        $this->resetForm();
+        session()->flash('success', 'Updated successfully');
     }
 
+    /* ================= DELETE ================= */
+    public function deleteEnty($id)
+    {
+        EntyDocument::findOrFail($id)->delete();
 
+        session()->flash('success', 'Deleted successfully');
 
-    /**
-     * Move All Enty Data Received Page...
-     */
+        $this->mount();
+    }
+
+    /* ================= MOVE TO RECEIVED ================= */
     public function moveToReceived($id)
     {
         DB::transaction(function () use ($id) {
 
-            $enty = EntyDocument::findOrFail($id);
-            // All Table ar Bl Valadation
-            $this->bl_no = $enty->bl_no;
-            $this->validate([
-                'bl_no' => 'nullable',
-            ]);
-            $exists =
-                DB::table('receiveds')->where('bl_no', $this->bl_no)->exists() ||
-                DB::table('registers')->where('bl_no', $this->bl_no)->exists() ||
-                DB::table('deliveries')->where('bl_no', $this->bl_no)->exists() ||
-                DB::table('assessments')->where('bl_no', $this->bl_no)->exists();
-            if ($exists) {
-                $this->addError('bl_no', 'BL No already exists in another record.');
-                return;
-            }
+            $enty = EntyDocument::with(['items', 'containers'])->findOrFail($id);
 
-            //Create Data With Received Page
             Received::create([
-                'importer_name'      => $enty->importer_name,
-                'goods_name'         => $enty->goods_name,
-                'quantity'           => $enty->quantity,
-                'pkgs_code'          => $enty->pkgs_code,
-                'vessel'             => $enty->vessel,
-                'bl_no'              => $enty->bl_no,
-                'container_no'       => $enty->container_no,
-                'container_size'     => $enty->container_size,
-                'lc_number'          => $enty->lc_number,
-                'lc_date'            => $enty->lc_date,
-                'gross_weight'       => $enty->gross_weight,
-                'arivel_date'        => $enty->arivel_date,
-                'document_receiver'  => now(),
+                'importer_name' => $enty->importer_name,
+                'vessel'        => $enty->vessel,
+                'bl_no'         => $enty->bl_no,
+                'pkgs_code'     => $enty->pkgs_code,
+                'lc_number'     => $enty->lc_number,
+                'lc_date'       => $enty->lc_date,
+                'gross_weight'  => $enty->gross_weight,
+                'arivel_date'   => $enty->arivel_date,
+                'items' => $enty->items->map(function ($i) {
+                    return [
+                        'goods_name' => $i->goods_name,
+                        'quantity'   => $i->quantity
+                    ];
+                })->toArray(),
+
+                'containers' => $enty->containers->map(function ($c) {
+                    return [
+                        'container_no'   => $c->container_no,
+                        'container_size' => $c->container_size
+                    ];
+                })->toArray(),
+
+                'document_receiver' => now(),
             ]);
 
-            //Delete from New enty
+
             $enty->delete();
-            $this->mount();
-            session()->flash('success', 'Enty Data moved to Received page successfully!');
-            return $this->redirect('/received', navigate: true);
         });
+
+        session()->flash('success', 'Moved to Received');
+        $this->mount();
     }
 
+
+
+    /* ================= RESET ================= */
+    private function resetForm()
+    {
+        $this->reset();
+        $this->formShow = false;
+        $this->mount();
+    }
 
     public function render()
     {

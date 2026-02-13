@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('registers', function (Blueprint $table) {
             $table->id();
 
-            // $table->foreignId('bonds_id')->constrained()->onDelete('cascade');
+
             // Copied Data (from Received)
             $table->string('importer_name');
             $table->string('goods_name');
@@ -43,7 +43,7 @@ return new class extends Migration
             $table->date('be_date')->nullable();
             $table->string('be_lane')->nullable();
 
-            $table->boolean('bond_adjusted')->default(false);
+
 
             $table->softDeletes(); // adds deleted_at
 

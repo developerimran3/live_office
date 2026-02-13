@@ -150,7 +150,7 @@
                                                             {{ $register->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
                                                         {{ $register->be_lane }}
                                                     </td>
-                                                    {{-- <td>{{ $register->be_lane }}</td> --}}
+                                                   
                                                     <td>
                                                         <a class="btn btn-sm btn-warning"
                                                             wire:click="editToregister({{ $register->id }})">
