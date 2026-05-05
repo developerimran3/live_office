@@ -160,6 +160,7 @@ class PortBillGenarate extends Component
 
     public function render()
     {
-        return view('livewire.port-bill-genarate');
+        return view('livewire.port-bill-genarate')
+            ->layout('layouts.app', ['title' => 'Bill Genarate']);
     }
 }

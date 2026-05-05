@@ -159,6 +159,7 @@ class Received extends Component
 
     public function render()
     {
-        return view('livewire.received');
+        return view('livewire.received')
+            ->layout('layouts.app', ['title' => 'Received']);
     }
 }

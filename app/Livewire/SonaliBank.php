@@ -107,6 +107,7 @@ class SonaliBank extends Component
 
         $this->delivery = Delivery::whereNotIn('be_no', $usedBeNos)->get();
 
-        return view('livewire.sonali-bank');
+        return view('livewire.sonali-bank')
+            ->layout('layouts.app', ['title' => 'Sonali Bank']);
     }
 }

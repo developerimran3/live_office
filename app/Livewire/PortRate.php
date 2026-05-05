@@ -136,6 +136,7 @@ class PortRate extends Component
 
     public function render()
     {
-        return view('livewire.port-rate');
+        return view('livewire.port-rate')
+            ->layout('layouts.app', ['title' => 'Port Rate']);
     }
 }

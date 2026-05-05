@@ -99,6 +99,7 @@ class BondLicence extends Component
 
     public function render()
     {
-        return view('livewire.bond-licence');
+        return view('livewire.bond-licence')
+            ->layout('layouts.app', ['title' => 'Bond Licence']);
     }
 }

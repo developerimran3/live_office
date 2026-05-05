@@ -162,6 +162,7 @@ class Assessment extends Component
     }
     public function render()
     {
-        return view('livewire.assessment');
+        return view('livewire.assessment')
+            ->layout('layouts.app', ['title' => 'Assessment']);
     }
 }

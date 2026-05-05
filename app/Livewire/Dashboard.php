@@ -3,10 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Enty;
+use Livewire\Component;
+use App\Models\Delivery;
 use App\Models\Received;
 use App\Models\Register;
 use App\Models\Assessment;
-use Livewire\Component;
 
 class Dashboard extends Component
 {
@@ -14,6 +15,7 @@ class Dashboard extends Component
     public $receiveds;
     public $registers;
     public $assessments;
+    public $delivery;
 
     public function mount()
     {
@@ -21,6 +23,7 @@ class Dashboard extends Component
         $this->receiveds = Received::get();
         $this->registers = Register::get();
         $this->assessments = Assessment::get();
+        $this->delivery = Delivery::get();
     }
 
     public function render()

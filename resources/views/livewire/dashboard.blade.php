@@ -17,8 +17,8 @@
                     </div>
                     <div class="counter_no">
                         <div>
-                            <p class="total_no">2500</p>
-                            <p class="head_couter">Welcome</p>
+                            <p class="total_no">{{ $enty->count() }}</p>
+                            <p class="head_couter">New Enty</p>
                         </div>
                     </div>
                 </div>
@@ -32,8 +32,8 @@
                     </div>
                     <div class="counter_no">
                         <div>
-                            <p class="total_no">123.50</p>
-                            <p class="head_couter">Average Time</p>
+                            <p class="total_no">{{ $receiveds->count() }}</p>
+                            <p class="head_couter">Received</p>
                         </div>
                     </div>
                 </div>
@@ -47,8 +47,8 @@
                     </div>
                     <div class="counter_no">
                         <div>
-                            <p class="total_no">1,805</p>
-                            <p class="head_couter">Collections</p>
+                            <p class="total_no">{{ $registers->count() }}</p>
+                            <p class="head_couter">Registers</p>
                         </div>
                     </div>
                 </div>
@@ -62,8 +62,23 @@
                     </div>
                     <div class="counter_no">
                         <div>
-                            <p class="total_no">54</p>
-                            <p class="head_couter">Comments</p>
+                            <p class="total_no">{{ $assessments->count() }}</p>
+                            <p class="head_couter">Assessments</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="full counter_section margin_bottom_30">
+                    <div class="couter_icon">
+                        <div>
+                            <i class="fa fa-comments-o red_color"></i>
+                        </div>
+                    </div>
+                    <div class="counter_no">
+                        <div>
+                            <p class="total_no">{{ $delivery->count() }}</p>
+                            <p class="head_couter">Delivery</p>
                         </div>
                     </div>
                 </div>

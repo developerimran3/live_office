@@ -254,6 +254,7 @@ class Enty extends Component
 
     public function render()
     {
-        return view('livewire.enty');
+        return view('livewire.enty')
+            ->layout('layouts.app', ['title' => 'Enty']);
     }
 }

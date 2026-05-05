@@ -110,6 +110,7 @@ class JanataBank extends Component
 
         $this->delivery = Delivery::whereNotIn('be_no', $usedBeNos)->get();
 
-        return view('livewire.janata-bank');
+        return view('livewire.janata-bank')
+            ->layout('layouts.app', ['title' => 'Janata Bank']);
     }
 }
