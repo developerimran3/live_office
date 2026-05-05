@@ -13,9 +13,10 @@
                     <div class="white_shd full p-4">
 
                         <div class="heading1 margin_0">
-                            <h2>Documents Details</h2>
+                            <h2>Edit Register Document</h2>
                             <hr class="m-0">
                         </div>
+
                         <form wire:submit.prevent="updateRegister({{ $registerId }})">
                             <div class="row">
                                 <div class="col-md-3">
@@ -150,7 +151,7 @@
                                                             {{ $register->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
                                                         {{ $register->be_lane }}
                                                     </td>
-                                                   
+
                                                     <td>
                                                         <a class="btn btn-sm btn-warning"
                                                             wire:click="editToregister({{ $register->id }})">

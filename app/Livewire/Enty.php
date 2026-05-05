@@ -16,8 +16,7 @@ class Enty extends Component
     public $containers = [];
 
     public $importer_name, $pkgs_code, $vessel,
-        $bl_no,
-        $lc_number, $lc_date, $gross_weight, $arivel_date;
+        $bl_no, $lc_number, $lc_date, $gross_weight, $arivel_date;
 
     public $updateId = null;
     public $formShow = false;
@@ -37,6 +36,41 @@ class Enty extends Component
 
         $this->resetFormArrays();
     }
+
+
+
+
+
+    public $step = 1;
+
+    public function nextStep()
+    {
+        if ($this->step == 1) {
+
+            $this->validate([
+                'importer_name' => 'required',
+                'bl_no' => 'required',
+                'lc_number' => 'required',
+
+            ]);
+        }
+
+        if ($this->step == 2) {
+
+            $this->validate([
+                'items.*.goods_name' => 'required',
+                'items.*.quantity' => 'required|numeric',
+            ]);
+        }
+
+        $this->step++;
+    }
+
+    public function prevStep()
+    {
+        $this->step--;
+    }
+
 
     /* ================= ITEMS ADD/REMOVE ================= */
     public function addItem()

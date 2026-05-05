@@ -94,7 +94,10 @@
 
          @if ($receivedId)
              <div class="card p-3 mb-3">
-                 <h4>Edit Received Document</h4>
+                 <div class="heading1 margin_0">
+                     <h2>Edit Received Document</h2>
+                     <hr class="m-0">
+                 </div>
 
                  <form wire:submit.prevent="updateReceived">
                      <div class="row mb-2">
@@ -104,19 +107,19 @@
                          </div>
                          <div class="col-md-3">
                              <label>Vessel</label>
-                             <input type="text" wire:model="vessel" class="form-control">
+                             <input type="text" wire:model="vessel" name="vessel" class="form-control">
                          </div>
                          <div class="col-md-3">
                              <label>Rotation No</label>
-                             <input type="text" wire:model="rot_no" class="form-control">
+                             <input type="text" wire:model="rot_no" name="rot_no" class="form-control">
                          </div>
                          <div class="col-md-3">
                              <label>Invoice Value</label>
-                             <input type="text" wire:model="invoice_value" class="form-control">
+                             <input type="text" wire:model="invoice_value" name="invoice_value" class="form-control">
                          </div>
                          <div class="col-md-3">
                              <label>Invoice No</label>
-                             <input type="text" wire:model="invoice_no" class="form-control">
+                             <input type="text" wire:model="invoice_no" name="invoice_no" class="form-control">
                          </div>
                          <div class="col-md-3">
                              <label>Invoice Date</label>
@@ -134,7 +137,7 @@
                                      class="form-control mb-2"></div>
 
                              <h6>Containers</h6>
-                             @foreach ($item['containers'] as $j => $c)
+                             @foreach ($item['containers'] ?? [] as $j => $c)
                                  <div class="d-flex mb-1">
                                      <input type="text"
                                          wire:model="items.{{ $i }}.containers.{{ $j }}.container_no"
@@ -202,8 +205,8 @@
                                                  <th>Quantity</th>
                                                  <th>Vessel</th>
                                                  <th>BL. No</th>
-                                                 <th>Rot. No</th>
                                                  <th>Cont. No</th>
+                                                 <th>Rot. No</th>
                                                  <th>Yard</th>
                                                  <th>Value</th>
                                                  <th>Invoice No</th>
@@ -231,13 +234,14 @@
                                                      </td>
                                                      <td>{{ $r->vessel }}</td>
                                                      <td>{{ $r->bl_no }}</td>
-                                                     <td>{{ $r->rot_no }} </td>
+
                                                      <td>
                                                          @foreach ($r->containers ?? [] as $c)
                                                              {{ $c['container_no'] }} x {{ $c['container_size'] }}
                                                              <br>
                                                          @endforeach
                                                      </td>
+                                                     <td>{{ $r->rot_no }} </td>
 
                                                      <td>
                                                          @foreach ($r->container_locations ?? [] as $loc)
@@ -258,7 +262,7 @@
                                                          <a class="btn btn-sm btn-warning"
                                                              wire:click="editToReceived({{ $r->id }})">
                                                              <i class="fa fa-edit"></i></a>
-                                                         @if ($r->invoice_value && $r->invoice_no && $r->invoice_date && $r->net_weights && $r->rot_no && $r->vessel)
+                                                         @if ($r->invoice_value && $r->invoice_no && $r->invoice_date && $r->rot_no && $r->vessel)
                                                              <a class="btn btn-sm btn-success"
                                                                  wire:click="moveToRegister({{ $r->id }})"
                                                                  wire:confirm="Are you Move To Register Document?">

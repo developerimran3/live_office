@@ -22,145 +22,178 @@
                     </div>
 
                     <div class="heading1 margin_0">
-                        <h2>Documents Details</h2>
+                        <h2>{{ $formShow ? 'Update Document' : 'Add New Document' }}</h2>
                         <hr class="m-0">
-                        <button type="button" wire:click="addItem" class="btn btn-info mt-2">
-                            + Add Item
-                        </button>
-
-                        <button type="button" wire:click="addContainer" class="btn btn-warning mt-2">
-                            + Add Container
-                        </button>
-
                     </div>
 
                     <form wire:submit.prevent="{{ $formShow ? 'updateEnty' : 'createEnty' }}">
                         <div class="row">
-
-                            <div class="col-md-2">
-                                <label for="importer_name">Importer Name</label>
-                                <input type="text" wire:model="importer_name" name="importer_name"
-                                    class="form-control text-uppercase">
-                                @error('importer_name')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <!-- GOODS ITEMS -->
-                            @foreach ($items as $index => $item)
-                                <div class="col-md-2 ">
-                                    <label for="goods_name">Goods Name</label>
-                                    <input type="text" wire:model="items.{{ $index }}.goods_name"
-                                        name="goods_name" class="form-control text-uppercase bg-info text-white">
-                                    @error('goods_name')
+                            @if ($step == 1)
+                                <div class="col-md-2">
+                                    <label for="importer_name">Importer Name</label>
+                                    <input type="text" wire:model="importer_name" name="importer_name"
+                                        class="form-control text-uppercase">
+                                    @error('importer_name')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-md-2">
                                     <label for="quantity">Quantity</label>
-                                    <input type="number" wire:model="items.{{ $index }}.quantity"
-                                        name="quantity" class="form-control bg-info text-white">
+                                    <input type="text" wire:model.lazy="quantity" name="quantity"
+                                        class="form-control text-uppercase">
                                     @error('quantity')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="col-md-2 d-flex align-items-end">
 
-                                    <button type="button" wire:click="removeItem({{ $index }})"
-                                        class="btn btn-danger">
-                                        x
-                                    </button>
-                                </div>
-                            @endforeach
-                            <div class="col-md-2">
-                                <label for="pkgs_code">Pkgs Code</label>
-                                <select wire:model="pkgs_code" class="form-control">
-                                    <option hidden></option>
-                                    <option value="ROLLS">ROLLS </option>
-                                    <option value="PKGS">PKGS </option>
-                                    <option value="BALES">BALES </option>
-                                    <option value="CTNS">CTNS </option>
-                                    <option value="BAGS">BAGS </option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="vessel">Vessel</label>
-                                <input type="text" wire:model="vessel" name="vessel"
-                                    class="form-control text-uppercase">
-                            </div>
-                            <div class="col-md-2">
-                                <label for="bl_no">BL No</label>
-                                <input type="text" wire:model="bl_no" name="bl_no"
-                                    class="form-control text-uppercase">
-                                @error('bl_no')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            {{-- Container --}}
-                            @foreach ($containers as $index => $container)
                                 <div class="col-md-2">
-                                    <label for="container_no">Container No</label>
-                                    <input type="text" <input type="text"
-                                        wire:model="containers.{{ $index }}.container_no"
-                                        name="container_no"class="form-control text-uppercase bg-warning text-white">
-                                    @error('container_no')
+                                    <label for="pkgs_code">Pkgs Code</label>
+                                    <select wire:model="pkgs_code" class="form-control">
+                                        <option hidden></option>
+                                        <option value="ROLLS">ROLLS </option>
+                                        <option value="PKGS">PKGS </option>
+                                        <option value="BALES">BALES </option>
+                                        <option value="CTNS">CTNS </option>
+                                        <option value="BAGS">BAGS </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label for="vessel">Vessel</label>
+                                    <input type="text" wire:model="vessel" name="vessel"
+                                        class="form-control text-uppercase">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="bl_no">BL No</label>
+                                    <input type="text" wire:model="bl_no" name="bl_no"
+                                        class="form-control text-uppercase">
+                                    @error('bl_no')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-2">
-                                    <label for="container_size">Container Size</label>
-                                    <select wire:model="containers.{{ $index }}.container_size"
-                                        class="form-control">
-                                        <option hidden></option>
-                                        <option value="20' FCL">20' FCL </option>
-                                        <option value="40' FCL">40' FCL </option>
-                                        <option value="20' LCL">20' LCL </option>
-                                        <option value="40' LCL">40' LCL </option>
-                                        <option value="BULK">BULK </option>
-                                    </select>
+                                    <label for=" lc_number">Lc Number</label>
+                                    <input type="number" wire:model="lc_number" name="lc_number" class="form-control">
+                                    @error('lc_number')
+                                        <p class="text-danger"> {{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="lc_date">LC Date</label>
+                                    <input type="date" wire:model="lc_date" class="form-control">
                                 </div>
 
-                                <div class="col-md-2 d-flex align-items-end">
-                                    <button type="button" wire:click="removeContainer({{ $index }})"
-                                        class="btn btn-danger">
-                                        x
+                                <div class="col-md-2">
+                                    <label for="gross_weight">Gross Weight</label>
+                                    <input type="number" wire:model="gross_weight" step="0.001" name="gross_weight"
+                                        class="form-control">
+                                </div>
+
+                                <div class="col-md-2 ">
+                                    <label for="arivel_date">Arivel Date</label>
+                                    <input type="date" wire:model="arivel_date" class="form-control">
+                                </div>
+
+                                <div class="col-md-12 my-3 text-right">
+                                    <button type="button" wire:click="nextStep" class="main_bt">
+                                        Next →
                                     </button>
                                 </div>
-                            @endforeach
+                            @endif
+                            <!-- ADD ITEMS AND ADD CONTAINER -->
 
-                            <div class="col-md-2">
-                                <label for=" lc_number">Lc Number</label>
-                                <input type="number" wire:model="lc_number" name="lc_number" class="form-control">
-                                @error('lc_number')
-                                    <p class="text-danger"> {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-md-2">
-                                <label for="lc_date">LC Date</label>
-                                <input type="date" wire:model="lc_date" class="form-control">
-                            </div>
+                            @if ($step == 1)
 
-                            <div class="col-md-2">
-                                <label for="gross_weight">Gross Weight</label>
-                                <input type="number" wire:model="gross_weight" step="0.001" name="gross_weight"
-                                    class="form-control">
-                            </div>
 
-                            <div class="col-md-2 ">
-                                <label for="arivel_date">Arivel Date</label>
-                                <input type="date" wire:model="arivel_date" class="form-control">
-                            </div>
 
-                            <div class="col-md-12 my-3">
-                                <button class="main_bt"">
-                                    {{ $formShow ? 'Update' : 'Create' }}
-                                </button>
-                            </div>
+                                <div class="col-md-1">
+                                    <button type="button" wire:click="addItem" class="btn btn-info">
+                                        + Add Item
+                                    </button>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" wire:click="addContainer" class="btn btn-warning">
+                                        + Add Container
+                                    </button>
+                                </div>
 
+                                <div class="col-md-6">
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="quantity">Total Quantity</label>
+                                    <input type="number" wire:model.lazy="quantity" class="form-control" readonly>
+                                </div>
+
+
+
+
+                                @foreach ($items as $index => $item)
+                                    <div class="col-md-4">
+                                        <label for="goods_name">Goods Name</label>
+                                        <input type="text" wire:model="items.{{ $index }}.goods_name"
+                                            name="goods_name" class="form-control text-uppercase bg-info">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="item_quantity">Item Quantity</label>
+                                        <input type="number" wire:model="items.{{ $index }}.item_quantity"
+                                            name="item_quantity" class="form-control">
+                                    </div>
+
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <button type="button" wire:click="removeItem({{ $index }})"
+                                            class="btn btn-info">
+                                            x
+                                        </button>
+                                    </div>
+                                @endforeach
+
+                                @foreach ($containers as $index => $container)
+                                    <div class="col-md-4">
+                                        <label for="container_no">Container No</label>
+                                        <input type="text" <input type="text"
+                                            wire:model="containers.{{ $index }}.container_no"
+                                            name="container_no"class="form-control text-uppercase bg-warning">
+                                        @error('container_no')
+                                            <p class="text-danger"> {{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="container_size">Container Size</label>
+                                        <select wire:model="containers.{{ $index }}.container_size"
+                                            class="form-control">
+                                            <option hidden></option>
+                                            <option value="20' FCL">20' FCL </option>
+                                            <option value="40' FCL">40' FCL </option>
+                                            <option value="20' LCL">20' LCL </option>
+                                            <option value="40' LCL">40' LCL </option>
+                                            <option value="BULK">BULK </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <button type="button" wire:click="removeContainer({{ $index }})"
+                                            class="btn btn-warning">
+                                            x
+                                        </button>
+                                    </div>
+                                @endforeach
+                                <div class="col-md-12 my-3">
+
+                                    <button type="button" wire:click="prevStep" class="btn btn-secondary">
+                                        ← Back
+                                    </button>
+
+                                    <button class="main_bt float-right">
+                                        {{ $formShow ? 'Update' : 'Create' }}
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -246,3 +279,5 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>

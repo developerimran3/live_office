@@ -42,11 +42,11 @@ class Received extends Component
         $this->items[] = [
             'goods_name' => '',
             'quantity' => '',
-            'containers' => [
-                ['container_no' => '', 'container_location' => '', 'net_weight' => '']
-            ]
+            'containers' => []
         ];
     }
+
+
 
     public function removeItem($i)
     {
