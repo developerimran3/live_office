@@ -9,6 +9,7 @@ class Received extends Model
     protected $fillable = [
         'importer_name',
         'vessel',
+        'total_quantity',
         'bl_no',
         'pkgs_code',
         'lc_number',

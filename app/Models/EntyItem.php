@@ -9,7 +9,7 @@ class EntyItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['enty_id', 'goods_name', 'quantity'];
+    protected $fillable = ['enty_id', 'goods_name', 'item_quantity'];
 
     public function enty()
     {

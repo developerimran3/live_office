@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
 
             $table->string('importer_name');
+            $table->string('total_quantity')->nullable();
             $table->string('pkgs_code')->nullable();
             $table->string('vessel')->nullable();
-            $table->string('bl_no')->unique()->nullable();
-            $table->string('container_no')->nullable();
-            $table->string('container_size')->nullable();
+            $table->string('bl_no')->nullable();
             $table->string('lc_number')->nullable();
             $table->date('lc_date')->nullable();
-            $table->string('gross_weight')->nullable();
+            $table->decimal('gross_weight', 15, 3)->nullable();
             $table->date('arivel_date')->nullable();
+
 
             $table->timestamps();
         });

@@ -11,6 +11,7 @@ class Enty extends Model
 
     protected $fillable = [
         'importer_name',
+        'total_quantity',
         'pkgs_code',
         'vessel',
         'bl_no',

@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             //New Enty
             $table->string('importer_name');
+            $table->string('total_quantity')->nullable();
+            $table->string('pkgs_code')->nullable();
             $table->string('vessel')->nullable();
             $table->string('bl_no')->nullable();
-            $table->string('pkgs_code')->nullable();
             $table->string('lc_number')->nullable();
             $table->date('lc_date')->nullable();
             $table->decimal('gross_weight', 15, 3)->nullable();

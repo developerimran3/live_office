@@ -125,9 +125,7 @@
     @livewireScripts
     @stack('scripts')
 
-    <script>
-        $("#dataTable").DataTable();
-    </script>
+
 </body>
 
 </html>

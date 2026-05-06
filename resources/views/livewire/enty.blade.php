@@ -29,7 +29,7 @@
                     <form wire:submit.prevent="{{ $formShow ? 'updateEnty' : 'createEnty' }}">
                         <div class="row">
                             @if ($step == 1)
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="importer_name">Importer Name</label>
                                     <input type="text" wire:model="importer_name" name="importer_name"
                                         class="form-control text-uppercase">
@@ -37,18 +37,15 @@
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="quantity">Quantity</label>
-                                    <input type="text" wire:model.lazy="quantity" name="quantity"
-                                        class="form-control text-uppercase">
-                                    @error('quantity')
-                                        <p class="text-danger"> {{ $message }}</p>
-                                    @enderror
+                                <div class="col-md-3">
+                                    <label for="total_quantity">Total Quantity</label>
+                                    <input type="number" wire:model="total_quantity" name="quantity"
+                                        class="form-control">
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="pkgs_code">Pkgs Code</label>
-                                    <select wire:model="pkgs_code" class="form-control">
+                                    <select wire:model.lazy="pkgs_code" class="form-control">
                                         <option hidden></option>
                                         <option value="ROLLS">ROLLS </option>
                                         <option value="PKGS">PKGS </option>
@@ -58,12 +55,12 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="vessel">Vessel</label>
                                     <input type="text" wire:model="vessel" name="vessel"
                                         class="form-control text-uppercase">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="bl_no">BL No</label>
                                     <input type="text" wire:model="bl_no" name="bl_no"
                                         class="form-control text-uppercase">
@@ -72,25 +69,25 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for=" lc_number">Lc Number</label>
                                     <input type="number" wire:model="lc_number" name="lc_number" class="form-control">
                                     @error('lc_number')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="lc_date">LC Date</label>
                                     <input type="date" wire:model="lc_date" class="form-control">
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="gross_weight">Gross Weight</label>
                                     <input type="number" wire:model="gross_weight" step="0.001" name="gross_weight"
                                         class="form-control">
                                 </div>
 
-                                <div class="col-md-2 ">
+                                <div class="col-md-3 ">
                                     <label for="arivel_date">Arivel Date</label>
                                     <input type="date" wire:model="arivel_date" class="form-control">
                                 </div>
@@ -103,64 +100,50 @@
                             @endif
                             <!-- ADD ITEMS AND ADD CONTAINER -->
 
-                            @if ($step == 1)
-
-
-
-                                <div class="col-md-1">
+                            @if ($step == 2)
+                                <div class="col-md-1 mb-3">
                                     <button type="button" wire:click="addItem" class="btn btn-info">
                                         + Add Item
                                     </button>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-1 mb-3">
                                     <button type="button" wire:click="addContainer" class="btn btn-warning">
                                         + Add Container
                                     </button>
                                 </div>
-
-                                <div class="col-md-6">
-
+                                <div class="col-md-8 mb-3">
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="quantity">Total Quantity</label>
-                                    <input type="number" wire:model.lazy="quantity" class="form-control" readonly>
-                                </div>
-
-
-
+                                {{-- <div class="col-md-2">
+                                    <label for="total_quantity">Total Quantity</label>
+                                    <input type="text" class="form-control" wire:model="total_quantity" readonly>
+                                </div> --}}
 
                                 @foreach ($items as $index => $item)
-                                    <div class="col-md-4">
-                                        <label for="goods_name">Goods Name</label>
+                                    <div class="col-md-4 ">
+                                        <label for="goods_name ">Goods Name</label>
                                         <input type="text" wire:model="items.{{ $index }}.goods_name"
                                             name="goods_name" class="form-control text-uppercase bg-info">
                                     </div>
-                                    <div class="col-md-4">
-                                        <label for="item_quantity">Item Quantity</label>
-                                        <input type="number" wire:model="items.{{ $index }}.item_quantity"
-                                            name="item_quantity" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-4 d-flex align-items-end">
+                                    <div class="col-md-4  d-flex align-items-end">
                                         <button type="button" wire:click="removeItem({{ $index }})"
                                             class="btn btn-info">
                                             x
                                         </button>
                                     </div>
+                                    <div class="col-md-4"> </div>
                                 @endforeach
 
                                 @foreach ($containers as $index => $container)
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 my-1">
                                         <label for="container_no">Container No</label>
-                                        <input type="text" <input type="text"
-                                            wire:model="containers.{{ $index }}.container_no"
+                                        <input type="text" wire:model="containers.{{ $index }}.container_no"
                                             name="container_no"class="form-control text-uppercase bg-warning">
                                         @error('container_no')
                                             <p class="text-danger"> {{ $message }}</p>
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <label for="container_size">Container Size</label>
                                         <select wire:model="containers.{{ $index }}.container_size"
                                             class="form-control">
@@ -193,7 +176,6 @@
                             @endif
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -208,13 +190,13 @@
                         <div class="col-md-12">
                             <div class=" full">
                                 <div class="heading1 margin_0">
-                                    <table class="table table-bordered table-striped" id="dataTable">
+                                    <table class="table table-bordered align-middle ">
                                         <thead>
                                             <tr class="new_enty_tr">
                                                 <th>#</th>
                                                 <th>Importer Name</th>
                                                 <th>Goods Name</th>
-                                                <th>Quantity</th>
+                                                <th>Total Quantity</th>
                                                 <th>Vessel</th>
                                                 <th>BL No</th>
                                                 <th>Container</th>
@@ -225,53 +207,83 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach ($enty as $e)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $e->importer_name }}</td>
-                                                    <td>
-                                                        @foreach ($e->items as $item)
-                                                            {{ $item->goods_name }} <br>
-                                                        @endforeach
-                                                    </td>
-                                                    <td>
-                                                        @foreach ($e->items as $item)
-                                                            {{ $item->quantity }} {{ $e->pkgs_code }} <br>
-                                                        @endforeach
-                                                    </td>
-                                                    <td>{{ $e->vessel }}</td>
-                                                    <td>{{ $e->bl_no }}</td>
 
-                                                    <td>
-                                                        @foreach ($e->containers as $container)
-                                                            {{ $container->container_no }} x
-                                                            {{ $container->container_size }}
-                                                            <br>
-                                                        @endforeach
-                                                    </td>
-                                                    <td>{{ $e->lc_number }}</td>
-                                                    <td>{{ $e->lc_date }}</td>
-                                                    <td>{{ number_format($e->gross_weight ?? 0, 2) }} KGS</td>
-                                                    <td>{{ $e->arivel_date }}</td>
-                                                    <td>
-                                                        <a class="btn btn-warning btn-sm"
-                                                            wire:click="editToEnty({{ $e->id }})"> <i
-                                                                class="fa fa-edit"></i></a>
-                                                        <a class="btn btn-danger btn-sm"
-                                                            wire:click="deleteEnty({{ $e->id }})"
-                                                            wire:confirm="Are you sure? Document Delete?"> <i
-                                                                class="fa fa-trash"></i></a>
-                                                        <a class="btn btn-success btn-sm"
-                                                            wire:click="moveToReceived({{ $e->id }})"
-                                                            wire:confirm="Are you Move To Received Document?"> <i
-                                                                class="fa fa-arrow-circle-right "></i></a>
-                                                    </td>
-                                                </tr>
+                                        <tbody class="text-uppercase">
+                                            @foreach ($enty as $e)
+                                                @php
+                                                    $rowspan = max($e->items->count(), 1);
+                                                    $first = true;
+                                                @endphp
+
+                                                @foreach ($e->items as $item)
+                                                    <tr>
+                                                        {{-- INDEX --}}
+                                                        @if ($first)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $loop->parent->iteration }}</td>
+
+                                                            <td rowspan="{{ $rowspan }}">{{ $e->importer_name }}
+                                                            </td>
+                                                        @endif
+                                                        {{-- GOODS --}}
+                                                        <td>{{ $item->goods_name }}</td>
+                                                        {{-- COMMON FIELDS (ONLY FIRST ROW) --}}
+                                                        @if ($first)
+                                                            <td class="font-weight-bold"
+                                                                rowspan="{{ $rowspan }}">
+                                                                {{ $e->total_quantity }} {{ $e->pkgs_code }}
+                                                            </td>
+                                                            <td rowspan="{{ $rowspan }}">{{ $e->vessel }}
+                                                            </td>
+                                                            <td rowspan="{{ $rowspan }}">{{ $e->bl_no }}
+                                                            </td>
+
+                                                            {{-- CONTAINER (MULTIPLE INSIDE SAME CELL) --}}
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                @foreach ($e->containers as $container)
+                                                                    <span class="badge mb-1 d-dark"
+                                                                        style="font-size: 10px;">
+                                                                        {{ $container->container_no }} x
+                                                                        {{ $container->container_size }}
+                                                                    </span>
+                                                                @endforeach
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">{{ $e->lc_number }}
+                                                            </td>
+                                                            <td rowspan="{{ $rowspan }}">{{ $e->lc_date }}
+                                                            </td>
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ number_format($e->gross_weight ?? 0, 2) }} KGS
+                                                            </td>
+                                                            <td rowspan="{{ $rowspan }}">{{ $e->arivel_date }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                <a class="btn btn-warning btn-sm"
+                                                                    wire:click="editToEnty({{ $e->id }})">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </a>
+
+                                                                <a class="btn btn-danger btn-sm"
+                                                                    wire:click="deleteEnty({{ $e->id }})"
+                                                                    wire:confirm="Are you sure? Document Delete?">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </a>
+
+                                                                <a class="btn btn-success btn-sm"
+                                                                    wire:click="moveToReceived({{ $e->id }})"
+                                                                    wire:confirm="Are you Move To Received Document?">
+                                                                    <i class="fa fa-arrow-circle-right"></i>
+                                                                </a>
+                                                            </td>
+                                                        @endif
+                                                    </tr>
+                                                    @php $first = false; @endphp
+                                                @endforeach
                                             @endforeach
                                         </tbody>
                                     </table>
-
                                 </div>
                             </div>
                         </div>

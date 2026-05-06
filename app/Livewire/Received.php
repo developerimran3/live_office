@@ -9,15 +9,45 @@ use App\Models\Received as ReceiveDocument;
 class Received extends Component
 {
     public $items = [];
+    public $containers = [];
     public $receiveds;
     public $receivedId;
 
-    public $invoice_value, $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no;
+    public $invoice_value, $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no,  $container_location, $net_weight;
 
     public function mount()
     {
         $this->receiveds = ReceiveDocument::get();
     }
+
+
+
+    /**
+     * Form Steps
+     * Step 1: Basic Information
+     * Step 2: Items
+     * Step 3: Containers
+     * Step 4: Review & Submit
+     */
+    public $step = 1;
+    public function nextStep()
+    {
+        $this->step++;
+    }
+
+    public function prevStep()
+    {
+        $this->step--;
+    }
+
+
+
+
+
+
+
+
+
 
     public function editToReceived($id)
     {
@@ -35,39 +65,40 @@ class Received extends Component
 
         // Load items JSON
         $this->items = $receive->items ?? [];
+        $this->containers = $receive->containers ?? [];
     }
 
-    public function addItem()
-    {
-        $this->items[] = [
-            'goods_name' => '',
-            'quantity' => '',
-            'containers' => []
-        ];
-    }
+    // public function addItem()
+    // {
+    //     $this->items[] = [
+    //         'goods_name' => '',
+    //         'quantity' => '',
+    //         'containers' => []
+    //     ];
+    // }
 
 
 
-    public function removeItem($i)
-    {
-        unset($this->items[$i]);
-        $this->items = array_values($this->items);
-    }
+    // public function removeItem($i)
+    // {
+    //     unset($this->items[$i]);
+    //     $this->items = array_values($this->items);
+    // }
 
-    public function addContainer($i)
-    {
-        $this->items[$i]['containers'][] = [
-            'container_no' => '',
-            'container_location' => '',
-            'net_weight' => ''
-        ];
-    }
+    // public function addContainer($i)
+    // {
+    //     $this->items[$i]['containers'][] = [
+    //         'container_no' => '',
+    //         'container_location' => '',
+    //         'net_weight' => ''
+    //     ];
+    // }
 
-    public function removeContainer($i, $j)
-    {
-        unset($this->items[$i]['containers'][$j]);
-        $this->items[$i]['containers'] = array_values($this->items[$i]['containers']);
-    }
+    // public function removeContainer($i, $j)
+    // {
+    //     unset($this->items[$i]['containers'][$j]);
+    //     $this->items[$i]['containers'] = array_values($this->items[$i]['containers']);
+    // }
 
     public function updateReceived()
     {
@@ -87,6 +118,8 @@ class Received extends Component
             'rot_no'        => $this->rot_no,
             'vessel'        => $this->vessel,
             'bl_no'         => $this->bl_no,
+
+            'containers'    => $this->containers,
             'items'         => $this->items, // JSON saved automatically
         ]);
 
@@ -94,6 +127,9 @@ class Received extends Component
         $this->mount();
         $this->receivedId = null;
     }
+
+
+
 
 
 
@@ -159,7 +195,6 @@ class Received extends Component
 
     public function render()
     {
-        return view('livewire.received')
-            ->layout('layouts.app', ['title' => 'Received']);
+        return view('livewire.received');
     }
 }

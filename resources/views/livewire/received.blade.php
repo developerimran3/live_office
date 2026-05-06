@@ -101,67 +101,106 @@
 
                  <form wire:submit.prevent="updateReceived">
                      <div class="row mb-2">
-                         <div class="col-md-3">
-                             <label>BL No</label>
-                             <input type="text" wire:model="bl_no" class="form-control" readonly>
-                         </div>
-                         <div class="col-md-3">
-                             <label>Vessel</label>
-                             <input type="text" wire:model="vessel" name="vessel" class="form-control">
-                         </div>
-                         <div class="col-md-3">
-                             <label>Rotation No</label>
-                             <input type="text" wire:model="rot_no" name="rot_no" class="form-control">
-                         </div>
-                         <div class="col-md-3">
-                             <label>Invoice Value</label>
-                             <input type="text" wire:model="invoice_value" name="invoice_value" class="form-control">
-                         </div>
-                         <div class="col-md-3">
-                             <label>Invoice No</label>
-                             <input type="text" wire:model="invoice_no" name="invoice_no" class="form-control">
-                         </div>
-                         <div class="col-md-3">
-                             <label>Invoice Date</label>
-                             <input type="date" wire:model="invoice_date" class="form-control">
-                         </div>
-                     </div>
-
-                     @foreach ($items as $i => $item)
-                         <div class="card p-2 mb-2 border">
-                             <h5>
-                                 Item Name: <input type="text" wire:model="items.{{ $i }}.goods_name"
+                         @if ($step == 1)
+                             <div class="col-md-3">
+                                 <label>BL No</label>
+                                 <input type="text" wire:model="bl_no" class="form-control" readonly>
+                             </div>
+                             <div class="col-md-3">
+                                 <label>Vessel</label>
+                                 <input type="text" wire:model="vessel" name="vessel" class="form-control">
+                             </div>
+                             <div class="col-md-3">
+                                 <label>Rotation No</label>
+                                 <input type="text" wire:model="rot_no" name="rot_no" class="form-control">
+                             </div>
+                             <div class="col-md-3">
+                                 <label>Invoice Value</label>
+                                 <input type="text" wire:model="invoice_value" name="invoice_value"
                                      class="form-control">
-                             </h5>
-                             <div>Quantity: <input type="number" wire:model="items.{{ $i }}.quantity"
-                                     class="form-control mb-2"></div>
+                             </div>
+                             <div class="col-md-3">
+                                 <label>Invoice No</label>
+                                 <input type="text" wire:model="invoice_no" name="invoice_no" class="form-control">
+                             </div>
+                             <div class="col-md-3">
+                                 <label>Invoice Date</label>
+                                 <input type="date" wire:model="invoice_date" class="form-control">
+                             </div>
+                             <div class="col-md-12 my-3 text-right">
+                                 <button type="button" wire:click="nextStep" class="main_bt">
+                                     Next →
+                                 </button>
+                             </div>
+                         @endif
 
-                             <h6>Containers</h6>
-                             @foreach ($item['containers'] ?? [] as $j => $c)
-                                 <div class="d-flex mb-1">
-                                     <input type="text"
-                                         wire:model="items.{{ $i }}.containers.{{ $j }}.container_no"
-                                         class="form-control me-1" placeholder="Container No">
-                                     <input type="text"
-                                         wire:model="items.{{ $i }}.containers.{{ $j }}.container_location"
-                                         class="form-control me-1" placeholder="Location">
-                                     <input type="number"
-                                         wire:model="items.{{ $i }}.containers.{{ $j }}.net_weight"
-                                         class="form-control me-1" placeholder="Net Weight">
-                                     <button type="button"
-                                         wire:click="removeContainer({{ $i }}, {{ $j }})"
-                                         class="btn btn-danger btn-sm">−</button>
+
+                         @if ($step == 2)
+                             {{-- Goods Details --}}
+                             <div class="col-md-12 mb-3">
+                                 <h3>Goods Details</h3>
+                             </div>
+                             @foreach ($items as $index => $item)
+                                 <div class="col-md-4 my-2">
+                                     <input type="text" wire:model="items.{{ $index }}.goods_name"
+                                         class="form-control text-uppercase text-white bg-info" readonly>
+                                 </div>
+                                 <div class="col-md-4 my-2">
+
+                                     <input type="number" wire:model="items.{{ $index }}.item_quantity"
+                                         name="quantity" class="form-control" placeholder="Item Quantity">
+                                 </div>
+                                 <div class="col-md-4 my-2">
+                                     <input type="number" wire:model="items.{{ $index }}.net_weight"
+                                         name="net_weight" class="form-control" placeholder="Net Weight">
                                  </div>
                              @endforeach
-                             <button type="button" wire:click="addContainer({{ $i }})"
-                                 class="btn btn-success btn-sm mt-1">+ Container</button>
-                             <button type="button" wire:click="removeItem({{ $i }})"
-                                 class="btn btn-danger btn-sm mt-1">Remove Item</button>
-                         </div>
-                     @endforeach
 
-                     <button type="button" wire:click="addItem" class="btn btn-primary mt-2">+ Add Item</button>
-                     <button type="submit" class="btn btn-success mt-2">Update</button>
+                             {{-- Container Details --}}
+                             <div class="col-md-12 my-3">
+                                 <h3>Container Details</h3>
+                             </div>
+                             @foreach ($containers as $i => $container)
+                                 <div class="col-md-4 my-2">
+                                     <input type="text" wire:model="containers.{{ $i }}.container_no"
+                                         class="form-control text-uppercase" readonly>
+                                 </div>
+                                 <div class="col-md-4 my-2">
+                                     <input type="text" wire:model="containers.{{ $i }}.container_size"
+                                         class="form-control text-uppercase" readonly>
+                                 </div>
+
+                                 <div class="col-md-2 my-2">
+                                     <select wire:model="containers.{{ $i }}.container_location"
+                                         class="form-control">
+                                         <option>Yard</option>
+                                         <option value="NCT">NCT </option>
+                                         <option value="CCT">CCT </option>
+                                         <option value="NCY">NCY </option>
+                                         <option value="01">01 </option>
+                                         <option value="02">02 </option>
+                                         <option value="03">03 </option>
+                                         <option value="04">04 </option>
+                                         <option value="05">05 </option>
+                                         <option value="06">06 </option>
+                                         <option value="07">07 </option>
+                                         <option value="08">08 </option>
+                                         <option value="08B">08B </option>
+                                         <option value="10">10 </option>
+                                     </select>
+                                 </div>
+                             @endforeach
+                             <div class="col-md-12 my-3">
+                                 <button type="button" wire:click="prevStep" class="btn btn-secondary">
+                                     ← Back
+                                 </button>
+
+                                 <button class="main_bt float-right">
+                                     Update
+                                 </button>
+                             </div>
+                         @endif
+                     </div>
                  </form>
              </div>
          @endif
@@ -195,81 +234,139 @@
                          <div class="col-md-12">
                              <div class=" full">
                                  <div class="heading1 margin_0">
-                                     <table class="table table-bordered table-striped mb-none dataTable no-footer "
-                                         id="dataTable">
+                                     <table class="table table-bordered  align-middle">
                                          <thead>
                                              <tr class="document_received">
                                                  <th>#</th>
                                                  <th>Importer Name</th>
                                                  <th>Goods Name</th>
-                                                 <th>Quantity</th>
+                                                 <th>Item Qty</th>
+                                                 <th>N.W</th>
+                                                 <th>Total Qty</th>
                                                  <th>Vessel</th>
                                                  <th>BL. No</th>
-                                                 <th>Cont. No</th>
                                                  <th>Rot. No</th>
+                                                 <th>Cont. No</th>
                                                  <th>Yard</th>
                                                  <th>Value</th>
                                                  <th>Invoice No</th>
                                                  <th>IV. Date</th>
-                                                 <th>N.W</th>
                                                  <th>Rec. Doc</th>
                                                  <th>Action</th>
                                              </tr>
                                          </thead>
-                                         <tbody>
+
+                                         <tbody class="text-uppercase">
                                              @foreach ($receiveds as $r)
-                                                 <tr class="document_received">
-                                                     <td> {{ $loop->iteration }} </td>
-                                                     <td>{{ $r->importer_name }}</td>
-                                                     <td class="text-uppercase">
-                                                         @foreach ($r->items ?? [] as $item)
-                                                             {{ $item['goods_name'] }} <br>
-                                                         @endforeach
+                                                 @php
+                                                     $items = $r->items ?? [];
+                                                     $rowspan = max(count($items), 1);
+                                                     $first = true;
+                                                 @endphp
 
-                                                     </td>
-                                                     <td>
-                                                         @foreach ($r->items ?? [] as $item)
-                                                             {{ $item['quantity'] }} {{ $r->pkgs_code }} <br>
-                                                         @endforeach
-                                                     </td>
-                                                     <td>{{ $r->vessel }}</td>
-                                                     <td>{{ $r->bl_no }}</td>
-
-                                                     <td>
-                                                         @foreach ($r->containers ?? [] as $c)
-                                                             {{ $c['container_no'] }} x {{ $c['container_size'] }}
-                                                             <br>
-                                                         @endforeach
-                                                     </td>
-                                                     <td>{{ $r->rot_no }} </td>
-
-                                                     <td>
-                                                         @foreach ($r->container_locations ?? [] as $loc)
-                                                             Y-{{ $loc }} <br>
-                                                         @endforeach
-                                                     </td>
-                                                     <td>$ {{ number_format($r->invoice_value ?? 0, 2) }}</td>
-                                                     <td>{{ $r->invoice_no }}</td>
-                                                     <td>{{ $r->invoice_date }}</td>
-
-                                                     <td>
-                                                         @foreach ($r->net_weights ?? [] as $w)
-                                                             {{ $w }} KGS <br>
-                                                         @endforeach
-                                                     </td>
-                                                     <td>{{ $r->document_receiver }}</td>
-                                                     <td>
-                                                         <a class="btn btn-sm btn-warning"
-                                                             wire:click="editToReceived({{ $r->id }})">
-                                                             <i class="fa fa-edit"></i></a>
-                                                         @if ($r->invoice_value && $r->invoice_no && $r->invoice_date && $r->rot_no && $r->vessel)
-                                                             <a class="btn btn-sm btn-success"
-                                                                 wire:click="moveToRegister({{ $r->id }})"
-                                                                 wire:confirm="Are you Move To Register Document?">
-                                                                 <i class="fa fa-arrow-circle-right "></i></a>
+                                                 @foreach ($items as $item)
+                                                     <tr>
+                                                         {{-- INDEX + IMPORTER --}}
+                                                         @if ($first)
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $loop->parent->iteration }}</td>
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->importer_name }}</td>
                                                          @endif
-                                                     </td>
-                                                 </tr>
+
+                                                         {{-- GOODS --}}
+                                                         <td class="text-uppercase">
+                                                             {{ $item['goods_name'] ?? '' }}
+                                                         </td>
+
+                                                         {{-- QUANTITY (PER GOODS) --}}
+                                                         <td>
+                                                             {{ $item['item_quantity'] ?? ($item['qty'] ?? 0) }}
+                                                             {{ $r->pkgs_code }}
+                                                         </td>
+
+                                                         <td>
+                                                             {{ $item['net_weight'] ?? 0 }}
+                                                             KGS
+                                                         </td>
+
+
+
+                                                         {{-- COMMON FIELDS --}}
+                                                         @if ($first)
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->total_quantity }} {{ $r->pkgs_code }}
+                                                             </td>
+                                                             <td rowspan="{{ $rowspan }}">{{ $r->vessel }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">{{ $r->bl_no }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">{{ $r->rot_no }}
+                                                             </td>
+
+                                                             {{-- CONTAINER (MULTIPLE IN SAME CELL) --}}
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 @foreach ($r->containers ?? [] as $c)
+                                                                     <span class="badge mb-1 d-dark"
+                                                                         style="font-size: 10px;">
+                                                                         {{ $c['container_no'] }} x
+                                                                         {{ $c['container_size'] }}
+                                                                     </span>
+                                                                 @endforeach
+                                                             </td>
+
+                                                             {{-- YARD --}}
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 @foreach ($r->container_locations ?? [] as $loc)
+                                                                     {{ $loc['container_location'] }}
+                                                                 @endforeach
+                                                             </td>
+                                                             {{-- <td rowspan="{{ $rowspan }}">
+                                                                 @foreach ($r->container_locations ?? [] as $loc)
+                                                                     <div class="mb-1">
+                                                                         <span class="badge bg-secondary"
+                                                                             style="font-size: 10px;">
+                                                                             Y-{{ $loc['container_location'] }}
+                                                                         </span>
+                                                                     </div>
+                                                                 @endforeach
+                                                             </td> --}}
+
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 $ {{ number_format($r->invoice_value ?? 0, 2) }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">{{ $r->invoice_no }}
+                                                             </td>
+                                                             <td rowspan="{{ $rowspan }}">{{ $r->invoice_date }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->document_receiver }}</td>
+
+                                                             {{-- ACTION --}}
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 <a class="btn btn-sm btn-warning"
+                                                                     wire:click="editToReceived({{ $r->id }})">
+                                                                     <i class="fa fa-edit"></i>
+                                                                 </a>
+
+                                                                 @if ($r->invoice_value && $r->invoice_no && $r->invoice_date && $r->rot_no && $r->vessel)
+                                                                     <a class="btn btn-sm btn-success"
+                                                                         wire:click="moveToRegister({{ $r->id }})"
+                                                                         wire:confirm="Are you Move To Register Document?">
+                                                                         <i class="fa fa-arrow-circle-right"></i>
+                                                                     </a>
+                                                                 @endif
+                                                             </td>
+                                                         @endif
+
+                                                     </tr>
+
+                                                     @php $first = false; @endphp
+                                                 @endforeach
                                              @endforeach
                                          </tbody>
                                      </table>

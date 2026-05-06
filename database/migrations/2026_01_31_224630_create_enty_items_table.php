@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('enty_id')->constrained()->cascadeOnDelete();
             $table->string('goods_name');
-            $table->string('quantity')->nullable();
+            $table->string('item_quantity')->nullable();
             $table->timestamps();
         });
     }

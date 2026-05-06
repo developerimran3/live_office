@@ -201,6 +201,7 @@ legend {
 .table td,
 .table th {
     border-top: 0px;
+    padding: 5px !important;
 }
 
 /*------------------------------------------------------------------
@@ -353,40 +354,52 @@ legend {
 .new_enty_tr th {
     background-color: #b6c6d9;
     text-align: center;
-    padding: 5px;
+    padding: 3px;
 }
 .new_enty_tr td {
     text-align: center;
     vertical-align: middle;
     padding: 0;
     text-transform: uppercase;
+    padding: 3px;
 }
 
 .new_enty_tr th:nth-child(1) {
     width: 2%;
 }
 .new_enty_tr th:nth-child(2) {
-    width: 12%;
+    width: 11%;
+}
+.new_enty_tr th:nth-child(5) {
+    width: 2%;
+}
+
+.new_enty_tr th:nth-child(4) {
+    width: 5%;
 }
 
 .new_enty_tr th:nth-child(3),
-.new_enty_tr th:nth-child(4),
 .new_enty_tr th:nth-child(8) {
     width: 7%;
 }
 
-.new_enty_tr th:nth-child(5),
 .new_enty_tr th:nth-child(6) {
     width: 9%;
 }
+.new_enty_tr th:nth-child(9) {
+    width: 2%;
+}
 
 .new_enty_tr th:nth-child(7),
-.new_enty_tr th:nth-child(9),
-.new_enty_tr th:nth-child(11) {
-    width: 8%;
+.new_enty_tr th:nth-child(10),
+.new_enty_tr th:nth-child(12) {
+    width: 9%;
 }
-.new_enty_tr th:nth-child(10) {
+.new_enty_tr th:nth-child(11) {
     width: 6%;
+}
+.new_enty_tr th:nth-child(13) {
+    width: 10%;
 }
 
 /*------------------------------------------------------------------
