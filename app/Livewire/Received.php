@@ -12,15 +12,20 @@ class Received extends Component
     public $containers = [];
     public $receiveds;
     public $receivedId;
+    public $total_quantity;
+    public $initial_total;
+    public $pkgs_code;
 
-    public $invoice_value, $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no,  $container_location, $net_weight;
+
+    public $invoice_value,  $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no,  $container_location, $net_weight;
+
+
+
 
     public function mount()
     {
         $this->receiveds = ReceiveDocument::get();
     }
-
-
 
     /**
      * Form Steps
@@ -42,13 +47,6 @@ class Received extends Component
 
 
 
-
-
-
-
-
-
-
     public function editToReceived($id)
     {
         $receive = ReceiveDocument::findOrFail($id);
@@ -56,49 +54,49 @@ class Received extends Component
         $this->receivedId = $id;
 
         // Load basic fields
-        $this->invoice_value = $receive->invoice_value;
-        $this->invoice_no    = $receive->invoice_no;
-        $this->invoice_date  = $receive->invoice_date;
-        $this->rot_no        = $receive->rot_no;
-        $this->vessel        = $receive->vessel;
-        $this->bl_no         = $receive->bl_no;
+        $this->invoice_value  = $receive->invoice_value;
+        $this->invoice_no     = $receive->invoice_no;
+        $this->invoice_date   = $receive->invoice_date;
+        $this->rot_no         = $receive->rot_no;
+
+
+        $this->initial_total = (int) $receive->total_quantity;
+        $this->total_quantity = (int) $receive->total_quantity;
+        $this->pkgs_code = $receive->pkgs_code;
+
+
+        $this->vessel         = $receive->vessel;
+        $this->bl_no          = $receive->bl_no;
 
         // Load items JSON
         $this->items = $receive->items ?? [];
         $this->containers = $receive->containers ?? [];
     }
 
-    // public function addItem()
-    // {
-    //     $this->items[] = [
-    //         'goods_name' => '',
-    //         'quantity' => '',
-    //         'containers' => []
-    //     ];
-    // }
 
 
+    public $warningMessage = '';
+    public function updatedItems()
+    {
+        $used = 0;
 
-    // public function removeItem($i)
-    // {
-    //     unset($this->items[$i]);
-    //     $this->items = array_values($this->items);
-    // }
+        foreach ($this->items as $item) {
+            $used += (int) ($item['item_quantity'] ?? 0);
+        }
 
-    // public function addContainer($i)
-    // {
-    //     $this->items[$i]['containers'][] = [
-    //         'container_no' => '',
-    //         'container_location' => '',
-    //         'net_weight' => ''
-    //     ];
-    // }
+        $remaining = $this->initial_total - $used;
 
-    // public function removeContainer($i, $j)
-    // {
-    //     unset($this->items[$i]['containers'][$j]);
-    //     $this->items[$i]['containers'] = array_values($this->items[$i]['containers']);
-    // }
+        if ($remaining < 0) {
+            $this->warningMessage = '⚠️ Quantity cannot be more than total!';
+            $this->total_quantity = 0;
+            return;
+        }
+
+        $this->warningMessage = '';
+        $this->total_quantity = $remaining;
+    }
+
+
 
     public function updateReceived()
     {

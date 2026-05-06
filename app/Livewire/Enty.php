@@ -79,28 +79,6 @@ class Enty extends Component
     }
 
 
-    /**
-     * Total Quantity Calculation
-     */
-
-
-    // public function updatedQuantity()
-    // {
-    //     $this->calculateTotal();
-    // }
-
-    // public function updatedPkgsCode()
-    // {
-    //     $this->calculateTotal();
-    // }
-    // public function calculateTotal()
-    // {
-    //     if ($this->quantity && $this->pkgs_code) {
-    //         $this->total_quantity = $this->quantity . ' ' . $this->pkgs_code;
-    //     } else {
-    //         $this->total_quantity = null;
-    //     }
-    // }
 
 
 

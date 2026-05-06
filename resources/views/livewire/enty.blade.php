@@ -113,10 +113,6 @@
                                 </div>
                                 <div class="col-md-8 mb-3">
                                 </div>
-                                {{-- <div class="col-md-2">
-                                    <label for="total_quantity">Total Quantity</label>
-                                    <input type="text" class="form-control" wire:model="total_quantity" readonly>
-                                </div> --}}
 
                                 @foreach ($items as $index => $item)
                                     <div class="col-md-4 ">

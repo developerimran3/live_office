@@ -8,89 +8,6 @@
                  </div>
              </div>
          </div>
-         {{-- @if ($receivedId)
-             <div class="row column1">
-                 <div class="col-md-12">
-                     <div class="white_shd full p-4">
-                         <div class="heading1 margin_0">
-                             <h2>Documents Details</h2>
-                             <hr class="m-0">
-                         </div>
-                         <form wire:submit.prevent="updateReceived({{ $receivedId }})">
-                             <div class="row">
-                                 <div class="col-md-3">
-                                     <label for="bl_no">BL No</label>
-                                     <input type="text" wire:model="bl_no" class="form-control" readonly>
-                                 </div>
-                                 @if (!$vessel)
-                                     <div class="col-md-3">
-                                         <label for="vessel">Vessel</label>
-                                         <input type="text" wire:model="vessel" name="vessel"
-                                             class="form-control text-uppercase">
-                                     </div>
-                                 @endif
-                                 <div class="col-md-3">
-                                     <label for="vessel">Rotation No</label>
-                                     <input type="text" wire:model="rot_no" name="rot_no" class="form-control">
-                                     @error('rot_no')
-                                         <p class="text-danger"> {{ $message }}</p>
-                                     @enderror
-                                 </div>
-
-                                 @foreach ($container_locations as $i => $loc)
-                                     <div class="col-md-3">
-                                         <label>Container Location</label>
-                                         <input type="text" wire:model="container_locations.{{ $i }}"
-                                             class="form-control">
-                                     </div>
-                                 @endforeach
-
-
-                                 <div class="col-md-3">
-                                     <label for="invoice_value">Invoice Value</label>
-                                     <input type="text" wire:model="invoice_value" name="invoice_value"
-                                         class="form-control" placeholder="Invoice Value">
-                                     @error('invoice_value')
-                                         <p class="text-danger"> {{ $message }}</p>
-                                     @enderror
-                                 </div>
-                                 <div class="col-md-3">
-                                     <label for="invoice_no">Invoice Number</label>
-                                     <input type="text" wire:model="invoice_no" name="invoice_no"
-                                         class="form-control text-uppercase" placeholder="Invoice Number">
-                                     @error('invoice_no')
-                                         <p class="text-danger"> {{ $message }}</p>
-                                     @enderror
-                                 </div>
-                                 <div class="col-md-3">
-                                     <label for="invoice_date">Invoice Date</label>
-                                     <input type="date" wire:model="invoice_date" name="invoice_date"
-                                         class="form-control" placeholder="Invoice Date">
-                                     @error('invoice_date')
-                                         <p class="text-danger"> {{ $message }}</p>
-                                     @enderror
-                                 </div>
-
-                                 <div class="col-md-3">
-                                     @foreach ($net_weights as $i => $w)
-                                         <label>Net Weight</label>
-                                         <input type="number" wire:model="net_weights.{{ $i }}"
-                                             class="form-control">
-                                     @endforeach
-                                     @error('net_weight')
-                                         <p class="text-danger"> {{ $message }}</p>
-                                     @enderror
-                                 </div>
-
-                                 <div class="col-md-6 my-3">
-                                     <button type="submit" class="main_bt">Update</button>
-                                 </div>
-                             </div>
-                         </form>
-                     </div>
-                 </div>
-             </div>
-         @endif --}}
 
          @if ($receivedId)
              <div class="card p-3 mb-3">
@@ -136,20 +53,37 @@
 
 
                          @if ($step == 2)
+                             {{-- Alart Message --}}
+
+                             <div wire:poll.2s class="col-md-12 mb-3">
+                                 @if ($warningMessage)
+                                     <div class="alert alert-danger">
+                                         {{ $warningMessage }}
+                                     </div>
+                                 @endif
+                             </div>
+
                              {{-- Goods Details --}}
-                             <div class="col-md-12 mb-3">
+                             <div class="col-md-10 mb-3">
                                  <h3>Goods Details</h3>
+                             </div>
+
+                             <div class="col-md-2 mb-2">
+                                 <label for="total_quantity">Total Quantity</label>
+                                 <input type="text" class="form-control"
+                                     value="{{ $total_quantity }} {{ $pkgs_code }}" readonly>
                              </div>
                              @foreach ($items as $index => $item)
                                  <div class="col-md-4 my-2">
                                      <input type="text" wire:model="items.{{ $index }}.goods_name"
                                          class="form-control text-uppercase text-white bg-info" readonly>
                                  </div>
-                                 <div class="col-md-4 my-2">
 
-                                     <input type="number" wire:model="items.{{ $index }}.item_quantity"
+                                 <div class="col-md-4 my-2">
+                                     <input type="number" wire:model.live="items.{{ $index }}.item_quantity"
                                          name="quantity" class="form-control" placeholder="Item Quantity">
                                  </div>
+
                                  <div class="col-md-4 my-2">
                                      <input type="number" wire:model="items.{{ $index }}.net_weight"
                                          name="net_weight" class="form-control" placeholder="Net Weight">
@@ -256,7 +190,7 @@
                                              </tr>
                                          </thead>
 
-                                         <tbody class="text-uppercase">
+                                         <tbody class="text-uppercase" style="font-size: 13px">
                                              @foreach ($receiveds as $r)
                                                  @php
                                                      $items = $r->items ?? [];
@@ -290,8 +224,6 @@
                                                              KGS
                                                          </td>
 
-
-
                                                          {{-- COMMON FIELDS --}}
                                                          @if ($first)
                                                              <td rowspan="{{ $rowspan }}">
@@ -306,33 +238,21 @@
                                                              <td rowspan="{{ $rowspan }}">{{ $r->rot_no }}
                                                              </td>
 
-                                                             {{-- CONTAINER (MULTIPLE IN SAME CELL) --}}
                                                              <td rowspan="{{ $rowspan }}">
-                                                                 @foreach ($r->containers ?? [] as $c)
-                                                                     <span class="badge mb-1 d-dark"
-                                                                         style="font-size: 10px;">
-                                                                         {{ $c['container_no'] }} x
-                                                                         {{ $c['container_size'] }}
-                                                                     </span>
+                                                                 @foreach ($r->containers ?? [] as $loc)
+                                                                     {{ $loc['container_no'] ?? '' }}
+                                                                     {{ $loc['container_size'] ?? '' }}
+                                                                     <br>
                                                                  @endforeach
+
                                                              </td>
 
-                                                             {{-- YARD --}}
                                                              <td rowspan="{{ $rowspan }}">
-                                                                 @foreach ($r->container_locations ?? [] as $loc)
-                                                                     {{ $loc['container_location'] }}
+                                                                 @foreach ($r->containers ?? [] as $loc)
+                                                                     Y- {{ $loc['container_location'] ?? '' }}
+                                                                     <br>
                                                                  @endforeach
                                                              </td>
-                                                             {{-- <td rowspan="{{ $rowspan }}">
-                                                                 @foreach ($r->container_locations ?? [] as $loc)
-                                                                     <div class="mb-1">
-                                                                         <span class="badge bg-secondary"
-                                                                             style="font-size: 10px;">
-                                                                             Y-{{ $loc['container_location'] }}
-                                                                         </span>
-                                                                     </div>
-                                                                 @endforeach
-                                                             </td> --}}
 
                                                              <td rowspan="{{ $rowspan }}">
                                                                  $ {{ number_format($r->invoice_value ?? 0, 2) }}
@@ -362,9 +282,7 @@
                                                                  @endif
                                                              </td>
                                                          @endif
-
                                                      </tr>
-
                                                      @php $first = false; @endphp
                                                  @endforeach
                                              @endforeach
