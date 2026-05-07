@@ -22,8 +22,7 @@ return new class extends Migration
             $table->string('lc_number')->nullable();
             $table->date('lc_date')->nullable();
             $table->decimal('gross_weight', 15, 3)->nullable();
-            $table->date('arivel_date')->nullable();
-
+            $table->date('arrival_date')->nullable();
 
             $table->timestamps();
         });

@@ -122,6 +122,7 @@ class Received extends Component
         ]);
 
         session()->flash('success', 'Document updated successfully!');
+        $this->reset();
         $this->mount();
         $this->receivedId = null;
     }

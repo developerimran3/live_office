@@ -22,7 +22,7 @@ class Enty extends Component
     public $lc_number = '';
     public $lc_date = '';
     public $gross_weight = '';
-    public $arivel_date = '';
+    public $arrival_date = '';
     public $item_quantity = '';
 
     public ?int $updateId = null;
@@ -45,12 +45,6 @@ class Enty extends Component
                 'importer_name' => 'required',
                 'bl_no'         => 'required',
                 'lc_number'     => 'required',
-            ]);
-        }
-        if ($this->step == 2) {
-            $this->validate([
-                'items.*.goods_name'    => 'required',
-                'items.*.item_quantity' => 'required|numeric',
             ]);
         }
         $this->step++;
@@ -77,10 +71,6 @@ class Enty extends Component
         ];
         // $this->resetFormArrays();
     }
-
-
-
-
 
 
     /**
@@ -111,12 +101,6 @@ class Enty extends Component
         $this->containers = array_values($this->containers);
     }
 
-    // private function resetFormArrays()
-    // {
-    //     $this->items = [['goods_name' => '']];
-    //     $this->containers = [['container_no' => '', 'container_size' => '']];
-    // }
-
 
 
     /**
@@ -124,6 +108,17 @@ class Enty extends Component
      */
     public function createEnty()
     {
+        $this->validate([
+
+            // ITEMS
+            'items.*.goods_name' => 'required',
+
+            // CONTAINERS
+            'containers.*.container_no'   => 'required',
+            'containers.*.container_size' => 'required',
+
+        ]);
+
         $enty = EntyDocument::create([
             "importer_name"  => $this->importer_name,
             "total_quantity" => $this->total_quantity,
@@ -133,7 +128,7 @@ class Enty extends Component
             "lc_number"      => $this->lc_number,
             "lc_date"        => $this->lc_date,
             "gross_weight"   => $this->gross_weight,
-            "arivel_date"    => $this->arivel_date,
+            "arrival_date"    => $this->arrival_date,
         ]);
 
         foreach ($this->items as $item) {
@@ -152,8 +147,9 @@ class Enty extends Component
         };
         $this->reset();
         $this->mount();
-        session()->flash('success', 'Created successfully');
+        $this->dispatch('success', message: 'Data Created Successfully');
     }
+
 
 
 
@@ -174,7 +170,7 @@ class Enty extends Component
         $this->lc_number = $enty->lc_number;
         $this->lc_date = $enty->lc_date;
         $this->gross_weight = $enty->gross_weight;
-        $this->arivel_date = $enty->arivel_date;
+        $this->arrival_date = $enty->arrival_date;
         $this->items = [];
         $this->containers = [];
         foreach ($enty->items as $item) {
@@ -190,9 +186,6 @@ class Enty extends Component
             ];
         }
     }
-
-
-
 
     /**
      * Data UPDATE
@@ -210,7 +203,7 @@ class Enty extends Component
                 "lc_number"      => $this->lc_number,
                 "lc_date"        => $this->lc_date,
                 "gross_weight"   => $this->gross_weight,
-                "arivel_date"    => $this->arivel_date,
+                "arrival_date"    => $this->arrival_date,
             ]);
             // delete old items
             EntyItem::where('enty_id', $enty->id)->delete();
@@ -233,10 +226,8 @@ class Enty extends Component
         });
 
         $this->resetForm();
-        session()->flash('success', 'Updated successfully');
+        $this->dispatch('success', message: 'Data Updated Successfully');
     }
-
-
 
     /**
      * DELETE
@@ -245,11 +236,10 @@ class Enty extends Component
     {
         EntyDocument::findOrFail($id)->delete();
 
-        session()->flash('success', 'Deleted successfully');
+        $this->dispatch('success', message: 'Deleted successfully');
 
         $this->mount();
     }
-
 
 
     /**
@@ -268,7 +258,7 @@ class Enty extends Component
                 'lc_number'     => $enty->lc_number,
                 'lc_date'       => $enty->lc_date,
                 'gross_weight'  => $enty->gross_weight,
-                'arivel_date'   => $enty->arivel_date,
+                'arrival_date'   => $enty->arrival_date,
                 'items' => $enty->items->map(function ($i) {
                     return [
                         'goods_name' => $i->goods_name,
@@ -285,7 +275,8 @@ class Enty extends Component
             ]);
             $enty->delete();
         });
-        session()->flash('success', 'Moved to Received');
+
+        $this->dispatch('success', message: 'Moved to Received');
         $this->mount();
     }
 

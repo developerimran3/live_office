@@ -31,7 +31,7 @@
                             @if ($step == 1)
                                 <div class="col-md-3">
                                     <label for="importer_name">Importer Name</label>
-                                    <input type="text" wire:model="importer_name" name="importer_name"
+                                    <input type="text" wire:model.live="importer_name" name="importer_name"
                                         class="form-control text-uppercase">
                                     @error('importer_name')
                                         <p class="text-danger"> {{ $message }}</p>
@@ -88,8 +88,8 @@
                                 </div>
 
                                 <div class="col-md-3 ">
-                                    <label for="arivel_date">Arivel Date</label>
-                                    <input type="date" wire:model="arivel_date" class="form-control">
+                                    <label for="arrival_date">Arrival Date</label>
+                                    <input type="date" wire:model="arrival_date" class="form-control">
                                 </div>
 
                                 <div class="col-md-12 my-3 text-right">
@@ -98,8 +98,8 @@
                                     </button>
                                 </div>
                             @endif
-                            <!-- ADD ITEMS AND ADD CONTAINER -->
 
+                            <!-- ADD ITEMS AND ADD CONTAINER -->
                             @if ($step == 2)
                                 <div class="col-md-1 mb-3">
                                     <button type="button" wire:click="addItem" class="btn btn-info">
@@ -119,6 +119,9 @@
                                         <label for="goods_name ">Goods Name</label>
                                         <input type="text" wire:model="items.{{ $index }}.goods_name"
                                             name="goods_name" class="form-control text-uppercase bg-info">
+                                        @error('items.*.goods_name')
+                                            <p class="text-danger"> {{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div class="col-md-4  d-flex align-items-end">
                                         <button type="button" wire:click="removeItem({{ $index }})"
@@ -134,7 +137,7 @@
                                         <label for="container_no">Container No</label>
                                         <input type="text" wire:model="containers.{{ $index }}.container_no"
                                             name="container_no"class="form-control text-uppercase bg-warning">
-                                        @error('container_no')
+                                        @error('containers.*.container_no')
                                             <p class="text-danger"> {{ $message }}</p>
                                         @enderror
                                     </div>
@@ -150,6 +153,9 @@
                                             <option value="40' LCL">40' LCL </option>
                                             <option value="BULK">BULK </option>
                                         </select>
+                                        @error('containers.*.container_size')
+                                            <p class="text-danger"> {{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="col-md-4 d-flex align-items-end">
@@ -207,54 +213,95 @@
                                         <tbody class="text-uppercase">
                                             @foreach ($enty as $e)
                                                 @php
-                                                    $rowspan = max($e->items->count(), 1);
-                                                    $first = true;
+                                                    $items = $e->items ?? [];
+                                                    $containers = $e->containers ?? [];
+
+                                                    $itemCount = count($items);
+                                                    $containerCount = count($containers);
+
+                                                    $rowspan = max($itemCount, $containerCount, 1);
                                                 @endphp
 
-                                                @foreach ($e->items as $item)
+                                                @for ($i = 0; $i < $rowspan; $i++)
+                                                    @php
+                                                        $item = $items[$i] ?? null;
+                                                        $container = $containers[$i] ?? null;
+                                                    @endphp
                                                     <tr>
                                                         {{-- INDEX --}}
-                                                        @if ($first)
+                                                        @if ($i == 0)
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $loop->parent->iteration }}</td>
+                                                                {{ $loop->iteration }}
+                                                            </td>
 
-                                                            <td rowspan="{{ $rowspan }}">{{ $e->importer_name }}
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $e->importer_name }}
                                                             </td>
                                                         @endif
-                                                        {{-- GOODS --}}
-                                                        <td>{{ $item->goods_name }}</td>
-                                                        {{-- COMMON FIELDS (ONLY FIRST ROW) --}}
-                                                        @if ($first)
-                                                            <td class="font-weight-bold"
-                                                                rowspan="{{ $rowspan }}">
-                                                                {{ $e->total_quantity }} {{ $e->pkgs_code }}
-                                                            </td>
-                                                            <td rowspan="{{ $rowspan }}">{{ $e->vessel }}
-                                                            </td>
-                                                            <td rowspan="{{ $rowspan }}">{{ $e->bl_no }}
-                                                            </td>
 
-                                                            {{-- CONTAINER (MULTIPLE INSIDE SAME CELL) --}}
+                                                        {{-- GOODS / ITEM / NW --}}
+                                                        @if ($item)
+                                                            <td>
+                                                                {{ $item['goods_name'] ?? '' }}
+                                                            </td>
+                                                        @else
+                                                            {{-- EMPTY CELLS --}}
+                                                            <td></td>
+                                                        @endif
+
+                                                        {{-- COMMON DATA --}}
+                                                        @if ($i == 0)
                                                             <td rowspan="{{ $rowspan }}">
-                                                                @foreach ($e->containers as $container)
-                                                                    <span class="badge mb-1 d-dark"
-                                                                        style="font-size: 10px;">
-                                                                        {{ $container->container_no }} x
-                                                                        {{ $container->container_size }}
-                                                                    </span>
-                                                                @endforeach
+                                                                {{ $e->total_quantity }}
+                                                                {{ $e->pkgs_code }}
                                                             </td>
 
-                                                            <td rowspan="{{ $rowspan }}">{{ $e->lc_number }}
-                                                            </td>
-                                                            <td rowspan="{{ $rowspan }}">{{ $e->lc_date }}
-                                                            </td>
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ number_format($e->gross_weight ?? 0, 2) }} KGS
-                                                            </td>
-                                                            <td rowspan="{{ $rowspan }}">{{ $e->arivel_date }}
+                                                                <a href="https://www.google.com/search?q={{ urlencode($e->vessel) }}"
+                                                                    target="_blank"
+                                                                    class="text-primary font-weight-bold">
+                                                                    {{ $e->vessel }}
+                                                                </a>
                                                             </td>
 
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $e->bl_no }}
+                                                            </td>
+                                                        @endif
+
+                                                        {{-- CONTAINER --}}
+                                                        <td>
+                                                            @if ($container)
+                                                                <a href="https://cpatos.gov.bd/pcs/index.php/Report/mySearchContainerLocation{{ urlencode($e->container) }}"
+                                                                    target="_blank"
+                                                                    class="text-primary font-weight-bold">
+                                                                    {{ $container['container_no'] ?? '' }}
+
+                                                                </a>
+                                                                x {{ $container['container_size'] ?? '' }}
+                                                            @endif
+
+                                                        </td>
+
+                                                        {{-- COMMON --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $e->lc_number }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $e->lc_date }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $e->gross_weight ? number_format($e->gross_weight, 2) . ' KGS' : '' }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $e->arrival_date }}
+                                                            </td>
+
+                                                            {{-- ACTION --}}
                                                             <td rowspan="{{ $rowspan }}">
                                                                 <a class="btn btn-warning btn-sm"
                                                                     wire:click="editToEnty({{ $e->id }})">
@@ -275,8 +322,7 @@
                                                             </td>
                                                         @endif
                                                     </tr>
-                                                    @php $first = false; @endphp
-                                                @endforeach
+                                                @endfor
                                             @endforeach
                                         </tbody>
                                     </table>

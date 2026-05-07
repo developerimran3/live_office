@@ -191,83 +191,118 @@
                                          </thead>
 
                                          <tbody class="text-uppercase" style="font-size: 13px">
+
                                              @foreach ($receiveds as $r)
                                                  @php
                                                      $items = $r->items ?? [];
-                                                     $rowspan = max(count($items), 1);
-                                                     $first = true;
+                                                     $containers = $r->containers ?? [];
+
+                                                     $itemCount = count($items);
+                                                     $containerCount = count($containers);
+
+                                                     $rowspan = max($itemCount, $containerCount, 1);
                                                  @endphp
 
-                                                 @foreach ($items as $item)
+                                                 @for ($i = 0; $i < $rowspan; $i++)
+                                                     @php
+                                                         $item = $items[$i] ?? null;
+                                                         $container = $containers[$i] ?? null;
+                                                     @endphp
                                                      <tr>
-                                                         {{-- INDEX + IMPORTER --}}
-                                                         @if ($first)
+
+                                                         {{-- INDEX --}}
+                                                         @if ($i == 0)
                                                              <td rowspan="{{ $rowspan }}">
-                                                                 {{ $loop->parent->iteration }}</td>
+                                                                 {{ $loop->iteration }}
+                                                             </td>
+
                                                              <td rowspan="{{ $rowspan }}">
-                                                                 {{ $r->importer_name }}</td>
+                                                                 {{ $r->importer_name }}
+                                                             </td>
                                                          @endif
 
-                                                         {{-- GOODS --}}
-                                                         <td class="text-uppercase">
-                                                             {{ $item['goods_name'] ?? '' }}
-                                                         </td>
+                                                         {{-- GOODS / ITEM / NW --}}
+                                                         @if ($item)
+                                                             <td>
+                                                                 {{ $item['goods_name'] ?? '' }}
+                                                             </td>
 
-                                                         {{-- QUANTITY (PER GOODS) --}}
+                                                             <td>
+                                                                 {{ $item['item_quantity'] ?? ($item['qty'] ?? 0) }}
+                                                                 {{ $r->pkgs_code }}
+                                                             </td>
+
+                                                             <td>
+                                                                 {{ $item['net_weight'] ?? 0 }}
+                                                                 KGS
+                                                             </td>
+                                                         @else
+                                                             {{-- EMPTY CELLS --}}
+                                                             <td></td>
+                                                             <td></td>
+                                                             <td></td>
+                                                         @endif
+
+
+                                                         {{-- COMMON DATA --}}
+                                                         @if ($i == 0)
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->total_quantity }}
+                                                                 {{ $r->pkgs_code }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->vessel }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->bl_no }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->rot_no }}
+                                                             </td>
+                                                         @endif
+
+
+                                                         {{-- CONTAINER --}}
                                                          <td>
-                                                             {{ $item['item_quantity'] ?? ($item['qty'] ?? 0) }}
-                                                             {{ $r->pkgs_code }}
+                                                             @if ($container)
+                                                                 {{ $container['container_no'] ?? '' }}
+                                                                 {{ $container['container_size'] ?? '' }}
+                                                                 FCL
+                                                             @endif
                                                          </td>
 
+                                                         {{-- YARD --}}
                                                          <td>
-                                                             {{ $item['net_weight'] ?? 0 }}
-                                                             KGS
+                                                             @if ($container)
+                                                                 Y- {{ $container['container_location'] ?? '' }}
+                                                             @endif
                                                          </td>
 
-                                                         {{-- COMMON FIELDS --}}
-                                                         @if ($first)
-                                                             <td rowspan="{{ $rowspan }}">
-                                                                 {{ $r->total_quantity }} {{ $r->pkgs_code }}
-                                                             </td>
-                                                             <td rowspan="{{ $rowspan }}">{{ $r->vessel }}
-                                                             </td>
 
-                                                             <td rowspan="{{ $rowspan }}">{{ $r->bl_no }}
-                                                             </td>
-
-                                                             <td rowspan="{{ $rowspan }}">{{ $r->rot_no }}
-                                                             </td>
-
-                                                             <td rowspan="{{ $rowspan }}">
-                                                                 @foreach ($r->containers ?? [] as $loc)
-                                                                     {{ $loc['container_no'] ?? '' }}
-                                                                     {{ $loc['container_size'] ?? '' }}
-                                                                     <br>
-                                                                 @endforeach
-
-                                                             </td>
-
-                                                             <td rowspan="{{ $rowspan }}">
-                                                                 @foreach ($r->containers ?? [] as $loc)
-                                                                     Y- {{ $loc['container_location'] ?? '' }}
-                                                                     <br>
-                                                                 @endforeach
-                                                             </td>
-
+                                                         {{-- COMMON --}}
+                                                         @if ($i == 0)
                                                              <td rowspan="{{ $rowspan }}">
                                                                  $ {{ number_format($r->invoice_value ?? 0, 2) }}
                                                              </td>
 
-                                                             <td rowspan="{{ $rowspan }}">{{ $r->invoice_no }}
-                                                             </td>
-                                                             <td rowspan="{{ $rowspan }}">{{ $r->invoice_date }}
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->invoice_no }}
                                                              </td>
 
                                                              <td rowspan="{{ $rowspan }}">
-                                                                 {{ $r->document_receiver }}</td>
+                                                                 {{ $r->invoice_date }}
+                                                             </td>
+
+                                                             <td rowspan="{{ $rowspan }}">
+                                                                 {{ $r->document_receiver }}
+                                                             </td>
 
                                                              {{-- ACTION --}}
                                                              <td rowspan="{{ $rowspan }}">
+
                                                                  <a class="btn btn-sm btn-warning"
                                                                      wire:click="editToReceived({{ $r->id }})">
                                                                      <i class="fa fa-edit"></i>
@@ -277,15 +312,19 @@
                                                                      <a class="btn btn-sm btn-success"
                                                                          wire:click="moveToRegister({{ $r->id }})"
                                                                          wire:confirm="Are you Move To Register Document?">
+
                                                                          <i class="fa fa-arrow-circle-right"></i>
+
                                                                      </a>
                                                                  @endif
+
                                                              </td>
                                                          @endif
+
                                                      </tr>
-                                                     @php $first = false; @endphp
-                                                 @endforeach
+                                                 @endfor
                                              @endforeach
+
                                          </tbody>
                                      </table>
                                  </div>

@@ -20,7 +20,7 @@ class Enty extends Model
         'lc_number',
         'lc_date',
         'gross_weight',
-        'arivel_date'
+        'arrival_date'
     ];
 
     public function items()

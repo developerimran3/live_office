@@ -27,23 +27,23 @@ return new class extends Migration
             $table->string('lc_number')->nullable();
             $table->date('lc_date')->nullable();
             $table->integer('gross_weight')->nullable();
-            $table->date('arivel_date')->nullable();
+            $table->date('arrival_date')->nullable();
+
+            // FROM ENTY
+            $table->json('items')->nullable();
+            $table->json('containers')->nullable();
 
             // Received fields
             $table->date('document_receiver')->nullable();
             $table->string('rot_no')->nullable();
-            $table->string('container_location')->nullable();
             $table->string('invoice_value')->nullable();
             $table->string('invoice_no')->unique()->nullable();
             $table->date('invoice_date')->nullable();
-            $table->integer('net_weight')->nullable();
 
             // Register fields
             $table->string('be_no')->unique()->nullable();
             $table->date('be_date')->nullable();
             $table->string('be_lane')->nullable();
-
-
 
             $table->softDeletes(); // adds deleted_at
 
