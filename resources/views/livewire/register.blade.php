@@ -103,28 +103,28 @@
                         <div class="col-md-12">
                             <div class=" full">
                                 <div class="heading1 margin_0">
-                                    <table class="table table-bordered table-striped mb-none dataTable no-footer "
-                                        id="dataTable">
+                                    <table class="table table-bordered mb-none dataTable no-footer " id="dataTable">
                                         <thead>
                                             <tr class="register_enty">
                                                 <th>#</th>
                                                 <th>Importer Name</th>
                                                 <th>Goods Name</th>
-                                                <th>Quantity</th>
+                                                <th>Item Qty</th>
+                                                <th>N.W</th>
+                                                <th>G.W</th>
+                                                <th>Total Qty</th>
                                                 <th>Vessel</th>
-                                                <th>BL No</th>
-                                                <th>Rot No</th>
-                                                <th>Cont No</th>
+                                                <th>BL. No</th>
+                                                <th>Rot. No</th>
+                                                <th>Cont. No</th>
                                                 <th>Yard</th>
                                                 <th>B/E No</th>
                                                 <th>B/E Date</th>
-                                                <th>G.W</th>
-                                                <th>N.W</th>
                                                 <th>B/E Lane</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        {{-- <tbody>
                                             @foreach ($registers as $register)
                                                 <tr class="register_enty">
                                                     <td>{{ $loop->iteration }}</td>
@@ -164,6 +164,147 @@
                                                         @endif
                                                     </td>
                                                 </tr>
+                                            @endforeach
+                                        </tbody> --}}
+                                        <tbody class="text-uppercase" style="font-size: 13px">
+
+                                            @foreach ($registers as $r)
+                                                @php
+                                                    $items = $r->items ?? [];
+                                                    $containers = $r->containers ?? [];
+
+                                                    $itemCount = count($items);
+                                                    $containerCount = count($containers);
+
+                                                    $rowspan = max($itemCount, $containerCount, 1);
+                                                @endphp
+
+                                                @for ($i = 0; $i < $rowspan; $i++)
+                                                    @php
+                                                        $item = $items[$i] ?? null;
+                                                        $container = $containers[$i] ?? null;
+                                                    @endphp
+                                                    <tr>
+
+                                                        {{-- INDEX --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $loop->iteration }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $r->importer_name }}
+                                                            </td>
+                                                        @endif
+
+                                                        {{-- GOODS / ITEM / NW --}}
+                                                        @if ($item)
+                                                            <td>
+                                                                {{ $item['goods_name'] ?? '' }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ $item['item_quantity'] ?? ($item['qty'] ?? 0) }}
+                                                                {{ $r->pkgs_code }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ $item['net_weight'] ?? 0 }}
+                                                                KGS
+                                                            </td>
+
+                                                            <td>
+                                                                {{ $item['gross_weight'] ?? 0 }}
+                                                                KGS
+                                                            </td>
+                                                        @else
+                                                            {{-- EMPTY CELLS --}}
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        @endif
+
+
+                                                        {{-- COMMON DATA --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $r->total_quantity }}
+                                                                {{ $r->pkgs_code }}
+                                                            </td>
+
+
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                <a href="https://www.google.com/search?q={{ urlencode($r->vessel) }}"
+                                                                    target="_blank"
+                                                                    class="text-primary font-weight-bold">
+                                                                    {{ $r->vessel }}
+                                                                </a>
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $r->bl_no }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $r->rot_no }}
+                                                            </td>
+                                                        @endif
+
+                                                        {{-- CONTAINER --}}
+                                                        <td>
+                                                            @if ($container)
+                                                                <a href="https://cpatos.gov.bd/pcs/index.php/Report/mySearchContainerLocation{{ urlencode($r->container) }}"
+                                                                    target="_blank"
+                                                                    class="text-primary font-weight-bold">
+                                                                    {{ $container['container_no'] ?? '' }}
+                                                                </a>
+                                                                x <br> {{ $container['container_size'] ?? '' }}
+                                                            @endif
+                                                        </td>
+
+                                                        {{-- YARD --}}
+                                                        <td class="text-success font-weight-bold">
+                                                            @if ($container)
+                                                                Y- {{ $container['container_location'] ?? '' }}
+                                                            @endif
+                                                        </td>
+
+                                                        {{-- COMMON --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                C- <samp
+                                                                    class="font-weight-bold text-success">{{ $r->be_no }}</samp>
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $r->be_date }}
+                                                            </td>
+
+
+
+                                                            <td rowspan="{{ $rowspan }}"
+                                                                class="font-weight-bold {{ $r->be_lane === 'RED' ? 'text-danger' : '' }}
+                                                            {{ $r->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
+                                                                {{ $r->be_lane }}
+                                                            </td>
+                                                            {{-- ACTION --}}
+
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                <a class="btn btn-sm btn-warning"
+                                                                    wire:click="editToregister({{ $r->id }})">
+                                                                    <i class="fa fa-edit"></i></a>
+                                                                @if ($r->be_no && $r->be_date && $r->be_lane)
+                                                                    <a class="btn btn-sm btn-success"
+                                                                        wire:click="moveToAssessment({{ $r->id }})"
+                                                                        wire:confirm="Are you Move To Assessment Document?">
+                                                                        <i class="fa fa-arrow-circle-right "></i></a>
+                                                                @endif
+                                                            </td>
+                                                        @endif
+                                                    </tr>
+                                                @endfor
                                             @endforeach
                                         </tbody>
                                     </table>

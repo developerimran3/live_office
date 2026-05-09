@@ -40,24 +40,24 @@ class Register extends Component
     /**
      * Update Data (Create aj jonno data)
      */
-    // public function updateRegister($id)
-    // {
-    //     $this->validate([
-    //         'be_no'    => 'required|unique:registers,be_no,' . $id,
-    //         'be_date'  => 'required',
-    //     ]);
-    //     $register = RegisterDocument::findOrFail($id);
-    //     $register->update([
-    //         'be_no'               => $this->be_no,
-    //         'be_date'             => $this->be_date,
-    //         'be_lane'             => $this->be_lane,
-    //         'container_location'  => $this->container_location,
-    //         'net_weight'          => $this->net_weight,
-    //     ]);
-    //     $this->reset();
-    //     $this->mount();
-    //     session()->flash('success', 'Document Update Successful.');
-    // }
+    public function updateRegister($id)
+    {
+        $this->validate([
+            'be_no'    => 'required|unique:registers,be_no,' . $id,
+            'be_date'  => 'required',
+        ]);
+        $register = RegisterDocument::findOrFail($id);
+        $register->update([
+            'be_no'               => $this->be_no,
+            'be_date'             => $this->be_date,
+            'be_lane'             => $this->be_lane,
+            'container_location'  => $this->container_location,
+            'net_weight'          => $this->net_weight,
+        ]);
+        $this->reset();
+        $this->mount();
+        session()->flash('success', 'Document Update Successful.');
+    }
 
     public function mount()
     {
