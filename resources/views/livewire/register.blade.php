@@ -21,21 +21,11 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for="quantity">Quantity</label>
-                                    <input type="text" wire:model="quantity" class="form-control"
+                                    <input type="text" wire:model="total_quantity" class="form-control"
                                         placeholder="Quantity" readonly>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="net_weight">Net Weight</label>
-                                    <input type="text" wire:model="net_weight" class="form-control"
-                                        placeholder="net_weight">
-                                </div>
-                                @if (!$container_location)
-                                    <div class="col-md-3">
-                                        <label for="container_location">Container Location</label>
-                                        <input type="text" wire:model="container_location" name="container_location"
-                                            class="form-control text-uppercase">
-                                    </div>
-                                @endif
+
+
                                 <div class="col-md-3">
                                     <label for="be_no">B/E Number</label>
                                     <input type="text" wire:model="be_no" name="be_no" class="form-control"
@@ -231,8 +221,6 @@
                                                                 {{ $r->total_quantity }}
                                                                 {{ $r->pkgs_code }}
                                                             </td>
-
-
 
                                                             <td rowspan="{{ $rowspan }}">
                                                                 <a href="https://www.google.com/search?q={{ urlencode($r->vessel) }}"

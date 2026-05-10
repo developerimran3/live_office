@@ -18,7 +18,7 @@ class Register extends Component
     public $be_lane;
     public $container_location;
     public $net_weight;
-    public $quantity;
+    public $total_quantity;
     public $pkgs_code;
     public $registerId;
 
@@ -31,9 +31,8 @@ class Register extends Component
         $this->be_no              = $register->be_no;
         $this->be_date            = $register->be_date;
         $this->be_lane            = $register->be_lane;
-        $this->quantity           = $register->quantity . ' ' . $register->pkgs_code;
+        $this->total_quantity     = $register->total_quantity . ' ' . $register->pkgs_code;
         $this->container_location = $register->container_location;
-        $this->net_weight         = $register->net_weight;
         $this->registerId         = $id;
     }
 

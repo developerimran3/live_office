@@ -23,10 +23,12 @@
                                  <label>BL No</label>
                                  <input type="text" wire:model="bl_no" class="form-control" readonly>
                              </div>
-                             <div class="col-md-3">
-                                 <label>Vessel</label>
-                                 <input type="text" wire:model="vessel" name="vessel" class="form-control">
-                             </div>
+                             @if (!$vessel)
+                                 <div class="col-md-3">
+                                     <label>Vessel</label>
+                                     <input type="text" wire:model="vessel" name="vessel" class="form-control">
+                                 </div>
+                             @endif
                              <div class="col-md-3">
                                  <label>Rotation No</label>
                                  <input type="text" wire:model="rot_no" name="rot_no" class="form-control">
@@ -64,29 +66,40 @@
                              </div>
 
                              {{-- Goods Details --}}
-                             <div class="col-md-10 mb-3">
+                             <div class="col-md-3 mb-3">
                                  <h3>Goods Details</h3>
                              </div>
 
-                             <div class="col-md-2 mb-2">
+                             <div class="col-md-3 mb-2">
                                  <label for="total_quantity">Total Quantity</label>
                                  <input type="text" class="form-control"
                                      value="{{ $total_quantity }} {{ $pkgs_code }}" readonly>
                              </div>
+
+                             <div class="col-md-3 mb-3"> </div>
+
+                             <div class="col-md-3 mb-2">
+                                 <label for="total_quantity">Total G.w</label>
+                                 <input type="text" class="form-control" value="{{ $gross_weight }} KGS" readonly>
+                             </div>
                              @foreach ($items as $index => $item)
-                                 <div class="col-md-4 my-2">
+                                 <div class="col-md-3 my-2">
                                      <input type="text" wire:model="items.{{ $index }}.goods_name"
                                          class="form-control text-uppercase text-white bg-info" readonly>
                                  </div>
 
-                                 <div class="col-md-4 my-2">
+                                 <div class="col-md-3 my-2">
                                      <input type="number" wire:model.live="items.{{ $index }}.item_quantity"
                                          name="quantity" class="form-control" placeholder="Item Quantity">
                                  </div>
 
-                                 <div class="col-md-4 my-2">
+                                 <div class="col-md-3 my-2">
                                      <input type="number" wire:model="items.{{ $index }}.net_weight"
                                          name="net_weight" class="form-control" placeholder="Net Weight">
+                                 </div>
+                                 <div class="col-md-3 my-2">
+                                     <input type="number" wire:model="items.{{ $index }}.item_gross_weight"
+                                         name="gross_weight" class="form-control" placeholder="Item Gross Weight">
                                  </div>
                              @endforeach
 

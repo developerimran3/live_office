@@ -5,9 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\Received as ReceiveDocument;
-
-
-use App\Models\Register; // ✅ Correct
+use App\Models\Register;
 
 
 
@@ -22,7 +20,7 @@ class Received extends Component
     public $pkgs_code;
 
 
-    public $invoice_value,  $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no,  $container_location, $net_weight;
+    public $invoice_value,  $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no, $gross_weight, $item_gross_weight, $container_location;
 
 
 
@@ -51,7 +49,6 @@ class Received extends Component
     }
 
 
-
     public function editToReceived($id)
     {
         $receive = ReceiveDocument::findOrFail($id);
@@ -63,18 +60,14 @@ class Received extends Component
         $this->invoice_no     = $receive->invoice_no;
         $this->invoice_date   = $receive->invoice_date;
         $this->rot_no         = $receive->rot_no;
-
-
-        $this->initial_total = (int) $receive->total_quantity;
+        $this->initial_total  = (int) $receive->total_quantity;
         $this->total_quantity = (int) $receive->total_quantity;
-        $this->pkgs_code = $receive->pkgs_code;
-
-
+        $this->pkgs_code      = $receive->pkgs_code;
         $this->vessel         = $receive->vessel;
         $this->bl_no          = $receive->bl_no;
 
         // Load items JSON
-        $this->items = $receive->items ?? [];
+        $this->items      = $receive->items ?? [];
         $this->containers = $receive->containers ?? [];
     }
 
@@ -133,66 +126,6 @@ class Received extends Component
     }
 
 
-
-
-
-
-    /**
-     * Move All Enty Data Recgister Page...
-     */
-    // public function moveToRegister($id)
-    // {
-    //     DB::transaction(function () use ($id) {
-
-    //         $receive = ReceiveDocument::findOrFail($id);
-
-    //         // All Table ar Bl Valadation
-    //         $this->invoice_no = $receive->invoice_no;
-    //         $this->validate([
-    //             'invoice_no' => 'nullable',
-    //         ]);
-    //         $exists =
-    //             DB::table('registers')->where('invoice_no', $this->invoice_no)->exists() ||
-    //             DB::table('deliveries')->where('invoice_no', $this->invoice_no)->exists() ||
-    //             DB::table('assessments')->where('invoice_no', $this->invoice_no)->exists();
-
-    //         if ($exists) {
-    //             $this->addError('invoice_no', 'Invoice No already exists in another record.');
-    //             return;
-    //         }
-
-    //         //Create Data With Register Page
-    //         Register::create([
-    //             'importer_name'      => $receive->importer_name,
-    //             'total_quantity'     => $receive->total_quantity,
-    //             'pkgs_code'          => $receive->pkgs_code,
-    //             'vessel'             => $receive->vessel,
-    //             'bl_no'              => $receive->bl_no,
-    //             'lc_number'          => $receive->lc_number,
-    //             'lc_date'            => $receive->lc_date,
-    //             'gross_weight'       => $receive->gross_weight,
-    //             'arivel_date'        => $receive->arivel_date,
-    //             'document_receiver'  => $receive->document_receiver,
-
-    //             'invoice_value'      => $receive->invoice_value,
-    //             'invoice_no'         => $receive->invoice_no,
-    //             'invoice_date'       => $receive->invoice_date,
-    //             'net_weight'         => $receive->net_weight,
-    //             'container_location' => $receive->container_location,
-    //             'rot_no'             => $receive->rot_no,
-
-    //         ]);
-
-
-
-    //         //Delete from Recived Data
-    //         $receive->delete();
-    //         $this->mount();
-    //         session()->flash('success', 'Received Data moved to Register page successfully!');
-    //         return $this->redirect('/register', navigate: true);
-    //     });
-    // }
-
     /**
      * Move All received Data Register Page...
      */
@@ -222,6 +155,7 @@ class Received extends Component
                         'goods_name' => $item['goods_name'] ?? '',
                         'item_quantity' => $item['item_quantity'] ?? '',
                         'net_weight' => $item['net_weight'] ?? '',
+                        'item_gross_weight' => $item['item_gross_weight'] ?? '',
                     ];
                 })->toArray(),
 
@@ -232,7 +166,6 @@ class Received extends Component
                         'container_location' => $container['container_location'] ?? '',
                     ];
                 })->toArray(),
-
             ]);
             $receive->delete();
             $this->mount();
