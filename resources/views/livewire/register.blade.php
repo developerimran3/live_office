@@ -114,50 +114,8 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        {{-- <tbody>
-                                            @foreach ($registers as $register)
-                                                <tr class="register_enty">
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $register->importer_name }}</td>
-                                                    <td class="font-weight-bold">{{ $register->goods_name }}</td>
-                                                    <td>{{ $register->quantity }} {{ $register->pkgs_code }}</td>
-                                                    <td>{{ $register->vessel }}</td>
-                                                    <td>{{ $register->bl_no }}</td>
-                                                    <td>{{ $register->rot_no }}</td>
-                                                    <td>{{ $register->container_no }} x
-                                                        {{ $register->container_size }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $register->container_location ? 'Y- ' . $register->container_location : '' }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $register->be_no ? 'C- ' . $register->be_no : '' }}
-                                                    </td>
-                                                    <td>{{ $register->be_date }}</td>
-                                                    <td>{{ number_format($register->gross_weight ?? 0, 2) }} KGS</td>
-                                                    <td>{{ number_format($register->net_weight ?? 0, 2) }} KGS</td>
-                                                    <td
-                                                        class="font-weight-bold {{ $register->be_lane === 'RED' ? 'text-danger' : '' }}
-                                                            {{ $register->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
-                                                        {{ $register->be_lane }}
-                                                    </td>
 
-                                                    <td>
-                                                        <a class="btn btn-sm btn-warning"
-                                                            wire:click="editToregister({{ $register->id }})">
-                                                            <i class="fa fa-edit"></i></a>
-                                                        @if ($register->be_no && $register->be_date && $register->be_lane)
-                                                            <a class="btn btn-sm btn-success"
-                                                                wire:click="moveToAssessment({{ $register->id }})"
-                                                                wire:confirm="Are you Move To Assessment Document?">
-                                                                <i class="fa fa-arrow-circle-right "></i></a>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody> --}}
-                                        <tbody class="text-uppercase" style="font-size: 13px">
-
+                                        <tbody class="text-uppercase">
                                             @foreach ($registers as $r)
                                                 @php
                                                     $items = $r->items ?? [];

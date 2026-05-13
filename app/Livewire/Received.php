@@ -20,7 +20,7 @@ class Received extends Component
     public $pkgs_code;
 
 
-    public $invoice_value,  $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no, $gross_weight, $item_gross_weight, $container_location;
+    public $invoice_value,  $invoice_no, $invoice_date, $rot_no, $vessel, $bl_no, $total_nw, $gross_weight, $remaining_gross_weight, $item_gross_weight, $container_location;
 
 
 
@@ -49,6 +49,9 @@ class Received extends Component
     }
 
 
+    /**
+     * Edit  
+     */
     public function editToReceived($id)
     {
         $receive = ReceiveDocument::findOrFail($id);
@@ -62,6 +65,7 @@ class Received extends Component
         $this->rot_no         = $receive->rot_no;
         $this->initial_total  = (int) $receive->total_quantity;
         $this->total_quantity = (int) $receive->total_quantity;
+        $this->gross_weight   = $receive->gross_weight;
         $this->pkgs_code      = $receive->pkgs_code;
         $this->vessel         = $receive->vessel;
         $this->bl_no          = $receive->bl_no;
@@ -74,25 +78,56 @@ class Received extends Component
 
 
     public $warningMessage = '';
+
     public function updatedItems()
     {
-        $used = 0;
+        // Total Net Weight Sum
+        $this->total_nw = collect($this->items)->sum(function ($item) {
+            return (float) ($item['net_weight'] ?? 0);
+        });
+
+        // Used Quantity
+        $usedQuantity = 0;
 
         foreach ($this->items as $item) {
-            $used += (int) ($item['item_quantity'] ?? 0);
+            $usedQuantity += (int) ($item['item_quantity'] ?? 0);
         }
 
-        $remaining = $this->initial_total - $used;
+        $remainingQuantity = $this->initial_total - $usedQuantity;
 
-        if ($remaining < 0) {
+        if ($remainingQuantity < 0) {
             $this->warningMessage = '⚠️ Quantity cannot be more than total!';
-            $this->total_quantity = 0;
             return;
         }
 
+        $this->total_quantity = $remainingQuantity;
+
+        // Used Gross Weight
+        $usedGrossWeight = 0;
+
+        foreach ($this->items as $item) {
+            $usedGrossWeight += (float) ($item['item_gross_weight'] ?? 0);
+        }
+
+        $remainingGrossWeight = $this->gross_weight - $usedGrossWeight;
+
+        if ($remainingGrossWeight < 0) {
+            $this->warningMessage = '⚠️ Gross Weight cannot be more than total!';
+            return;
+        }
+`
+        $this->remaining_gross_weight = $remainingGrossWeight;
+
+        // Clear Warning
         $this->warningMessage = '';
-        $this->total_quantity = $remaining;
     }
+
+
+
+
+
+
+
 
 
 

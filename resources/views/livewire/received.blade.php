@@ -57,6 +57,8 @@
                          @if ($step == 2)
                              {{-- Alart Message --}}
 
+
+
                              <div wire:poll.2s class="col-md-12 mb-3">
                                  @if ($warningMessage)
                                      <div class="alert alert-danger">
@@ -76,7 +78,10 @@
                                      value="{{ $total_quantity }} {{ $pkgs_code }}" readonly>
                              </div>
 
-                             <div class="col-md-3 mb-3"> </div>
+                             <div class="col-md-3 mb-2">
+                                 <label for="total_quantity">Total N.W</label>
+                                 <input type="text" class="form-control" value="{{ $total_nw }} KGS" readonly>
+                             </div>
 
                              <div class="col-md-3 mb-2">
                                  <label for="total_quantity">Total G.w</label>
@@ -89,7 +94,7 @@
                                  </div>
 
                                  <div class="col-md-3 my-2">
-                                     <input type="number" wire:model.live="items.{{ $index }}.item_quantity"
+                                     <input type="text" wire:model="items.{{ $index }}.item_quantity"
                                          name="quantity" class="form-control" placeholder="Item Quantity">
                                  </div>
 
@@ -203,8 +208,7 @@
                                              </tr>
                                          </thead>
 
-                                         <tbody class="text-uppercase" style="font-size: 13px">
-
+                                         <tbody class="text-uppercase">
                                              @foreach ($receiveds as $r)
                                                  @php
                                                      $items = $r->items ?? [];
