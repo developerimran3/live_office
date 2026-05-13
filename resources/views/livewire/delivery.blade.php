@@ -50,7 +50,7 @@
         <!-- table srart -->
         <div class="row column1 pt-lg-4">
             <div class="col-md-12">
-                <div class="white_shd full p-4">
+                <div class="white_shd page_title mt-0">
                     <div class="heading1 m-0 p-0">
                         @if (Session::has('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">

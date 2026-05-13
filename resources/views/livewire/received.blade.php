@@ -56,9 +56,6 @@
 
                          @if ($step == 2)
                              {{-- Alart Message --}}
-
-
-
                              <div wire:poll.2s class="col-md-12 mb-3">
                                  @if ($warningMessage)
                                      <div class="alert alert-danger">
@@ -107,7 +104,6 @@
                                          name="gross_weight" class="form-control" placeholder="Item Gross Weight">
                                  </div>
                              @endforeach
-
                              {{-- Container Details --}}
                              <div class="col-md-12 my-3">
                                  <h3>Container Details</h3>
@@ -160,7 +156,7 @@
          <!-- table srart -->
          <div class="row column1 pt-lg-4">
              <div class="col-md-12">
-                 <div class="white_shd full p-4">
+                 <div class="white_shd page_title mt-0">
                      <div>
                          @if (Session::has('success'))
                              <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -288,17 +284,17 @@
                                                          {{-- CONTAINER --}}
                                                          <td>
                                                              @if ($container)
-                                                                 <a href="https://cpatos.gov.bd/pcs/index.php/Report/mySearchContainerLocation{{ urlencode($r->container) }}"
-                                                                     target="_blank"
-                                                                     class="text-primary font-weight-bold">
+                                                                 <a class="text-primary font-weight-bold">
                                                                      {{ $container['container_no'] ?? '' }}
+
                                                                  </a>
                                                                  x <br> {{ $container['container_size'] ?? '' }}
                                                              @endif
+
                                                          </td>
 
                                                          {{-- YARD --}}
-                                                         <td class="text-success font-weight-bold">
+                                                         <td class="text-success">
                                                              @if ($container)
                                                                  Y- {{ $container['container_location'] ?? '' }}
                                                              @endif

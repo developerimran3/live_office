@@ -16,11 +16,35 @@ class Register extends Component
     public $be_no;
     public $be_date;
     public $be_lane;
-    public $container_location;
+    public $container_location, $containers;
     public $net_weight;
+    public $bl_no;
     public $total_quantity;
     public $pkgs_code;
     public $registerId;
+
+
+
+
+
+    /**
+     * Form Steps
+     * Step 1: Basic Information
+     * Step 2: Items
+     * Step 3: Containers
+     * Step 4: Review & Submit
+     */
+    public $step = 1;
+    public function nextStep()
+    {
+        $this->step++;
+    }
+
+    public function prevStep()
+    {
+        $this->step--;
+    }
+
 
     /**
      * Edit Data (create ar jonno)
@@ -31,8 +55,8 @@ class Register extends Component
         $this->be_no              = $register->be_no;
         $this->be_date            = $register->be_date;
         $this->be_lane            = $register->be_lane;
-        $this->total_quantity     = $register->total_quantity . ' ' . $register->pkgs_code;
-        $this->container_location = $register->container_location;
+        $this->total_quantity     = ' BL- ' . $register->bl_no . ',  STC- ' . $register->total_quantity . ' ' . $register->pkgs_code;
+        $this->containers         = $register->containers ?? [];
         $this->registerId         = $id;
     }
 
@@ -50,7 +74,7 @@ class Register extends Component
             'be_no'               => $this->be_no,
             'be_date'             => $this->be_date,
             'be_lane'             => $this->be_lane,
-            'container_location'  => $this->container_location,
+            'containers'          => $this->containers,
             'net_weight'          => $this->net_weight,
         ]);
         $this->reset();

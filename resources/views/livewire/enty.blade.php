@@ -9,7 +9,8 @@
         </div>
         <div class="row column1">
             <div class="col-md-12">
-                <div class="white_shd full p-4">
+
+                <div class="white_shd page_title mb-0">
                     <div>
                         @if (Session::has('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -184,7 +185,7 @@
         <!-- table srart -->
         <div class="row column1 pt-lg-4">
             <div class="col-md-12">
-                <div class="white_shd full p-4">
+                <div class="white_shd page_title mt-0">
                     <div class="heading1 m-0 p-0">
                         <h2 class="">All New Documents</h2>
                     </div>
@@ -272,13 +273,11 @@
                                                         {{-- CONTAINER --}}
                                                         <td>
                                                             @if ($container)
-                                                                <a href="https://cpatos.gov.bd/pcs/index.php/Report/mySearchContainerLocation{{ urlencode($e->container) }}"
-                                                                    target="_blank"
-                                                                    class="text-primary font-weight-bold">
+                                                                <a class="text-primary font-weight-bold">
                                                                     {{ $container['container_no'] ?? '' }}
 
                                                                 </a>
-                                                                x {{ $container['container_size'] ?? '' }}
+                                                                x <br>{{ $container['container_size'] ?? '' }}
                                                             @endif
 
                                                         </td>

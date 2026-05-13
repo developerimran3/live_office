@@ -115,7 +115,7 @@ class Received extends Component
             $this->warningMessage = '⚠️ Gross Weight cannot be more than total!';
             return;
         }
-`
+
         $this->remaining_gross_weight = $remainingGrossWeight;
 
         // Clear Warning
