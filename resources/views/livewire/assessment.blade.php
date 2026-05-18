@@ -109,49 +109,142 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach ($assessments as $assessment)
-                                                <tr class="assessment">
-                                                    <td> {{ $loop->iteration }} </td>
-                                                    <td>{{ $assessment->importer_name }}</td>
-                                                    <td>{{ $assessment->lc_number }}</td>
-                                                    <td class="font-weight-bold">{{ $assessment->goods_name }}</td>
-                                                    <td>{{ $assessment->quantity }} {{ $assessment->pkgs_code }}</td>
-                                                    <td>
-                                                        {{ $assessment->be_no ? 'C- ' . $assessment->be_no : '' }}
-                                                    </td>
-                                                    <td>{{ $assessment->be_date }}</td>
-                                                    <td>{{ $assessment->assessment_date }}</td>
-                                                    <td>
-                                                        {{ $assessment->r_no ? 'R- ' . $assessment->r_no : '' }}
-                                                    </td>
-                                                    <td>{{ number_format($assessment->gross_weight ?? 0, 2) }} KGS</td>
-                                                    <td>{{ $assessment->container_no }} x
-                                                        {{ $assessment->container_size }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $assessment->container_location ? 'Y- ' . $assessment->container_location : '' }}
-                                                    </td>
-                                                    <td>
-                                                        @if ($assessment->document)
-                                                            <a href="{{ Storage::url($assessment->document) }}"
-                                                                target="_blank" class="btn btn-sm btn-info">
-                                                                View
-                                                            </a>
-                                                        @endif
-                                                    </td>
 
-                                                    <td>
-                                                        <a class="btn btn-sm btn-warning"
-                                                            wire:click="editToAssessment({{ $assessment->id }})">
-                                                            <i class="fa fa-edit"></i></a>
-                                                        @if ($assessment->assessment_date && $assessment->r_no && $assessment->container_location)
-                                                            <a class="btn btn-success"
-                                                                wire:click.prevent="confirmMoveToDelivery({{ $assessment->id }})">
-                                                                <i class="fa fa-arrow-circle-right"></i>
+                                        <tbody class="text-uppercase">
+                                            @foreach ($assessments as $assessment)
+                                                @php
+                                                    $items = $assessment->items ?? [];
+                                                    $containers = $assessment->containers ?? [];
+
+                                                    $itemCount = count($items);
+                                                    $containerCount = count($containers);
+
+                                                    $rowspan = max($itemCount, $containerCount, 1);
+                                                @endphp
+
+                                                @for ($i = 0; $i < $rowspan; $i++)
+                                                    @php
+                                                        $item = $items[$i] ?? null;
+                                                        $container = $containers[$i] ?? null;
+                                                    @endphp
+                                                    <tr>
+
+                                                        {{-- INDEX --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $loop->iteration }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $assessment->importer_name }}
+                                                            </td>
                                                         @endif
-                                                    </td>
-                                                </tr>
+
+                                                        {{-- GOODS / ITEM / NW --}}
+                                                        @if ($item)
+                                                            <td>
+                                                                {{ $item['goods_name'] ?? '' }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ $item['item_quantity'] ?? ($item['qty'] ?? 0) }}
+                                                                {{ $assessment->pkgs_code }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ $item['net_weight'] ?? 0 }}
+                                                                KGS
+                                                            </td>
+
+                                                            <td>
+                                                                {{ $item['item_gross_weight'] ?? 0 }}
+                                                                KGS
+                                                            </td>
+                                                        @else
+                                                            {{-- EMPTY CELLS --}}
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        @endif
+
+
+                                                        {{-- COMMON DATA --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $assessment->total_quantity }}
+                                                                {{ $assessment->pkgs_code }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                <a href="https://www.google.com/search?q={{ urlencode($assessment->vessel) }}"
+                                                                    target="_blank"
+                                                                    class="text-primary font-weight-bold">
+                                                                    {{ $assessment->vessel }}
+                                                                </a>
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $assessment->bl_no }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $assessment->rot_no }}
+                                                            </td>
+                                                        @endif
+
+                                                        {{-- CONTAINER --}}
+                                                        <td>
+                                                            @if ($container)
+                                                                <a class="text-primary font-weight-bold">
+                                                                    {{ $container['container_no'] ?? '' }}
+
+                                                                </a>
+                                                                x <br> {{ $container['container_size'] ?? '' }}
+                                                            @endif
+                                                        </td>
+
+                                                        {{-- YARD --}}
+                                                        <td class="text-danger font-weight-bold">
+                                                            @if ($container)
+                                                                Y- <br> {{ $container['container_location'] ?? '' }}
+                                                            @endif
+                                                        </td>
+
+                                                        {{-- COMMON --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                C- <br> <a
+                                                                    class="font-weight-bold text-success">{{ $assessment->be_no }}</a>
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $assessment->be_date }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}"
+                                                                class="font-weight-bold {{ $assessment->be_lane === 'RED' ? 'text-danger' : '' }}
+                                                            {{ $assessment->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
+                                                                {{ $assessment->be_lane }}
+                                                            </td>
+                                                            {{-- ACTION --}}
+
+
+                                                            <td rowspan="{{ $rowspan }}">
+
+                                                                <a class="btn btn-sm btn-warning"
+                                                                    wire:click="editToAssessment({{ $assessment->id }})">
+                                                                    <i class="fa fa-edit"></i></a>
+                                                                @if ($assessment->assessment_date && $assessment->r_no && $assessment->container_location)
+                                                                    <a class="btn btn-success"
+                                                                        wire:click.prevent="confirmMoveToDelivery({{ $assessment->id }})">
+                                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                                @endif
+                                                            </td>
+                                                            </td>
+                                                        @endif
+                                                    </tr>
+                                                @endfor
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -169,7 +262,6 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content p-3">
                     <h5>Move to Delivery</h5>
-
                     <div class="form-group">
                         <label for="delivery_date">Delivery Date</label>
                         <input type="date" id="delivery_date" wire:model="delivery_date" class="form-control">
@@ -177,7 +269,6 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <div class="d-flex justify-content-end mt-2">
                         <button class="btn btn-success"
                             wire:click="moveToDelivery({{ $assessment->id }})">Confirm</button>

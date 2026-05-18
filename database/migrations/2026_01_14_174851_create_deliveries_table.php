@@ -14,33 +14,28 @@ return new class extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
 
-            // Copied data (Assessment + previous)
+            // Copied Data (from Received)
             $table->string('importer_name');
-            $table->string('goods_name');
-            $table->string('quantity')->nullable();
+            $table->string('total_quantity')->nullable();
             $table->string('pkgs_code')->nullable();
             $table->string('vessel')->nullable();
-            $table->string('bl_no')->unique()->nullable();
-            $table->string('container_no')->nullable();
-            $table->string('container_size')->nullable();
+            $table->string('bl_no')->nullable();
             $table->string('lc_number')->nullable();
             $table->date('lc_date')->nullable();
-            $table->integer('gross_weight')->nullable();
+            $table->decimal('gross_weight', 15, 3)->nullable();
             $table->date('arrival_date')->nullable();
 
             // FROM ENTY
             $table->json('items')->nullable();
             $table->json('containers')->nullable();
-
-            // Received
+            // RECEIVED ONLY
             $table->date('document_receiver')->nullable();
             $table->string('rot_no')->nullable();
             $table->string('invoice_value')->nullable();
-            $table->string('invoice_no')->unique()->nullable();
+            $table->string('invoice_no')->nullable()->unique();
             $table->date('invoice_date')->nullable();
 
-
-            // Register
+            // Register fields
             $table->string('be_no')->unique()->nullable();
             $table->date('be_date')->nullable();
             $table->string('be_lane')->nullable();

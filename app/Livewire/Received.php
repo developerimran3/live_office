@@ -124,13 +124,9 @@ class Received extends Component
 
 
 
-
-
-
-
-
-
-
+    /**
+     * Update Data (Create aj jonno data)
+     */
     public function updateReceived()
     {
         $this->validate([
@@ -187,9 +183,9 @@ class Received extends Component
 
                 'items' => collect($receive->items)->map(function ($item) {
                     return [
-                        'goods_name' => $item['goods_name'] ?? '',
-                        'item_quantity' => $item['item_quantity'] ?? '',
-                        'net_weight' => $item['net_weight'] ?? '',
+                        'goods_name'        => $item['goods_name'] ?? '',
+                        'item_quantity'     => $item['item_quantity'] ?? '',
+                        'net_weight'        => $item['net_weight'] ?? '',
                         'item_gross_weight' => $item['item_gross_weight'] ?? '',
                     ];
                 })->toArray(),

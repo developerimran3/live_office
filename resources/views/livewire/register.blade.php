@@ -222,6 +222,7 @@
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
+                                                        <td></td>
                                                     @endif
 
 
@@ -257,7 +258,6 @@
                                                             </a>
                                                             x <br> {{ $container['container_size'] ?? '' }}
                                                         @endif
-
                                                     </td>
 
                                                     {{-- YARD --}}

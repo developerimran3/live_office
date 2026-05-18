@@ -41,4 +41,23 @@ class Assessment extends Model
         'document',
         'r_no',
     ];
+
+
+    protected $casts = [
+        'items' => 'array',
+        'containers' => 'array',
+        'container_locations' => 'array',
+        'net_weights' => 'array',
+        'item_gross_weights' => 'array',
+    ];
+
+    public function items()
+    {
+        return $this->hasMany(EntyItem::class, 'enty_id', 'id');
+    }
+
+    public function containers()
+    {
+        return $this->hasMany(EntyContainer::class, 'enty_id', 'id');
+    }
 }
