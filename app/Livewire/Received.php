@@ -200,6 +200,7 @@ class Received extends Component
             ]);
             $receive->delete();
             $this->mount();
+            return $this->redirect('/register', navigate: true);
         });
     }
 

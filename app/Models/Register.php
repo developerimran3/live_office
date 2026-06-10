@@ -35,9 +35,6 @@ class Register extends Model
         'be_lane',
     ];
 
-
-
-
     protected $casts = [
         'items' => 'array',
         'containers' => 'array',

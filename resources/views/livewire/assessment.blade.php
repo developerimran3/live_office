@@ -89,22 +89,38 @@
                         <div class="col-md-12">
                             <div class=" full">
                                 <div class="heading1 margin_0">
-                                    <table class="table table-bordered table-striped mb-none dataTable no-footer "
-                                        id="dataTable">
+                                    <table class="table table-bordered align-middle">
                                         <thead>
                                             <tr class="assessment">
+                                                {{-- <th>#</th>
+                                                <th>Importer Name</th>
+                                                <th>Goods Name</th>
+                                                <th>Item Qty</th>
+                                                <th>N.W</th>
+                                                <th>G.W</th>
+                                                <th>Total Qty</th>
+                                                <th>Vessel</th>
+                                                <th>BL. No</th>
+                                                <th>Rot. No</th>
+                                                <th>Cont. No</th>
+                                                <th>Yard</th>
+                                                <th>B/E No</th>
+                                                <th>B/E Date</th>
+                                                <th>B/E Lane</th>
+                                                <th>Action</th> --}}
                                                 <th>#</th>
                                                 <th>Importer Name</th>
                                                 <th>Lc No</th>
                                                 <th>Goods Name</th>
                                                 <th>Quantity</th>
+                                                <th>N. W</th>
+                                                <th>G. W</th>
                                                 <th>B/E No</th>
                                                 <th>B/E Date</th>
-                                                <th>Ass. Date</th>
-                                                <th>R No</th>
-                                                <th>G. W</th>
                                                 <th>Cont. No</th>
                                                 <th>Yard</th>
+                                                <th>R No</th>
+                                                <th>Ass. Date</th>
                                                 <th>Doc</th>
                                                 <th>Action</th>
                                             </tr>
@@ -138,6 +154,10 @@
                                                             <td rowspan="{{ $rowspan }}">
                                                                 {{ $assessment->importer_name }}
                                                             </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $assessment->lc_number }}
+                                                            </td>
                                                         @endif
 
                                                         {{-- GOODS / ITEM / NW --}}
@@ -155,7 +175,6 @@
                                                                 {{ $item['net_weight'] ?? 0 }}
                                                                 KGS
                                                             </td>
-
                                                             <td>
                                                                 {{ $item['item_gross_weight'] ?? 0 }}
                                                                 KGS
@@ -172,24 +191,12 @@
                                                         {{-- COMMON DATA --}}
                                                         @if ($i == 0)
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $assessment->total_quantity }}
-                                                                {{ $assessment->pkgs_code }}
+                                                                C- <br> <a
+                                                                    class="font-weight-bold text-success">{{ $assessment->be_no }}</a>
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                <a href="https://www.google.com/search?q={{ urlencode($assessment->vessel) }}"
-                                                                    target="_blank"
-                                                                    class="text-primary font-weight-bold">
-                                                                    {{ $assessment->vessel }}
-                                                                </a>
-                                                            </td>
-
-                                                            <td rowspan="{{ $rowspan }}">
-                                                                {{ $assessment->bl_no }}
-                                                            </td>
-
-                                                            <td rowspan="{{ $rowspan }}">
-                                                                {{ $assessment->rot_no }}
+                                                                {{ $assessment->be_date }}
                                                             </td>
                                                         @endif
 
@@ -198,9 +205,8 @@
                                                             @if ($container)
                                                                 <a class="text-primary font-weight-bold">
                                                                     {{ $container['container_no'] ?? '' }}
-
                                                                 </a>
-                                                                x <br> {{ $container['container_size'] ?? '' }}
+                                                                x {{ $container['container_size'] ?? '' }}
                                                             @endif
                                                         </td>
 
@@ -214,33 +220,33 @@
                                                         {{-- COMMON --}}
                                                         @if ($i == 0)
                                                             <td rowspan="{{ $rowspan }}">
-                                                                C- <br> <a
-                                                                    class="font-weight-bold text-success">{{ $assessment->be_no }}</a>
+                                                                R- <br> <a
+                                                                    class="font-weight-bold text-warning">{{ $assessment->r_no }}</a>
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $assessment->be_date }}
+                                                                {{ $assessment->assessment_date }}
                                                             </td>
 
-                                                            <td rowspan="{{ $rowspan }}"
-                                                                class="font-weight-bold {{ $assessment->be_lane === 'RED' ? 'text-danger' : '' }}
-                                                            {{ $assessment->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
-                                                                {{ $assessment->be_lane }}
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                @if ($assessment->document)
+                                                                    <a href="{{ Storage::url($assessment->document) }}"
+                                                                        target="_blank" class="btn btn-sm btn-info">
+                                                                        pdf
+                                                                    </a>
+                                                                @endif
                                                             </td>
+
                                                             {{-- ACTION --}}
-
-
                                                             <td rowspan="{{ $rowspan }}">
-
                                                                 <a class="btn btn-sm btn-warning"
                                                                     wire:click="editToAssessment({{ $assessment->id }})">
                                                                     <i class="fa fa-edit"></i></a>
-                                                                @if ($assessment->assessment_date && $assessment->r_no && $assessment->container_location)
+                                                                @if ($assessment->assessment_date && $assessment->r_no)
                                                                     <a class="btn btn-success"
                                                                         wire:click.prevent="confirmMoveToDelivery({{ $assessment->id }})">
                                                                         <i class="fa fa-arrow-circle-right"></i>
                                                                 @endif
-                                                            </td>
                                                             </td>
                                                         @endif
                                                     </tr>

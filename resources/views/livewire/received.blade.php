@@ -97,11 +97,12 @@
 
                                  <div class="col-md-3 my-2">
                                      <input type="number" wire:model="items.{{ $index }}.net_weight"
-                                         name="net_weight" class="form-control" placeholder="Net Weight">
+                                         name="net_weight" class="form-control" step="0.001" placeholder="Net Weight">
                                  </div>
                                  <div class="col-md-3 my-2">
                                      <input type="number" wire:model="items.{{ $index }}.item_gross_weight"
-                                         name="gross_weight" class="form-control" placeholder="Item Gross Weight">
+                                         name="gross_weight" class="form-control" step="0.001"
+                                         placeholder="Item Gross Weight">
                                  </div>
                              @endforeach
                              {{-- Container Details --}}
@@ -182,7 +183,7 @@
                          <div class="col-md-12">
                              <div class=" full">
                                  <div class="heading1 margin_0">
-                                     <table class="table table-bordered  align-middle">
+                                     <table class="table table-bordered align-middle">
                                          <thead>
                                              <tr class="document_received">
                                                  <th>#</th>
@@ -342,7 +343,6 @@
                                                      </tr>
                                                  @endfor
                                              @endforeach
-
                                          </tbody>
                                      </table>
                                  </div>

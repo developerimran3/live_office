@@ -66,8 +66,7 @@
                         <div class="col-md-12">
                             <div class=" full">
                                 <div class="heading1 margin_0">
-                                    <table class="table table-bordered table-striped mb-none dataTable no-footer "
-                                        id="dataTable">
+                                    <table class="table table-bordered" id="dataTable">
                                         <thead>
                                             <tr class="delivery_tr">
                                                 <th>#</th>
@@ -87,7 +86,120 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($delivery as $item)
+                                            @foreach ($delivery as $deliv)
+                                                @php
+                                                    $items = $deliv->items ?? [];
+                                                    $containers = $deliv->containers ?? [];
+
+                                                    $itemCount = count($items);
+                                                    $containerCount = count($containers);
+
+                                                    $rowspan = max($itemCount, $containerCount, 1);
+                                                @endphp
+
+                                                @for ($i = 0; $i < $rowspan; $i++)
+                                                    @php
+                                                        $item = $items[$i] ?? null;
+                                                        $container = $containers[$i] ?? null;
+                                                    @endphp
+                                                    <tr>
+
+                                                        {{-- INDEX --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $loop->iteration }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $deliv->importer_name }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $deliv->lc_number }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $deliv->lc_date }}
+                                                            </td>
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $deliv->be_no }}
+                                                            </td>
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $deliv->be_date }}
+                                                            </td>
+                                                        @endif
+
+                                                        {{-- GOODS / ITEM / NW --}}
+                                                        @if ($item)
+                                                            <td>
+                                                                {{ $item['goods_name'] ?? '' }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ $item['item_quantity'] ?? ($item['qty'] ?? 0) }}
+                                                                {{ $deliv->pkgs_code }}
+                                                            </td>
+
+                                                            <td>
+                                                                @if ($container)
+                                                                    <a class="text-primary font-weight-bold">
+                                                                        {{ $container['container_no'] ?? '' }}
+                                                                    </a>
+                                                                    x {{ $container['container_size'] }}
+                                                                @endif
+                                                            </td>
+                                                        @else
+                                                            {{-- EMPTY CELLS --}}
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        @endif
+
+                                                        {{-- COMMON --}}
+                                                        @if ($i == 0)
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $deliv->delivery_date }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}"
+                                                                class="font-weight-bold {{ $deliv->be_lane === 'RED' ? 'text-danger' : '' }}
+                                                            {{ $deliv->be_lane === 'YELLOW' ? 'text-warning' : '' }}">
+                                                                {{ $deliv->be_lane }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                {{ $deliv->assessment_date }}
+                                                            </td>
+
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                @if ($deliv->document)
+                                                                    <a href="{{ Storage::url($deliv->document) }}"
+                                                                        target="_blank" class="btn btn-sm btn-info">
+                                                                        pdf
+                                                                    </a>
+                                                                @endif
+                                                            </td>
+
+                                                            {{-- ACTION --}}
+                                                            <td rowspan="{{ $rowspan }}">
+                                                                @if (!$deliv->document)
+                                                                    <a class="btn btn-sm btn-warning"
+                                                                        wire:click="editToDelivery({{ $deliv->id }})">
+                                                                        <i class="fa fa-edit"></i></a>
+                                                                @endif
+                                                                <a class="btn btn-sm btn-info"
+                                                                    wire:click="viewDocument({{ $deliv->id }})"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#viewDocumentModal">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </a>
+                                                            </td>
+                                                        @endif
+                                                    </tr>
+                                                @endfor
+                                            @endforeach
+                                            {{-- @foreach ($delivery as $item)
                                                 <tr class="delivery_tr">
                                                     <td> {{ $loop->iteration }} </td>
                                                     <td>{{ $item->importer_name }}</td>
@@ -129,7 +241,7 @@
                                                         </a>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
