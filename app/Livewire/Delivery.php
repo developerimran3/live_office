@@ -13,7 +13,7 @@ class Delivery extends Component
 
     public $delivery;
     public $document;
-    public $quantity;
+    public $bl_no;
     public $importer_name;
     public $be_no;
 
@@ -37,9 +37,9 @@ class Delivery extends Component
         $delivery = DeliveryDocument::findOrFail($id);
 
         $this->document         = $delivery->document;
-        $this->quantity         = $delivery->quantity . ' ' . $delivery->pkgs_code;
+        $this->bl_no       = ' BL- ' . $delivery->bl_no;
         $this->importer_name    = $delivery->importer_name;
-        $this->be_no            = $delivery->be_no;
+        $this->be_no            = ' C- ' . $delivery->be_no;
         $this->deliveryId       = $id;
     }
 
@@ -67,7 +67,7 @@ class Delivery extends Component
             'document'           => $path,
         ]);
 
-        $this->reset('document');
+        $this->reset();
         $this->mount();
         session()->flash('success', 'Document updated successfully!');
     }
@@ -78,6 +78,16 @@ class Delivery extends Component
     {
         $this->delivery = DeliveryDocument::get();
     }
+
+    public function deleteDelivery($id)
+    {
+        $delivery = DeliveryDocument::findOrFail($id);
+
+        $delivery->delete();
+        session()->flash('success', 'Document deleted successfully!');
+        $this->mount();
+    }
+
 
     public function render()
     {

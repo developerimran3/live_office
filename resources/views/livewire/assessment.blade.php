@@ -7,55 +7,112 @@
                 </div>
             </div>
         </div>
+
         @if ($assessmentId)
             <div class="row column1">
                 <div class="col-md-12">
-                    <div class="white_shd full p-4">
+                    <div class="white_shd page_title mt-3">
                         <div class="heading1 margin_0">
                             <h2>Documents Details</h2>
                             <hr class="m-0">
                         </div>
                         <form wire:submit.prevent="updateAssessment({{ $assessmentId }})">
                             <div class="row">
-                                <div class="col-md-3">
-                                    <label for="quantity">Quantity</label>
-                                    <input type="text" wire:model="quantity" class="form-control"
-                                        placeholder="Quantity" readonly>
-                                </div>
-                                @if (!$container_location)
-                                    <div class="col-md-3">
-                                        <label for="container_location">Container Location</label>
-                                        <input type="text" wire:model="container_location" name="container_location"
-                                            class="form-control text-uppercase">
+                                @if ($step == 1)
+                                    <div class="col-md-3 mb-3">
+                                        <label>Quantity</label>
+                                        <input type="text" wire:model="total_quantity" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="col-md-3 mb-3">
+                                        <label>Assessment Date</label>
+                                        <input type="date" wire:model="assessment_date" class="form-control">
+
+                                        @error('assessment_date')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-3 mb-3">
+                                        <label>R No</label>
+                                        <input type="text" wire:model="r_no" class="form-control">
+
+                                        @error('r_no')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-3 mb-3">
+                                        <label>Document</label>
+                                        <input type="file" wire:model="document" class="form-control">
+                                        {{-- Current File --}}
+                                        @if ($document && is_string($document))
+                                            <p class="text-primary d-block mt-2">
+                                                File: {{ basename($document) }}
+                                            </p>
+                                        @endif
+                                    </div>
+                                    @if (!$containers[0]['container_location'])
+                                        <div class="col-md-12 text-right mt-3">
+                                            <button type="button" wire:click="nextStep" class="main_bt">
+                                                Next →
+                                            </button>
+                                        </div>
+                                    @else
+                                        <div class="col-md-12 text-right mt-3">
+                                            <button type="submit" class="main_bt" data-bs-dismiss="modal">
+                                                Update
+                                            </button>
+                                        </div>
+                                    @endif
+                                @endif
+                                @if ($step == 2)
+                                    @foreach ($containers as $i => $container)
+                                        <div class="col-md-4 mb-2">
+                                            <input type="text"
+                                                wire:model="containers.{{ $i }}.container_no"
+                                                class="form-control text-uppercase" readonly>
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <input type="text"
+                                                wire:model="containers.{{ $i }}.container_size"
+                                                class="form-control text-uppercase" readonly>
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <select wire:model="containers.{{ $i }}.container_location"
+                                                class="form-control">
+                                                <option value="">-- Select Yard --</option>
+                                                <option value="NCT">NCT</option>
+                                                <option value="CCT">CCT</option>
+                                                <option value="NCY">NCY</option>
+                                                <option value="01">01</option>
+                                                <option value="02">02</option>
+                                                <option value="03">03</option>
+                                                <option value="04">04</option>
+                                                <option value="05">05</option>
+                                                <option value="06">06</option>
+                                                <option value="07">07</option>
+                                                <option value="08">08</option>
+                                                <option value="08B">08B</option>
+                                                <option value="10">10</option>
+
+                                            </select>
+                                        </div>
+                                    @endforeach
+
+                                    <div class="col-md-12 mt-3">
+
+                                        <button type="button" wire:click="prevStep" class="btn btn-secondary">
+                                            ← Back
+                                        </button>
+
+                                        <button class="main_bt float-right" data-bs-dismiss="modal">
+                                            Update
+                                        </button>
                                     </div>
                                 @endif
-                                <div class="col-md-3">
-                                    <label for="assessment_date">Assessment Date</label>
-                                    <input type="date" wire:model="assessment_date" name="assessment_date"
-                                        class="form-control">
-                                    @error('assessment_date')
-                                        <p class="text-danger"> {{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="r_no">R No</label>
-                                    <input type="text" wire:model="r_no" name="r_no" class="form-control">
-                                    @error('r_no')
-                                        <p class="text-danger"> {{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label for="document">Document</label>
-                                    <input type="file" wire:model="document" class="form-control">
-                                    @error('document')
-                                        <p class="text-danger"> {{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-6 my-3">
-                                    <button type="submit" class="main_bt">Update</button>
-                                </div>
                             </div>
                         </form>
                     </div>
@@ -92,22 +149,6 @@
                                     <table class="table table-bordered align-middle">
                                         <thead>
                                             <tr class="assessment">
-                                                {{-- <th>#</th>
-                                                <th>Importer Name</th>
-                                                <th>Goods Name</th>
-                                                <th>Item Qty</th>
-                                                <th>N.W</th>
-                                                <th>G.W</th>
-                                                <th>Total Qty</th>
-                                                <th>Vessel</th>
-                                                <th>BL. No</th>
-                                                <th>Rot. No</th>
-                                                <th>Cont. No</th>
-                                                <th>Yard</th>
-                                                <th>B/E No</th>
-                                                <th>B/E Date</th>
-                                                <th>B/E Lane</th>
-                                                <th>Action</th> --}}
                                                 <th>#</th>
                                                 <th>Importer Name</th>
                                                 <th>Lc No</th>
@@ -213,7 +254,8 @@
                                                         {{-- YARD --}}
                                                         <td class="text-danger font-weight-bold">
                                                             @if ($container)
-                                                                Y- <br> {{ $container['container_location'] ?? '' }}
+                                                                Y- <br>
+                                                                {{ $container['container_location'] ?? '' }}
                                                             @endif
                                                         </td>
 
@@ -241,9 +283,9 @@
                                                             <td rowspan="{{ $rowspan }}">
                                                                 <div class="d-flex justify-content-between">
                                                                     <a class="btn btn-sm btn-warning"
-                                                                        wire:click="editToAssessment({{ $assessment->id }})">
+                                                                        wire:click.prevent="editToAssessment({{ $assessment->id }})">
                                                                         <i class="fa fa-edit"></i></a>
-                                                                    @if ($assessment->assessment_date && $assessment->r_no)
+                                                                    @if ($assessment->assessment_date && $assessment->r_no && $container['container_location'])
                                                                         <a class="btn btn-sm btn-success ml-1"
                                                                             wire:click.prevent="confirmMoveToDelivery({{ $assessment->id }})">
                                                                             <i class="fa fa-arrow-circle-right"></i>
@@ -289,4 +331,5 @@
         </div>
         <div class="modal-backdrop fade show"></div>
     @endif
+
 </div>

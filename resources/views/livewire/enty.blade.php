@@ -9,8 +9,7 @@
         </div>
         <div class="row column1">
             <div class="col-md-12">
-
-                <div class="white_shd page_title mb-0">
+                <div class="white_shd page_title mt-3">
                     <div>
                         @if (Session::has('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -212,10 +211,10 @@
                                         </thead>
 
                                         <tbody class="text-uppercase">
-                                            @foreach ($enty as $e)
+                                            @foreach ($enty as $new_enty)
                                                 @php
-                                                    $items = $e->items ?? [];
-                                                    $containers = $e->containers ?? [];
+                                                    $items = $new_enty->items ?? [];
+                                                    $containers = $new_enty->containers ?? [];
 
                                                     $itemCount = count($items);
                                                     $containerCount = count($containers);
@@ -236,7 +235,7 @@
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $e->importer_name }}
+                                                                {{ $new_enty->importer_name }}
                                                             </td>
                                                         @endif
 
@@ -253,20 +252,20 @@
                                                         {{-- COMMON DATA --}}
                                                         @if ($i == 0)
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $e->total_quantity }}
-                                                                {{ $e->pkgs_code }}
+                                                                {{ $new_enty->total_quantity }}
+                                                                {{ $new_enty->pkgs_code }}
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                <a href="https://www.google.com/search?q={{ urlencode($e->vessel) }}"
+                                                                <a href="https://www.google.com/search?q={{ urlencode($new_enty->vessel) }}"
                                                                     target="_blank"
                                                                     class="text-primary font-weight-bold">
-                                                                    {{ $e->vessel }}
+                                                                    {{ $new_enty->vessel }}
                                                                 </a>
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $e->bl_no }}
+                                                                {{ $new_enty->bl_no }}
                                                             </td>
                                                         @endif
 
@@ -285,40 +284,41 @@
                                                         {{-- COMMON --}}
                                                         @if ($i == 0)
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $e->lc_number }}
+                                                                {{ $new_enty->lc_number }}
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $e->lc_date }}
+                                                                {{ $new_enty->lc_date }}
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $e->gross_weight ? number_format($e->gross_weight, 2) . ' KGS' : '' }}
+                                                                {{ $new_enty->gross_weight ? number_format($new_enty->gross_weight, 2) . ' KGS' : '' }}
                                                             </td>
 
                                                             <td rowspan="{{ $rowspan }}">
-                                                                {{ $e->arrival_date }}
+                                                                {{ $new_enty->arrival_date }}
                                                             </td>
 
                                                             {{-- ACTION --}}
                                                             <td rowspan="{{ $rowspan }}">
-                                                                <div class="d-flex justify-content-between">
+                                                                <div class="d-flex justify-content-left">
                                                                     <a class="btn btn-warning btn-sm"
-                                                                        wire:click="editToEnty({{ $e->id }})">
+                                                                        wire:click="editToEnty({{ $new_enty->id }})">
                                                                         <i class="fa fa-edit"></i>
                                                                     </a>
 
                                                                     <a class="btn btn-danger btn-sm ml-1"
-                                                                        wire:click="deleteEnty({{ $e->id }})"
+                                                                        wire:click="deleteEnty({{ $new_enty->id }})"
                                                                         wire:confirm="Are you sure? Document Delete?">
                                                                         <i class="fa fa-trash"></i>
                                                                     </a>
-
-                                                                    <a class="btn btn-sm  btn-success ml-1"
-                                                                        wire:click="moveToReceived({{ $e->id }})"
-                                                                        wire:confirm="Are you Move To Received Document?">
-                                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                                    </a>
+                                                                    @if ($new_enty->lc_number)
+                                                                        <a class="btn btn-sm  btn-success ml-1"
+                                                                            wire:click="moveToReceived({{ $new_enty->id }})"
+                                                                            wire:confirm="Are you Move To Received Document?">
+                                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                                        </a>
+                                                                    @endif
                                                                 </div>
                                                             </td>
                                                         @endif

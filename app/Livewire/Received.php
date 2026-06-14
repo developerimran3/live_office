@@ -36,11 +36,6 @@ class Received extends Component
 
 
 
-    public function mount()
-    {
-        $this->receiveds = ReceiveDocument::get();
-    }
-
     /**
      * Form Steps
      * Step 1: Basic Information
@@ -51,6 +46,14 @@ class Received extends Component
     public $step = 1;
     public function nextStep()
     {
+        if ($this->step == 1) {
+            $this->validate([
+                'invoice_value' => 'required',
+                'invoice_no'    => 'required',
+                'invoice_date'  => 'required',
+                'rot_no'        => 'required',
+            ]);
+        }
         $this->step++;
     }
 
@@ -84,13 +87,12 @@ class Received extends Component
 
         $this->pkgs_code      = $receive->pkgs_code;
         $this->vessel         = $receive->vessel;
-        $this->bl_no          = $receive->bl_no;
+        $this->bl_no          = ' BL- ' . $receive->bl_no . ',  STC- ' . $receive->total_quantity . ' ' . $receive->pkgs_code;
 
         // Load items JSON
         $this->items      = $receive->items ?? [];
         $this->containers = $receive->containers ?? [];
     }
-
 
 
 
@@ -185,16 +187,16 @@ class Received extends Component
             'invoice_date'  => $this->invoice_date,
             'rot_no'        => $this->rot_no,
             'vessel'        => $this->vessel,
-            'bl_no'         => $this->bl_no,
 
             'containers'    => $this->containers,
             'items'         => $this->items, // JSON saved automatically
         ]);
 
+        $this->receivedId = null;
+
         session()->flash('success', 'Document updated successfully!');
         $this->reset();
         $this->mount();
-        $this->receivedId = null;
     }
 
 
@@ -246,7 +248,10 @@ class Received extends Component
         });
     }
 
-
+    public function mount()
+    {
+        $this->receiveds = ReceiveDocument::get();
+    }
 
     public function render()
     {

@@ -21,7 +21,7 @@ class Register extends Component
     public $bl_no;
     public $total_quantity;
     public $pkgs_code;
-    public $registerId;
+    public $registerId = null;
 
 
 
@@ -52,12 +52,14 @@ class Register extends Component
     public function editToregister($id)
     {
         $register = RegisterDocument::findOrFail($id);
+        $this->registerId         = $id;
+
         $this->be_no              = $register->be_no;
         $this->be_date            = $register->be_date;
         $this->be_lane            = $register->be_lane;
         $this->total_quantity     = ' BL- ' . $register->bl_no . ',  STC- ' . $register->total_quantity . ' ' . $register->pkgs_code;
+
         $this->containers         = $register->containers ?? [];
-        $this->registerId         = $id;
     }
 
     /**
@@ -70,22 +72,24 @@ class Register extends Component
             'be_date'  => 'required',
         ]);
         $register = RegisterDocument::findOrFail($id);
+
         $register->update([
             'be_no'               => $this->be_no,
             'be_date'             => $this->be_date,
             'be_lane'             => $this->be_lane,
-            'containers'          => $this->containers,
+            'containers'          => $this->containers ?? [],
             'net_weight'          => $this->net_weight,
         ]);
+
+        $this->registerId = null;
+
+        session()->flash('success', 'Document Update Successful.');
         $this->reset();
         $this->mount();
-        session()->flash('success', 'Document Update Successful.');
     }
 
-    public function mount()
-    {
-        $this->registers = RegisterDocument::get();
-    }
+
+
 
     /**
      * Move All Enty Data Recgister Page...
@@ -160,6 +164,15 @@ class Register extends Component
             return $this->redirect('/assessment', navigate: true);
         });
     }
+
+
+    public function mount()
+    {
+        $this->registers = RegisterDocument::get();
+    }
+
+
+
 
     public function render()
     {

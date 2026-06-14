@@ -16,17 +16,41 @@ class Assessment extends Component
     use WithFileUploads, FileUpload;
 
     public $assessments = '';
+    public $containers = [];
     public $container_location;
     public $assessment_date;
     public $r_no;
     public $document;
-    public $quantity;
+    public $total_quantity;
     public $pkgs_code;
     public $assessmentId;
 
-
     public $delivery_date;
     public $showDeliveryModal = false;
+
+
+    /**
+     * Form Steps
+     * Step 1: Basic Information
+     * Step 2: Items
+     * Step 3: Containers
+     * Step 4: Review & Submit
+     */
+    public $step = 1;
+    public function nextStep()
+    {
+        if ($this->step == 1) {
+            $this->validate([
+                'r_no'              => 'required',
+                'assessment_date'   => 'required',
+            ]);
+        }
+        $this->step++;
+    }
+    public function prevStep()
+    {
+        $this->step--;
+    }
 
 
 
@@ -40,10 +64,13 @@ class Assessment extends Component
         $this->assessment_date    = $assessment->assessment_date;
         $this->r_no               = $assessment->r_no;
         $this->document           = $assessment->document;
-        $this->quantity           = $assessment->quantity . ' ' . $assessment->pkgs_code;
+        $this->total_quantity     = ' BL- ' . $assessment->bl_no . ',  STC- ' . $assessment->total_quantity . ' ' . $assessment->pkgs_code;
         $this->container_location = $assessment->container_location;
+        $this->containers         = $assessment->containers ?? [];
         $this->assessmentId       = $id;
     }
+
+
 
     /**
      * Update Data (Create aj jonno data)
@@ -54,7 +81,7 @@ class Assessment extends Component
         $assessment = AssessmentDocument::findOrFail($id);
 
         $rules = [
-            'r_no'            => 'nullable|unique:assessments,r_no,' . $id,
+            'r_no'            => 'required|unique:assessments,r_no,' . $id,
             'assessment_date' => 'required|date',
         ];
 
@@ -64,7 +91,6 @@ class Assessment extends Component
         }
 
         $this->validate($rules);
-
         // 🔥 BEST PRACTICE FILE HANDLING
         $path = $this->fileUpload(
             $this->document,
@@ -77,10 +103,11 @@ class Assessment extends Component
             'assessment_date'    => $this->assessment_date,
             'r_no'               => $this->r_no,
             'container_location' => $this->container_location,
+            'containers'         => $this->containers,
             'document'           => $path,
         ]);
 
-        $this->reset('document');
+        $this->reset();
         $this->mount();
 
         session()->flash('success', 'Document updated successfully!');

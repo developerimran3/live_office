@@ -44,7 +44,6 @@ class Enty extends Component
             $this->validate([
                 'importer_name' => 'required',
                 'bl_no'         => 'required',
-                'lc_number'     => 'required',
             ]);
         }
         $this->step++;
@@ -276,6 +275,7 @@ class Enty extends Component
 
         $this->dispatch('success', message: 'Moved to Received');
         $this->mount();
+        return $this->redirect('/received', navigate: true);
     }
 
 
