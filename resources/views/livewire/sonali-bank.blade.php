@@ -7,7 +7,7 @@
                 </div>
             </div>
         </div>
-        <div class="row column1">
+        <div class="row column1  mt-3 ">
             <div class="col-md-5">
                 <div class="white_shd full p-4">
                     <div class="heading1 margin_0">
@@ -20,7 +20,7 @@
                             <div class="col-md-4">
                                 <label>Cash or B/E</label>
                                 <select class="form-control" wire:model.lazy="type">
-                                    <option value="">Select</option>
+                                    <option value="">--Select--</option>
                                     <option value="BE">B/E</option>
                                     <option value="CASH">CASH</option>
                                 </select>
@@ -47,7 +47,7 @@
                                 <div class="col-md-4">
                                     <label>B/E Number</label>
                                     <select wire:model.lazy="be_no" class="form-control">
-                                        <option value="">select</option>
+                                        <option value="">--select--</option>
                                         @foreach ($delivery as $d)
                                             <option value="{{ $d->be_no }}">{{ $d->be_no }}</option>
                                         @endforeach
@@ -65,7 +65,8 @@
 
                                 <div class="col-md-4">
                                     <label>Goods Name</label>
-                                    <input type="text" wire:model="goods_name" class="form-control" readonly>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ collect($items)->pluck('goods_name')->implode(', ') }}">
                                     @error('goods_name')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
@@ -93,7 +94,7 @@
             </div>
             <!-- table srart -->
             <div class="col-md-7">
-                <div class="white_shd full p-4">
+                <div class="white_shd full p-4 ">
                     <div class="heading1 m-0 p-0">
                         @if (Session::has('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -146,7 +147,9 @@
                                     <td class="font-weight-bold"> {{ number_format($sonali->balance ?? 0, 2) }}</td>
                                     <td>
                                         @if ($sonali->type == 'BE')
-                                            {{ $sonali->goods_name }}
+                                            @foreach ($sonali->items ?? [] as $item)
+                                                {{ $item['goods_name'] ?? '' }} <br>
+                                            @endforeach
                                         @elseif($sonali->type == 'CASH')
                                             CASH
                                         @endif

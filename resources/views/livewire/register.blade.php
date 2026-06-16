@@ -307,8 +307,8 @@
                                                                          <a class="btn btn-sm btn-success ml-1"
                                                                              wire:click="moveToAssessment({{ $register->id }})"
                                                                              wire:confirm="Are you Move To Assessment Document?">
-                                                                             <i
-                                                                                 class="fa fa-arrow-circle-right "></i></a>
+                                                                             <i class="fa fa-arrow-circle-right"></i>
+                                                                         </a>
                                                                      @endif
                                                                  </div>
                                                              </td>

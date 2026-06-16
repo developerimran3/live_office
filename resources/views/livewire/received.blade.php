@@ -360,23 +360,23 @@
 
                                                              {{-- ACTION --}}
                                                              <td rowspan="{{ $rowspan }}">
-                                                                 <div class="d-flex justify-content-between">
+                                                                 <div class="d-flex  justify-content-left">
                                                                      <a class="btn btn-sm btn-warning"
                                                                          wire:click="editToReceived({{ $receive->id }})">
                                                                          <i class="fa fa-edit"></i>
                                                                      </a>
+                                                                     <a class="btn btn-danger btn-sm ml-1 float-left"
+                                                                         wire:click="deleteReceived({{ $receive->id }})"
+                                                                         wire:confirm="Are you sure? Document Delete?">
+                                                                         <i class="fa fa-trash"></i>
+                                                                     </a>
                                                                      @if ($receive->invoice_no)
-                                                                         <a class="btn btn-sm btn-success ml-1"
+                                                                         <a class="btn btn-sm btn-success ml-1 fload-right"
                                                                              wire:click="moveToRegister({{ $receive->id }})"
                                                                              wire:confirm="Are you Move To Register Document?">
                                                                              <i class="fa fa-arrow-circle-right"></i>
                                                                          </a>
                                                                      @endif
-                                                                     <a class="btn btn-danger btn-sm ml-1"
-                                                                         wire:click="deleteReceived({{ $receive->id }})"
-                                                                         wire:confirm="Are you sure? Document Delete?">
-                                                                         <i class="fa fa-trash"></i>
-                                                                     </a>
                                                                  </div>
                                                              </td>
                                                          @endif

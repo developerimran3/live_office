@@ -10,7 +10,7 @@ use App\Models\Delivery;
 class SonaliBank extends Component
 {
     public $type = ''; // Cash বা BE
-    public $goods_name;
+    public $items;
     public $be_no;
     public $be_date;
     public $debit;
@@ -34,11 +34,12 @@ class SonaliBank extends Component
     public function updatedBeNo($value)
     {
         $delivery = $this->delivery->where('be_no', $value)->first();
+
         if ($delivery) {
-            $this->goods_name = $delivery->goods_name;
+            $this->items   = $delivery->items ?? [];
             $this->be_date = $delivery->be_date;
         } else {
-            $this->goods_name = '';
+            $this->items = [];
             $this->be_date = '';
         }
     }
@@ -65,17 +66,24 @@ class SonaliBank extends Component
         // Create new 
         Sonali::create([
             'type'        => $this->type,
-            'goods_name'  => $this->goods_name,
+
             'be_no'       => $this->be_no,
             'be_date'     => $this->be_date,
             'debit'       => $this->type == 'BE' ? $this->debit : 0,
             'credit'      => $this->type == 'CASH' ? $this->credit : 0,
             'credit_date' => $this->credit_date,
 
+            'items' => collect($this->items)->map(function ($item) {
+                return [
+                    'goods_name'        => $item['goods_name'] ?? '',
+
+                ];
+            })->toArray(),
+
         ]);
         session()->flash('success', 'Sonali Bank Data saved successfully!');
         // Reset form
-        $this->reset(['type', 'credit', 'credit_date',  'be_no', 'be_date', 'goods_name', 'debit']);
+        $this->reset();
 
         // Reload table and recalc balance
         $this->sonalis = Sonali::orderBy('id')->get();

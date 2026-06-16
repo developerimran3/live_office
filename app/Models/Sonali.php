@@ -8,11 +8,16 @@ class Sonali extends Model
 {
     protected $fillable = [
         'type',
-        'goods_name',
+        'items',
         'be_no',
         'be_date',
         'debit',
         'credit',
         'credit_date',
+    ];
+
+
+    protected $casts = [
+        'items' => 'array',
     ];
 }

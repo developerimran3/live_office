@@ -7,7 +7,7 @@
                 </div>
             </div>
         </div>
-        <div class="row column1">
+        <div class="row column1  mt-3 ">
             <div class="col-md-5">
                 <div class="white_shd full p-4">
                     <div class="heading1 margin_0">
@@ -118,12 +118,12 @@
                         <thead>
                             <tr class="janata">
                                 <th>#</th>
-                                <th>Importer Name</th>
+                                <th style="width: 20%">Importer Name</th>
                                 <th>B/E No</th>
                                 <th>Date</th>
                                 <th>Debit</th>
                                 <th>Credit</th>
-                                <th>Balance</th>
+                                <th style="width: 10%">Balance</th>
                                 <th>Remarks</th>
                             </tr>
                         </thead>
@@ -132,12 +132,18 @@
                             @foreach ($janatas as $janata)
                                 <tr class="janata">
                                     <td>{{ $loop->iteration }} </td>
-                                    <td>{{ $janata->importer_name }}</td>
+                                    <td>
+                                        @if ($janata->type == 'BE')
+                                            {{ $janata->importer_name }}
+                                        @elseif($janata->type == 'CASH')
+                                            CASH
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ($janata->type == 'BE')
                                             {{ $janata->be_no ? 'C- ' . $janata->be_no : '' }}
                                         @elseif($janata->type == 'CASH')
-                                            CASH
+                                            --
                                         @endif
                                     </td>
 
