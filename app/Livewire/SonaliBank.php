@@ -11,6 +11,7 @@ class SonaliBank extends Component
 {
     public $type = ''; // Cash বা BE
     public $items;
+    public $goods_name;
     public $be_no;
     public $be_date;
     public $debit;
@@ -66,19 +67,12 @@ class SonaliBank extends Component
         // Create new 
         Sonali::create([
             'type'        => $this->type,
-
             'be_no'       => $this->be_no,
             'be_date'     => $this->be_date,
             'debit'       => $this->type == 'BE' ? $this->debit : 0,
             'credit'      => $this->type == 'CASH' ? $this->credit : 0,
             'credit_date' => $this->credit_date,
 
-            'items' => collect($this->items)->map(function ($item) {
-                return [
-                    'goods_name'        => $item['goods_name'] ?? '',
-
-                ];
-            })->toArray(),
 
         ]);
         session()->flash('success', 'Sonali Bank Data saved successfully!');
