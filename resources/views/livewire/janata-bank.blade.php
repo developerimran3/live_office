@@ -20,7 +20,7 @@
                             <div class="col-md-4">
                                 <label>Cash or B/E</label>
                                 <select class="form-control" wire:model.lazy="type">
-                                    <option value="">Select</option>
+                                    <option value="">--Select--</option>
                                     <option value="BE">B/E</option>
                                     <option value="CASH">CASH</option>
                                 </select>
@@ -47,7 +47,7 @@
                                 <div class="col-md-4">
                                     <label>B/E Number</label>
                                     <select wire:model.lazy="be_no" class="form-control">
-                                        <option value="">select</option>
+                                        <option value="">--select--</option>
                                         @foreach ($delivery as $d)
                                             <option value="{{ $d->be_no }}">{{ $d->be_no }}</option>
                                         @endforeach
@@ -65,7 +65,8 @@
 
                                 <div class="col-md-4">
                                     <label>Goods Name</label>
-                                    <input type="text" wire:model="goods_name" class="form-control" readonly>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ collect($items)->pluck('goods_name')->implode(', ') }}">
                                     @error('goods_name')
                                         <p class="text-danger"> {{ $message }}</p>
                                     @enderror
@@ -114,11 +115,11 @@
 
                         <h2>All Availability</h2>
                     </div>
-                    <table class="table table-bordered table-striped " id="dataTable">
+                    <table class="table table-bordered">
                         <thead>
                             <tr class="janata">
                                 <th>#</th>
-                                <th style="width: 20%">Importer Name</th>
+                                <th style="width: 27%">Importer Name</th>
                                 <th>B/E No</th>
                                 <th>Date</th>
                                 <th>Debit</th>
@@ -162,7 +163,15 @@
                                     <td class="font-weight-bold"> {{ number_format($janata->balance ?? 0, 2) }}</td>
                                     <td>
                                         @if ($janata->type == 'BE')
-                                            {{ $janata->goods_name }}
+                                            @php
+                                                $items = is_string($janata->items)
+                                                    ? json_decode($janata->items, true)
+                                                    : $janata->items;
+                                            @endphp
+
+                                            @foreach ($items ?? [] as $item)
+                                                {{ collect($items)->pluck('goods_name')->implode(', ') }}
+                                            @endforeach
                                         @elseif($janata->type == 'CASH')
                                             CASH
                                         @endif

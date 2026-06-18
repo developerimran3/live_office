@@ -9,6 +9,7 @@ use App\Models\Janata;
 class JanataBank extends Component
 {
     public $type = ''; // Cash বা BE
+    public $items;
     public $goods_name;
     public $be_no;
     public $be_date;
@@ -35,11 +36,11 @@ class JanataBank extends Component
     {
         $delivery = $this->delivery->where('be_no', $value)->first();
         if ($delivery) {
-            $this->goods_name = $delivery->goods_name;
+            $this->items = $delivery->items ?? [];
             $this->be_date = $delivery->be_date;
             $this->importer_name = $delivery->importer_name;
         } else {
-            $this->goods_name = '';
+            $this->items = [];
             $this->be_date = '';
             $this->importer_name = '';
         }
@@ -67,8 +68,8 @@ class JanataBank extends Component
         // Create new 
         Janata::create([
             'type'           => $this->type,
-            'goods_name'     => $this->goods_name,
             'importer_name'  => $this->importer_name,
+            'items'          => json_encode($this->items),
             'be_no'          => $this->be_no,
             'be_date'        => $this->be_date,
             'debit'          => $this->type == 'BE' ? $this->debit : 0,
@@ -78,7 +79,7 @@ class JanataBank extends Component
         ]);
         session()->flash('success', 'Janata Bank Data saved successfully!');
         // Reset form
-        $this->reset(['type', 'credit', 'credit_date',  'be_no', 'be_date', 'goods_name', 'debit', 'importer_name']);
+        $this->reset();
 
         // Reload table and recalc balance
         $this->janatas = Janata::orderBy('id')->get();

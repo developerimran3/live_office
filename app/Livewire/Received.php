@@ -6,8 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\Received as ReceiveDocument;
 use App\Models\Register;
-
-
+use PhpParser\Node\Scalar\Float_;
 
 class Received extends Component
 {
@@ -103,7 +102,7 @@ class Received extends Component
     {
         // Total Net Weight Sum
         $this->total_nw = collect($this->items)->sum(function ($item) {
-            return (int) ($item['net_weight'] ?? 0);
+            return (float) ($item['net_weight'] ?? 0);
         });
 
 
@@ -112,7 +111,7 @@ class Received extends Component
         $usedQuantity = 0;
 
         foreach ($this->items as $item) {
-            $usedQuantity += (int) ($item['item_quantity'] ?? 0);
+            $usedQuantity += (float) ($item['item_quantity'] ?? 0);
         }
 
         $remainingQuantity = $this->initial_total - $usedQuantity;
@@ -130,7 +129,7 @@ class Received extends Component
         $usedGrossWeight = 0;
 
         foreach ($this->items as $item) {
-            $usedGrossWeight += (int) ($item['item_gross_weight'] ?? 0);
+            $usedGrossWeight += (float) ($item['item_gross_weight'] ?? 0);
         }
 
         $remainingGrossWeight = $this->initial_gw - $usedGrossWeight;
@@ -148,11 +147,11 @@ class Received extends Component
         $items = collect($this->items);
         // TOTAL USED VALUE (sum of item_value)
         $usedValue = $items->sum(function ($item) {
-            return (int) ($item['item_value'] ?? 0);
+            return (float) ($item['item_value'] ?? 0);
         });
 
         // REMAINING VALUE = INVOICE - USED
-        $this->remainingValue = (int) $this->invoice_value - $usedValue;
+        $this->remainingValue = (float) $this->invoice_value - $usedValue;
 
         // WARNING if over limit
         if ($this->remainingValue < 0) {
@@ -187,7 +186,6 @@ class Received extends Component
             'invoice_date'  => $this->invoice_date,
             'rot_no'        => $this->rot_no,
             'vessel'        => $this->vessel,
-
             'containers'    => $this->containers,
             'items'         => $this->items, // JSON saved automatically
         ]);

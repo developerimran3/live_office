@@ -122,7 +122,8 @@
                                          </div>
 
                                          <div class="col-md-2 my-2">
-                                             <input type="number" wire:model="items.{{ $index }}.item_value"
+                                             <input type="number"
+                                                 wire:model.lazy="items.{{ $index }}.item_value"
                                                  name="item_value" class="form-control" step="0.001"
                                                  placeholder="Item Value">
                                          </div>

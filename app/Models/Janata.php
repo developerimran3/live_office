@@ -9,11 +9,14 @@ class Janata extends Model
     protected $fillable = [
         'type',
         'importer_name',
-        'goods_name',
+        'items',
         'be_no',
         'be_date',
         'debit',
         'credit',
         'credit_date',
+    ];
+    protected $casts = [
+        'items' => 'array',
     ];
 }

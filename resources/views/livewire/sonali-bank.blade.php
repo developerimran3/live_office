@@ -121,6 +121,7 @@
                         </thead>
 
                         <tbody>
+
                             @foreach ($sonalis as $sonali)
                                 <tr class="sonali">
                                     <td>{{ $loop->iteration }} </td>
@@ -147,8 +148,14 @@
                                     <td class="font-weight-bold"> {{ number_format($sonali->balance ?? 0, 2) }}</td>
                                     <td>
                                         @if ($sonali->type == 'BE')
-                                            @foreach ($sonali->items ?? [] as $item)
-                                                {{ $item['goods_name'] ?? '' }} <br>
+                                            @php
+                                                $items = is_string($sonali->items)
+                                                    ? json_decode($sonali->items, true)
+                                                    : $sonali->items;
+                                            @endphp
+
+                                            @foreach ($items ?? [] as $item)
+                                                {{ collect($items)->pluck('goods_name')->implode(', ') }}
                                             @endforeach
                                         @elseif($sonali->type == 'CASH')
                                             CASH
