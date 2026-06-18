@@ -107,7 +107,7 @@
 
                         <h2>All Availability</h2>
                     </div>
-                    <table class="table table-bordered table-striped " id="dataTable">
+                    <table class="table table-bordered">
                         <thead>
                             <tr class="sonali">
                                 <th>#</th>
@@ -154,6 +154,7 @@
                                             CASH
                                         @endif
                                     </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
