@@ -69,6 +69,7 @@ class SonaliBank extends Component
             'type'        => $this->type,
             'be_no'       => $this->be_no,
             'be_date'     => $this->be_date,
+            'items'       => json_encode($this->items),
             'debit'       => $this->type == 'BE' ? $this->debit : 0,
             'credit'      => $this->type == 'CASH' ? $this->credit : 0,
             'credit_date' => $this->credit_date,

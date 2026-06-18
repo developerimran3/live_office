@@ -294,7 +294,7 @@
                                                         ->values();
                                                     $rowCount = max($items->count(), $containers->count(), 1);
                                                     $total_net_weight = collect($this->viewData->items ?? [])->sum(
-                                                        'net_weight',
+                                                        fn($item) => (float) ($item['net_weight'] ?? 0),
                                                     );
                                                 @endphp
 
@@ -320,12 +320,14 @@
                                                         </td>
                                                         <td>
                                                             @if ($item)
-                                                                {{ $item['net_weight'] ?? '' }} KGS
+                                                                {{ number_format((float) ($item['net_weight'] ?? 0), 2) }}
+                                                                KGS
                                                             @endif
                                                         </td>
                                                         <td>
                                                             @if ($item)
-                                                                {{ $item['item_gross_weight'] ?? '' }} KGS
+                                                                {{ number_format((float) ($item['item_gross_weight'] ?? 0), 2) }}
+                                                                KGS
                                                             @endif
                                                         </td>
                                                         <td>
