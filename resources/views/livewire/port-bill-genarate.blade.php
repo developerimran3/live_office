@@ -158,7 +158,7 @@
                                         <td class="text-center"> {{ $qty ?? 0 }}</td>
                                         <td class="text-center">-</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['river_dues'] * $usd_rate, 3) }}
+                                            {{ number_format($calculated['river_dues'] * $usd_rate, 2) }}
                                         </td>
                                         <td class="text-right">
                                             {{ number_format($calculated['river_dues'] * $usd_rate * 0.15, 2) }}

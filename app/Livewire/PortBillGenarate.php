@@ -280,8 +280,8 @@ class PortBillGenarate extends Component
 
         // Total
         $total_port =
-            (float) ($river_dues * (float)$this->qty * (float)$this->usd_rate)
-            + (float)($lift_on  * (float)$this->qty * (float)$this->usd_rate)
+            (float) ($river_dues * (float)$this->usd_rate)
+            + (float)($lift_on  * (float)$this->usd_rate)
             + (float) $rpc_rate * $rpc
             + (float)($store_rent_total * (float)$this->usd_rate)
             + (float)($extra_mov_rate * (float)$this->extra_mov * (float)$this->usd_rate)
