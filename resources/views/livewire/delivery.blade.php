@@ -231,6 +231,12 @@
                     <h5 class="modal-title text-white">
                         📄 Document Full Details
                     </h5>
+                    @if ($this->viewData)
+                        <button class="btn btn-danger btn-sm" wire:click="downloadPdf({{ $this->viewData->id }})">
+                            📄 Download PDF
+                        </button>
+                    @endif
+
                 </div>
 
                 <!-- Modal Body -->
@@ -315,7 +321,8 @@
                                                         </td>
                                                         <td>
                                                             @if ($item)
-                                                                $ {{ $item['item_value'] ?? '' }}
+                                                                $
+                                                                {{ number_format((float) ($item['item_value'] ?? 0), 2) }}
                                                             @endif
                                                         </td>
                                                         <td>
@@ -462,6 +469,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     @endif
                 </div>

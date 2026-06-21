@@ -23,13 +23,14 @@
                                  @if ($step == 1)
                                      <div class="col-md-3 mb-3">
                                          <label>BL No</label>
-                                         <input type="text" wire:model="bl_no" class="form-control" readonly>
+                                         <input type="text" wire:model="bl_no" class="form-control text-uppercase"
+                                             readonly>
                                      </div>
                                      @if (!$vessel)
                                          <div class="col-md-2">
                                              <label>Vessel</label>
                                              <input type="text" wire:model="vessel" name="vessel"
-                                                 class="form-control">
+                                                 class="form-control text-uppercase">
                                          </div>
                                      @endif
                                      <div class="col-md-2">
@@ -44,7 +45,7 @@
                                      <div class="col-md-2">
                                          <label>Invoice No</label>
                                          <input type="text" wire:model="invoice_no" name="invoice_no"
-                                             class="form-control">
+                                             class="form-control text-uppercase">
                                      </div>
                                      <div class="col-md-2">
                                          <label>Invoice Date</label>
@@ -124,7 +125,7 @@
                                          <div class="col-md-2 my-2">
                                              <input type="number"
                                                  wire:model.lazy="items.{{ $index }}.item_value"
-                                                 name="item_value" class="form-control" step="0.001"
+                                                 name="invoice_value" class="form-control" step="0.001"
                                                  placeholder="Item Value">
                                          </div>
                                      @endforeach

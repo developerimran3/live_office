@@ -3,8 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Bond;
-use Livewire\Component;
 use App\Models\Register;
+use Livewire\Component;
 
 class BondLicence extends Component
 {
@@ -12,84 +12,119 @@ class BondLicence extends Component
     public $availability;
     public $filter_item;
 
-    public $items = [];        // item names for dropdown
-    public $allocations = [];  // Allocation table
-    public $minus_tables = []; // Minus tables per item
+    public $items = [];
+    public $allocations = [];
+    public $registers = [];
+    public $minus_tables = [];
+
 
     public function mount()
     {
-        $this->loadItems();
         $this->loadData();
     }
 
-    public function loadItems()
-    {
-        $this->items = Bond::orderBy('goods_name')->pluck('goods_name')->unique()->toArray();
-    }
 
     public function bondlicence()
     {
         $this->validate([
-            'goods_name'   => 'required',
+            'goods_name' => 'required',
             'availability' => 'required|numeric|min:0',
         ]);
 
         Bond::create([
-            'goods_name'   => $this->goods_name,
+            'goods_name' => $this->goods_name,
             'availability' => $this->availability,
         ]);
 
         $this->reset(['goods_name', 'availability']);
-        $this->loadItems();
+
         $this->loadData();
+
+        session()->flash('success', 'Bond Added Successfully');
     }
+
 
     public function updatedFilterItem()
     {
         $this->loadData();
     }
 
+
     public function loadData()
     {
-        // Allocation table
-        $this->allocations = Bond::orderBy('created_at')->get();
+        // Allocation
+        $this->allocations = Bond::all();
 
-        // Build items list from both Bond and Register
-        $bond_items = Bond::pluck('goods_name')->toArray();
-        $register_items = Register::pluck('goods_name')->toArray();
-        $this->items = collect(array_merge($bond_items, $register_items))->unique()->toArray();
+        // Registers
+        $this->registers = Register::all();
 
-        // Minus tables
-        $registers = Register::orderBy('be_date')->get();
+
+        // Items list
+        $bondItems = Bond::pluck('goods_name')->toArray();
+
+        $registerItems = Register::pluck('items')
+            ->map(function ($items) {
+
+                if (is_string($items)) {
+                    $items = json_decode($items, true);
+                }
+
+                return collect($items ?? [])
+                    ->pluck('goods_name')
+                    ->toArray();
+            })
+            ->flatten()
+            ->toArray();
+
+
+        $this->items = collect(array_merge($bondItems, $registerItems))
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+
+        $this->buildMinusTable();
+    }
+
+
+    public function buildMinusTable()
+    {
         $this->minus_tables = [];
 
         foreach ($this->items as $item_name) {
-
-            // Apply filter
+            // filter
             if ($this->filter_item && $this->filter_item != $item_name) {
                 continue;
             }
 
-            $rows = [];
-            $total_allocation = $this->allocations
+            // total allocation
+            $allocation = $this->allocations
                 ->where('goods_name', $item_name)
                 ->sum('availability');
 
-            $used_so_far = 0;
+            $used = 0;
+            $rows = [];
 
-            $item_registers = $registers->where('goods_name', $item_name)
-                ->sortBy('be_date');
+            $registers = $this->registers->sortBy('be_date');
 
-            foreach ($item_registers as $reg) {
-                $used_so_far += $reg->net_weight;
+            foreach ($registers as $reg) {
+                $items = is_string($reg->items)
+                    ? json_decode($reg->items, true)
+                    : $reg->items;
 
-                $rows[] = (object)[
-                    'goods_name' => $item_name,
-                    'be_no'      => $reg->be_no,
-                    'be_date'    => $reg->be_date,
-                    'used'       => $reg->net_weight,
-                    'balance'    => $total_allocation - $used_so_far,
-                ];
+                foreach ($items ?? [] as $i) {
+                    if ($i['goods_name'] == $item_name) {
+                        $used += $i['net_weight'];
+
+                        $rows[] = (object)[
+                            'be_no' => $reg->be_no,
+                            'be_date' => $reg->be_date,
+                            'used' => $i['net_weight'],
+                            'balance' => $allocation - $used,
+                        ];
+                    }
+                }
             }
 
             $this->minus_tables[$item_name] = $rows;
@@ -100,6 +135,6 @@ class BondLicence extends Component
     public function render()
     {
         return view('livewire.bond-licence')
-            ->layout('layouts.app', ['title' => 'Bond Licence']);
+            ->layout('layouts.app', ['title' => 'Bond Management']);
     }
 }

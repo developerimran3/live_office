@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Traits\FileUpload;
-use Livewire\WithFileUploads;
+
+
 use App\Models\Delivery as DeliveryDocument;
+use App\Traits\FileUpload;
+use Barryvdh\DomPDF\Facade\PDF;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Delivery extends Component
 {
@@ -93,5 +96,22 @@ class Delivery extends Component
     {
         return view('livewire.delivery')
             ->layout('layouts.app', ['title' => 'Delivery']);
+    }
+
+
+
+
+
+    public function downloadPdf($id)
+    {
+        $data = DeliveryDocument::findOrFail($id);
+
+        $pdf = PDF::loadView('pdf.document', [
+            'data' => $data
+        ]);
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, 'document-' . $data->be_no . '.pdf');
     }
 }

@@ -14,6 +14,8 @@ use App\Models\BillGenerate;
 class PortBillGenarate extends Component
 
 {
+
+
     public $cl_date;
     public $unstf_date;
     public $wr_date;
@@ -21,9 +23,16 @@ class PortBillGenarate extends Component
     public $ado_dt;
     public $qty;
     public $rate;
+
     public $extra_mov;
+    public $extra_mov_qty;
+
     public $rpc;
+    public $rpc_qty;
+
     public $hc;
+    public $hc_qty;
+
     public $dg_status;
     public $cont_select;
     public $days;
@@ -45,6 +54,7 @@ class PortBillGenarate extends Component
     {
         $this->setWrAndAdo($value);
     }
+
     public function setWrAndAdo($value)
     {
         if ($value) {
@@ -67,96 +77,278 @@ class PortBillGenarate extends Component
     }
 
 
-
-    public function mount()
+    public function updatedQty($value)
     {
-        $this->portRates = PortRate::first(); // DB থেকে rate load
+        $this->syncRpc($value);
     }
 
+
+    public function syncRpc($value)
+    {
+        if ($value) {
+            // auto set rpc = qty
+            $this->rpc = (int) $value;
+        }
+    }
+
+    public function updatedRpc($value)
+    {
+        if ($value < $this->qty) {
+            $this->rpc = $this->qty;
+        }
+    }
 
 
     // Form submit
     public function createEnty()
     {
-        // $this->calculate(); // হিসাব করা
+
+        $this->calculate();
+
 
         BillGenerate::create([
-            'cl_date'        => $this->cl_date,
-            'wr_date'        => $this->wr_date,
-            'upto_date'      => $this->upto_date,
-            'unstf_date'     => $this->unstf_date,
-            'extra_mov'      => $this->extra_mov,
-            'hc'             => $this->hc,
-            'rpc'            => $this->rpc,
-            'qty'            => $this->qty,
-            'usd_rate'       => $this->usd_rate,
-            'cont_select'    => $this->cont_select,
-            'dg_status'      => $this->dg_status,
+            'port_rate_id' => $this->portRates->id,
+
+            'cl_date'       => $this->cl_date,
+            'wr_date'       => $this->wr_date,
+            'upto_date'     => $this->upto_date,
+            'unstf_date'    => $this->unstf_date ?? null,
+            'extra_mov_qty' => $this->extra_mov_qty ?? 0,
+            'hc_qty'        => $this->hc_qty ?? 0,
+            'rpc_qty'       => $this->rpc_qty ?? 0,
+            'qty'           => $this->qty ?? 1,
+            'usd_rate'      => $this->usd_rate ?? 123.50,
+            'cont_select'   => $this->cont_select,
+            'dg_status'     => $this->dg_status ?? 0,
         ]);
+
+        session()->flash('message', 'Port Bill Generated Successfully');
     }
+
+
+    public function updated($field)
+    {
+        if (
+            in_array($field, [
+                'cont_select',
+                'qty',
+                'days',
+                'dg_status',
+                'extra_mov',
+                'hc',
+                'rpc'
+            ])
+        ) {
+            $this->calculate();
+        }
+    }
+
+
 
 
     // Calculation logic
     public function calculate()
     {
-        $rate = $this->selected_container == '40fcl' ? $this->portRates->river_duse_40 : $this->portRates->river_duse_20;
-        $lift = $this->selected_container == '40fcl' ? $this->portRates->lift_on_40 : $this->portRates->lift_on_20;
-        $storage_1 = $this->dg ? $this->portRates->storage_1st_40_dg : $this->portRates->storage_1st_40;
-        $storage_2 = $this->dg ? $this->portRates->storage_2nd_40_dg : $this->portRates->storage_2nd_40;
-        $storage_3 = $this->dg ? $this->portRates->storage_3rd_40_dg : $this->portRates->storage_3rd_40;
+        if (!$this->portRates) {
+            return;
+        }
+
+
+        $usd_rate = (float) ($this->portRates->usd_rate ?? 1);
+
+
+        $is40 = $this->cont_select == '40fcl';
+        $isDg = $this->dg_status == 1;
+
+        // Container Rate
+        $rate = $is40
+            ? $this->portRates->river_duse_40
+            : $this->portRates->river_duse_20;
+
+        $lift = $is40
+            ? $this->portRates->lift_on_40
+            : $this->portRates->lift_on_20;
+
+        $extra_mov = $is40
+            ? $this->portRates->extra_movement_40
+            : $this->portRates->extra_movement_20;
+
+
+        // Storage Rate
+        $storage_1 = $is40
+            ? ($isDg ? $this->portRates->storage_1st_40_dg : $this->portRates->storage_1st_40)
+            : ($isDg ? $this->portRates->storage_1st_20_dg : $this->portRates->storage_1st_20);
+
+
+        $storage_2 = $is40
+            ? ($isDg ? $this->portRates->storage_2nd_40_dg : $this->portRates->storage_2nd_40)
+            : ($isDg ? $this->portRates->storage_2nd_20_dg : $this->portRates->storage_2nd_20);
+
+
+        $storage_3 = $is40
+            ? ($isDg ? $this->portRates->storage_3rd_40_dg : $this->portRates->storage_3rd_40)
+            : ($isDg ? $this->portRates->storage_3rd_20_dg : $this->portRates->storage_3rd_20);
+
+
+        $qty  = (float) $this->qty;
+        $days = (int) $this->days;
+
+
+
 
         // River Dues
-        $river_dues = $this->qnty * $rate;
+        $river_dues = $qty * $rate;
+
 
         // Lift On
-        $lift_on = $this->qnty * $lift;
+        $lift_on = $qty * $lift;
+
 
         // RPC
-        $rpc = $this->rpc * $this->qnty;
 
-        // Store Rent
-        $store_rent_1 = ($this->days >= 1 ? 1 * $storage_1 : 0);
-        $store_rent_2 = ($this->days >= 2 ? 1 * $storage_2 : 0);
-        $store_rent_3 = ($this->days >= 3 ? 1 * $storage_3 : 0);
+        $rpc_rate = (float) ($this->portRates->rpc ?? 0);
+        $rpc = (float) $this->rpc;
 
-        $store_rent_total = $store_rent_1 + $store_rent_2 + $store_rent_3;
+        // Extra Charges
+        $extra_mov_rate = $extra_mov;
+        $extra_mov = (float) ($this->extra_mov);
 
-        // Extra Movement + HC
-        $extra_movement = $this->ext_mov;
-        $hc             = $this->hc;
+        $hc_rate = (float) ($this->portRates->hc ?? 0);
+        $hc = (float) ($this->hc ?? 0);
 
-        // TOTAL
-        $total_port = $river_dues + $lift_on + $rpc + $store_rent_total + $extra_movement + $hc;
 
-        // VAT 15%, MLWF 4%
-        $vat  = $total_port * 0.15;
-        $mlwf = $total_port * 0.04;
+
+        // Storage Calculation
+        $store_rent_1_days = 0;
+        $store_rent_2_days = 0;
+        $store_rent_3_days = 0;
+
+
+        $store_rent_1_amount = 0;
+        $store_rent_2_amount = 0;
+        $store_rent_3_amount = 0;
+
+        // 1st slab (1-7)
+        if ($days > 0) {
+
+            $store_rent_1_days = min($days, 7);
+
+            $store_rent_1_amount =
+                $storage_1 * $qty * $store_rent_1_days;
+        }
+
+        // 2nd slab (8-20)
+        // আবার 1 থেকে count হবে
+
+        if ($days > 7) {
+
+
+            $store_rent_2_days = min($days - 7, 13);
+
+
+            $store_rent_2_amount =
+                $storage_2 * $qty * $store_rent_2_days;
+        }
+
+        // 3rd slab (21+)
+        // আবার 1 থেকে count হবে
+
+        if ($days > 20) {
+
+            $store_rent_3_days = ($days - 20) + 4;
+
+            $store_rent_3_amount =
+                $storage_3 * $qty * $store_rent_3_days;
+        } else {
+
+            $store_rent_3_days = 0;
+            $store_rent_3_amount = 0;
+        }
+
+
+
+
+        $store_rent_total =
+            $store_rent_1_amount
+            +
+            $store_rent_2_amount
+            +
+            $store_rent_3_amount;
+
+
+
+
+        // Total
+        $total_port =
+            (float) ($river_dues * (float)$this->qty * (float)$this->usd_rate)
+            + (float)($lift_on  * (float)$this->qty * (float)$this->usd_rate)
+            + (float) $rpc_rate * $rpc
+            + (float)($store_rent_total * (float)$this->usd_rate)
+            + (float)($extra_mov_rate * (float)$this->extra_mov * (float)$this->usd_rate)
+            + (float)$hc_rate * (float)$this->hc * (float)$this->usd_rate;
+
+        $vat = $total_port * 0.15;
+        $mlwf = $river_dues * (float)$this->usd_rate * 0.04;
+
+        $gross =  $total_port + $vat +  $mlwf;
+
+
+
+
+
+        $display_days = $days;
+
+        if ($days > 20) {
+            $display_days = ($days - 20) + 4 + 20;
+        }
+
 
         $this->calculated = [
+
+
+            'display_days' => $display_days,
             'river_dues' => $river_dues,
-            'lift_on'    => $lift_on,
-            'rpc'        => $rpc,
-            'store_rent' => $store_rent_total,
-            'extra_mov'  => $extra_movement,
-            'hc'         => $hc,
+
+            'lift_on' => $lift_on,
+
+            'store_rent_1' => $storage_1,
+            'store_rent_2' => $storage_2,
+            'store_rent_3' => $storage_3,
+
+            'hc' => $hc,
+            'hc_rate' => $hc_rate,
+
+            'usd_rate' => $usd_rate,   // <-- add this
+
             'total_port' => $total_port,
-            'vat'        => $vat,
-            'mlwf'       => $mlwf,
+            'vat' => $vat,
+            'mlwf' => $mlwf,
+            'gross' => $gross,
+
+            'extra_mov' => $extra_mov,
+            'extra_mov_rate' => $extra_mov_rate,
+
+            'rpc' => $rpc,
+            'rpc_rate' => $rpc_rate,
+
+
+            'days' => $this->days,
+
+            'store_rent_1_days' => $store_rent_1_days,
+            'store_rent_2_days' => $store_rent_2_days,
+            'store_rent_3_days' => $store_rent_3_days,
+
+            'store_rent_1_amount' => $store_rent_1_amount,
+            'store_rent_2_amount' => $store_rent_2_amount,
+            'store_rent_3_amount' => $store_rent_3_amount,
         ];
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    public function mount()
+    {
+        $this->portRates = PortRate::first(); // DB থেকে rate load
+    }
 
     public function render()
     {

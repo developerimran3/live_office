@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <div class="row column1">
+        <div class="row column1 mt-2">
 
             <!-- Licence Form -->
             <div class="col-md-5">
@@ -26,13 +26,10 @@
                             <div class="col-md-7">
                                 <label for="goods_name">Goods Name</label>
                                 <select class="form-control" wire:model="goods_name">
-                                    <option value="">Select</option>
-                                    <option value="ARTIFICIAL LEATHER">ARTIFICIAL LEATHER</option>
-                                    <option value="BUCKLE">BUCKLE</option>
-                                    <option value="RIVET/EYELT">RIVET/EYELT</option>
-                                    <option value="INTERLINING">INTERLINING</option>
-                                    <option value="ZIPPER">ZIPPER</option>
-                                    <option value="SLIDER">SLIDER</option>
+                                    <option value="">--Select--</option>
+                                    @foreach ($items as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 

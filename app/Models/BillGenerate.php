@@ -8,6 +8,7 @@ class BillGenerate extends Model
 {
     protected $fillable = [
         'port_rate_id',
+
         'cl_date',
         'wr_date',
         'upto_date',
@@ -18,7 +19,7 @@ class BillGenerate extends Model
         'qty',
         'usd_rate',
         'cont_select',
-        'dg_status'
+        'dg_status',
     ];
 
     public function portRate()

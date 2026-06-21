@@ -266,7 +266,6 @@
                                                              @if ($container)
                                                                  <a class="text-primary font-weight-bold">
                                                                      {{ $container['container_no'] ?? '' }}
-
                                                                  </a>
                                                                  <br> X {{ $container['container_size'] ?? '' }}
                                                              @endif
@@ -289,8 +288,6 @@
                                                              <td rowspan="{{ $rowspan }}">
                                                                  {{ $register->be_date }}
                                                              </td>
-
-
 
                                                              <td rowspan="{{ $rowspan }}"
                                                                  class="font-weight-bold {{ $register->be_lane === 'RED' ? 'text-danger' : '' }}

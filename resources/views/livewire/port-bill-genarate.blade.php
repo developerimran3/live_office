@@ -26,8 +26,8 @@
 
                             <div class="col-2 label-cell">CONT(s)</div>
                             <div class="col-3">
-                                <select name="cont_select" class="form-control">
-                                    <option>--select--</option>
+                                <select class="form-control" wire:model="cont_select">
+                                    <option value="">--select--</option>
                                     <option value="20fcl">20' FCL</option>
                                     <option value="40fcl">40' FCL</option>
                                     <option value="lockfast">LOCKFAST</option>
@@ -47,7 +47,7 @@
 
                             <div class="col-2 label-cell">QNTY</div>
                             <div class="col-3">
-                                <input type="number" class="form-control" wire:model.debounce.500ms="qty"
+                                <input type="number" value="1" class="form-control" wire:model="qty"
                                     placeholder="1">
                             </div>
                         </div>
@@ -63,8 +63,7 @@
 
                             <div class="col-2 label-cell">EXCH RATE</div>
                             <div class="col-3">
-                                <input type="text" class="form-control" wire:model.debounce.500ms="usd_rate"
-                                    placeholder="122.70">
+                                <input type="text" class="form-control" value="122.7" wire:model="usd_rate">
                             </div>
                         </div>
 
@@ -94,10 +93,9 @@
 
                             <div class="col-2 text-warning font-weight-bold">DG</div>
                             <div class="col-3">
-                                <select name="dg_status" class="form-control">
-                                    <option>--select--</option>
-                                    <option value="1">YES</option>
+                                <select class="form-control" wire:model="dg_status">
                                     <option value="0">NO</option>
+                                    <option value="1">YES</option>
                                 </select>
                             </div>
                         </div>
@@ -108,20 +106,17 @@
                         <div class="form-row align-items-center mb-3">
                             <div class="col-2 label-cell">EXT. MOV</div>
                             <div class="col-2">
-                                <input type="number" class="form-control" wire:model.debounce.500ms="extra_mov"
-                                    placeholder="0">
+                                <input type="number" class="form-control" wire:model="extra_mov" placeholder="0">
                             </div>
 
                             <div class="col-2 label-cell">RPC</div>
                             <div class="col-2">
-                                <input type="number" class="form-control" wire:model.debounce.500ms="rpc"
-                                    placeholder="0">
+                                <input type="number" wire:model="rpc" min="{{ $qty }}" class="form-control">
                             </div>
 
                             <div class="col-2 label-cell">HC</div>
                             <div class="col-2">
-                                <input type="number" class="form-control" wire:model.debounce.500ms="hc"
-                                    placeholder="0">
+                                <input type="number" class="form-control" wire:model="hc" placeholder="0">
                             </div>
                         </div>
 
@@ -140,11 +135,9 @@
 
             <div class="col-md-7">
                 <div class="full counter_section margin_bottom_30">
-
                     <div class="table-responsive">
-
                         @if (!empty($calculated))
-                            <table class="table table-bordered table-sm mt-3">
+                            <table class="table table-bordered table-sm">
                                 <thead class="port_bill">
                                     <tr>
                                         <th>DESCRIPTION</th>
@@ -158,179 +151,198 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>RIVER DUES CNT</td>
-                                        <td class="text-right">{{ number_format($calculated['river_dues'], 2) }}</td>
-                                        <td class="text-center">{{ $qnty }}</td>
-                                        <td class="text-center">-</td>
-                                        <td class="text-right">{{ number_format($calculated['river_dues'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['vat'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['mlwf'], 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>LIFT ON</td>
-                                        <td class="text-right">{{ number_format($calculated['lift_on'], 2) }}</td>
-                                        <td class="text-center">{{ $qnty }}</td>
-                                        <td class="text-center">-</td>
-                                        <td class="text-right">{{ number_format($calculated['lift_on'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['vat'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['mlwf'], 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>RPC</td>
-                                        <td class="text-right">{{ number_format($calculated['rpc'], 2) }}</td>
-                                        <td class="text-center">{{ $qnty }}</td>
-                                        <td class="text-center">-</td>
-                                        <td class="text-right">{{ number_format($calculated['rpc'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['vat'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['mlwf'], 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>STORE RENT</td>
-                                        <td class="text-right">{{ number_format($calculated['store_rent'], 2) }}</td>
-                                        <td class="text-center">{{ $qnty }}</td>
-                                        <td class="text-center">{{ $days }}</td>
-                                        <td class="text-right">{{ number_format($calculated['store_rent'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['vat'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['mlwf'], 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>EXTRA MOVEMENT + HC</td>
+                                        <td>RIVER DUES CNT (2N)</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['extra_mov'] + $calculated['hc'], 2) }}</td>
-                                        <td class="text-center">{{ $qnty }}</td>
+                                            {{ number_format($calculated['river_dues'] / ($qty ?: 1), 2) }}
+                                        </td>
+                                        <td class="text-center"> {{ $qty ?? 0 }}</td>
                                         <td class="text-center">-</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['extra_mov'] + $calculated['hc'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['vat'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['mlwf'], 2) }}</td>
+                                            {{ number_format($calculated['river_dues'] * $usd_rate, 3) }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['river_dues'] * $usd_rate * 0.15, 2) }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['river_dues'] * $usd_rate * 0.04, 2) }}
+                                        </td>
                                     </tr>
+
+                                    <tr>
+                                        <td>LIFT ON (2N)</td>
+
+                                        <td class="text-right">
+                                            {{ number_format($calculated['lift_on'] / ($qty ?: 1), 2) }}
+                                        </td>
+                                        <td class="text-center"> {{ $qty ?? 0 }}</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['lift_on'] * $usd_rate, 2) }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['lift_on'] * $usd_rate * 0.15, 2) }}
+                                        </td>
+                                        </td>
+                                        <td class="text-right">-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>REPAIRING CHARGE (2N)</td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['rpc_rate'], 2) }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ (float) ($rpc ?? 0) }}
+                                        </td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['rpc_rate'] * (float) $rpc, 2) }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['rpc_rate'] * (float) $rpc * 0.15, 2) }}
+                                        </td>
+                                        <td class="text-right">-</td>
+                                    </tr>
+
+                                    @if ($calculated['store_rent_1_days'] > 0)
+                                        <tr>
+                                            <td>
+                                                STORE RENT (1N) NR
+                                            </td>
+
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_1'], 2) }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ $qty }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ $calculated['store_rent_1_days'] }}
+                                            </td>
+
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_1_amount'] * $usd_rate, 2) }}
+                                            </td>
+
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_1_amount'] * $usd_rate * 0.15, 2) }}
+                                            </td>
+                                            <td class="text-right">-</td>
+                                        </tr>
+                                    @endif
+
+                                    @if ($calculated['store_rent_2_days'] > 0)
+                                        <tr>
+                                            <td>
+                                                STORE RENT (2N) NR
+                                            </td>
+
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_2'], 2) }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ $qty ?? 0 }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ $calculated['store_rent_2_days'] }}
+                                            </td>
+
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_2_amount'] * $usd_rate, 2) }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_2_amount'] * $usd_rate * 0.15, 2) }}
+                                            </td>
+                                            <td class="text-right"> - </td>
+                                        </tr>
+                                    @endif
+
+                                    @if ($calculated['store_rent_3_days'] > 0)
+                                        <tr>
+                                            <td>
+                                                STORE RENT (3N) NR
+                                            </td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_3'], 2) }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $qty ?? 0 }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $calculated['store_rent_3_days'] }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_3_amount'] * $usd_rate, 2) }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['store_rent_3_amount'] * $usd_rate * 0.15, 2) }}
+                                            </td>
+                                            <td class="text-right">-</td>
+                                        </tr>
+                                    @endif
+
+                                    @if ($extra_mov)
+                                        <tr>
+                                            <td>EXTRA MOVEMENT (2N)</td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['extra_mov_rate'], 2) }}
+                                            </td>
+                                            <td class="text-center"> {{ (float) ($extra_mov ?? 0) }}</td>
+                                            <td class="text-center">-</td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['extra_mov_rate'] * (float) $extra_mov * $usd_rate, 2) }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['extra_mov_rate'] * (float) $extra_mov * $usd_rate * 0.15, 2) }}
+                                            </td>
+                                            <td class="text-right">-</td>
+                                        </tr>
+                                    @endif
+
+                                    @if ($hc)
+                                        <tr>
+                                            <td>HOSTING CHARGES (2N)</td>
+                                            <td class="text-right"> {{ number_format($calculated['hc_rate'], 2) }}
+                                            </td>
+                                            <td class="text-center">{{ (float) ($hc ?? 0) }}</td>
+                                            <td class="text-center">-</td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['hc_rate'] * (float) $hc * $usd_rate, 2) }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ number_format($calculated['hc_rate'] * (float) $hc * $usd_rate * 0.15, 2) }}
+                                            </td>
+                                            <td class="text-right">-</td>
+                                        </tr>
+                                    @endif
 
                                     <tr class="total-row font-weight-bold">
                                         <td colspan="3" class="text-right">TOTAL</td>
-                                        <td class="text-center">{{ $days }}</td>
-                                        <td class="text-right">{{ number_format($calculated['total_port'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['vat'], 2) }}</td>
+                                        <td class="text-center">{{ $calculated['display_days'] }}</td>
+                                        <td class="text-right">
+                                            {{ number_format($calculated['total_port'], 3) }}
+                                        </td>
+                                        <td class="text-right"> {{ number_format($calculated['vat'], 2) }}</td>
                                         <td class="text-right">{{ number_format($calculated['mlwf'], 2) }}</td>
                                     </tr>
 
                                     <tr class="gross-row bg-info text-white font-weight-bold">
                                         <td colspan="6" class="text-right">GROSS</td>
-                                        <td class="text-right">
-                                            {{ number_format($calculated['total_port'] + $calculated['vat'] + $calculated['mlwf'], 2) }}
-                                        </td>
+                                        <td class="text-right">{{ number_format($calculated['gross'], 2) }}</td>
+
                                     </tr>
                                 </tbody>
                             </table>
                         @endif
-                        {{-- <table class="table table-bordered table-sm">
-                            <thead class="port_bill">
-                                <tr>
-                                    <th>DESCRIPTION</th>
-                                    <th>RATE (T/$)</th>
-                                    <th>QNTY</th>
-                                    <th>DAYS</th>
-                                    <th>PORT (TK)</th>
-                                    <th>VAT (TK)</th>
-                                    <th>MLWF (TK)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>RIVER DUES CNT (2N)</td>
-                                    <td class="text-right">10.82</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-right">1,327.61</td>
-                                    <td class="text-right">199.14</td>
-                                    <td class="text-right">53.11</td>
-                                </tr>
-                                <tr>
-                                    <td>LIFT ON (2N)</td>
-                                    <td class="text-right">30.00</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-right">3,681.00</td>
-                                    <td class="text-right">552.15</td>
-                                    <td class="text-right">-</td>
-                                </tr>
-                                <tr>
-                                    <td>REPAIRING CHARGE (2N)</td>
-                                    <td class="text-right">7.50</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-right">7.50</td>
-                                    <td class="text-right">1.13</td>
-                                    <td class="text-right">-</td>
-                                </tr>
-                                <tr>
-                                    <td>STORE RENT (1N) NR</td>
-                                    <td class="text-right">13.80</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">7</td>
-                                    <td class="text-right">11,852.82</td>
-                                    <td class="text-right">1,777.92</td>
-                                    <td class="text-right">-</td>
-                                </tr>
-                                <tr>
-                                    <td>STORE RENT (2N) NR</td>
-                                    <td class="text-right">27.60</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">13</td>
-                                    <td class="text-right">44,024.76</td>
-                                    <td class="text-right">6,603.71</td>
-                                    <td class="text-right">-</td>
-                                </tr>
-                                <tr>
-                                    <td>STORE RENT (3N) NR</td>
-                                    <td class="text-right">55.20</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">23</td>
-                                    <td class="text-right">155,779.92</td>
-                                    <td class="text-right">23,366.99</td>
-                                    <td class="text-right">-</td>
-                                </tr>
-                                <tr>
-                                    <td>EXTRA MOVEMENT (2N)</td>
-                                    <td class="text-right">68.90</td>
-                                    <td class="text-center">0</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                </tr>
-                                <tr>
-                                    <td>HOSTING CHARGES (2N)</td>
-                                    <td class="text-right">5.42</td>
-                                    <td class="text-center">0</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                    <td class="text-center">-</td>
-                                </tr>
-
-                                <tr class="total-row font-weight-bold">
-                                    <td colspan="3" class="text-right">TOTAL</td>
-                                    <td class="text-center">43</td>
-                                    <td class="text-right">216,673.61</td>
-                                    <td class="text-right">32,501.04</td>
-                                    <td class="text-right">53.11</td>
-                                </tr>
-
-                                <tr class="gross-row bg-info text-white font-weight-bold">
-                                    <td colspan="6" class="text-right">GROSS</td>
-                                    <td class="text-right">249,227.76</td>
-                                </tr>
-                            </tbody>
-                        </table> --}}
                     </div>
-
                 </div>
             </div>
 
+
         </div>
     </div>
-
-    <!-- Port Rate Set -->
-
-
 </div>

@@ -35,8 +35,7 @@
 
                                     <div class="col-md-3 mb-3">
                                         <label>R No</label>
-                                        <input type="text" wire:model="r_no" class="form-control">
-
+                                        <input type="text" wire:model="r_no" name="r_no" class="form-control">
                                         @error('r_no')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror

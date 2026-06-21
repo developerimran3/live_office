@@ -7,7 +7,7 @@
                 </div>
             </div>
         </div>
-        <div class="row column1  mt-3 ">
+        <div class="row column1 mt-2">
             <div class="col-md-5">
                 <div class="white_shd full p-4">
                     <div class="heading1 margin_0">
@@ -119,9 +119,9 @@
                         <thead>
                             <tr class="janata">
                                 <th>#</th>
-                                <th style="width: 27%">Importer Name</th>
-                                <th>B/E No</th>
-                                <th>Date</th>
+                                <th style="width: 25%">Importer Name</th>
+                                <th style="width: 10%">B/E No</th>
+                                <th style="width: 12%">Date</th>
                                 <th>Debit</th>
                                 <th>Credit</th>
                                 <th style="width: 10%">Balance</th>
@@ -140,9 +140,10 @@
                                             CASH
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-success">
                                         @if ($janata->type == 'BE')
-                                            {{ $janata->be_no ? 'C- ' . $janata->be_no : '' }}
+                                            <strong class="font-weight-bold">
+                                                {{ $janata->be_no ? 'C- ' . $janata->be_no : '' }} </strong>
                                         @elseif($janata->type == 'CASH')
                                             --
                                         @endif

@@ -43,7 +43,6 @@ class SonaliBank extends Component
             $this->items = [];
             $this->be_date = '';
         }
-        $this->reset();
     }
 
 
