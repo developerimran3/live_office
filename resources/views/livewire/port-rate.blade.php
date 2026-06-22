@@ -44,11 +44,9 @@
                     <tbody>
                         <tr>
                             <td class="text-danger font-weight-bold">Lift 20 ft</td>
-                            <td><input type="number" step="0.01" wire:model="lift_on_20"
-                                    class="form-control form-control-sm"></td>
+                            <td><input type="number" wire:model="lift_on_20" class="form-control form-control-sm"></td>
                             <td class="text-danger font-weight-bold">Lift 40 ft</td>
-                            <td><input type="number" step="0.01" wire:model="lift_on_40"
-                                    class="form-control form-control-sm"></td>
+                            <td><input type="number" wire:model="lift_on_40" class="form-control form-control-sm"></td>
                         </tr>
                     </tbody>
                 </table>

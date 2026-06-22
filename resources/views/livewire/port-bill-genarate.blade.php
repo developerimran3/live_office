@@ -63,7 +63,8 @@
 
                             <div class="col-2 label-cell">EXCH RATE</div>
                             <div class="col-3">
-                                <input type="text" class="form-control" value="122.7" wire:model="usd_rate">
+                                <input type="text" class="form-control" value="122.7" wire:model="usd_rate"
+                                    placeholder="122.7">
                             </div>
                         </div>
 
@@ -153,18 +154,18 @@
                                     <tr>
                                         <td>RIVER DUES CNT (2N)</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['river_dues'] / ($qty ?: 1), 2) }}
+                                            {{ $calculated['river_dues'] / ($qty ?: 1) }}
                                         </td>
                                         <td class="text-center"> {{ $qty ?? 0 }}</td>
                                         <td class="text-center">-</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['river_dues'] * $usd_rate, 2) }}
+                                            {{ $calculated['river_dues'] * $usd_rate }}
                                         </td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['river_dues'] * $usd_rate * 0.15, 2) }}
+                                            {{ $calculated['river_dues'] * $usd_rate * 0.15 }}
                                         </td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['river_dues'] * $usd_rate * 0.04, 2) }}
+                                            {{ $calculated['river_dues'] * $usd_rate * 0.04 }}
                                         </td>
                                     </tr>
 
@@ -172,15 +173,15 @@
                                         <td>LIFT ON (2N)</td>
 
                                         <td class="text-right">
-                                            {{ number_format($calculated['lift_on'] / ($qty ?: 1), 2) }}
+                                            {{ $calculated['lift_on'] / ($qty ?: 1) }}
                                         </td>
                                         <td class="text-center"> {{ $qty ?? 0 }}</td>
                                         <td class="text-center">-</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['lift_on'] * $usd_rate, 2) }}
+                                            {{ $calculated['lift_on'] * $usd_rate }}
                                         </td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['lift_on'] * $usd_rate * 0.15, 2) }}
+                                            {{ $calculated['lift_on'] * $usd_rate * 0.15 }}
                                         </td>
                                         </td>
                                         <td class="text-right">-</td>
@@ -189,17 +190,17 @@
                                     <tr>
                                         <td>REPAIRING CHARGE (2N)</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['rpc_rate'], 2) }}
+                                            {{ $calculated['rpc_rate'] }}
                                         </td>
                                         <td class="text-center">
                                             {{ (float) ($rpc ?? 0) }}
                                         </td>
                                         <td class="text-center">-</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['rpc_rate'] * (float) $rpc, 2) }}
+                                            {{ $calculated['rpc_rate'] * (float) $rpc }}
                                         </td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['rpc_rate'] * (float) $rpc * 0.15, 2) }}
+                                            {{ $calculated['rpc_rate'] * (float) $rpc * 0.15 }}
                                         </td>
                                         <td class="text-right">-</td>
                                     </tr>
@@ -211,7 +212,7 @@
                                             </td>
 
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_1'], 2) }}
+                                                {{ $calculated['store_rent_1'] }}
                                             </td>
 
                                             <td class="text-center">
@@ -223,11 +224,11 @@
                                             </td>
 
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_1_amount'] * $usd_rate, 2) }}
+                                                {{ $calculated['store_rent_1_amount'] * $usd_rate }}
                                             </td>
 
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_1_amount'] * $usd_rate * 0.15, 2) }}
+                                                {{ $calculated['store_rent_1_amount'] * $usd_rate * 0.15 }}
                                             </td>
                                             <td class="text-right">-</td>
                                         </tr>
@@ -240,7 +241,7 @@
                                             </td>
 
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_2'], 2) }}
+                                                {{ $calculated['store_rent_2'] }}
                                             </td>
 
                                             <td class="text-center">
@@ -252,10 +253,10 @@
                                             </td>
 
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_2_amount'] * $usd_rate, 2) }}
+                                                {{ $calculated['store_rent_2_amount'] * $usd_rate }}
                                             </td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_2_amount'] * $usd_rate * 0.15, 2) }}
+                                                {{ $calculated['store_rent_2_amount'] * $usd_rate * 0.15 }}
                                             </td>
                                             <td class="text-right"> - </td>
                                         </tr>
@@ -267,7 +268,7 @@
                                                 STORE RENT (3N) NR
                                             </td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_3'], 2) }}
+                                                {{ $calculated['store_rent_3'] }}
                                             </td>
                                             <td class="text-center">
                                                 {{ $qty ?? 0 }}
@@ -276,10 +277,10 @@
                                                 {{ $calculated['store_rent_3_days'] }}
                                             </td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_3_amount'] * $usd_rate, 2) }}
+                                                {{ $calculated['store_rent_3_amount'] * $usd_rate }}
                                             </td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['store_rent_3_amount'] * $usd_rate * 0.15, 2) }}
+                                                {{ $calculated['store_rent_3_amount'] * $usd_rate * 0.15 }}
                                             </td>
                                             <td class="text-right">-</td>
                                         </tr>
@@ -289,15 +290,15 @@
                                         <tr>
                                             <td>EXTRA MOVEMENT (2N)</td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['extra_mov_rate'], 2) }}
+                                                {{ $calculated['extra_mov_rate'] }}
                                             </td>
                                             <td class="text-center"> {{ (float) ($extra_mov ?? 0) }}</td>
                                             <td class="text-center">-</td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['extra_mov_rate'] * (float) $extra_mov * $usd_rate, 2) }}
+                                                {{ $calculated['extra_mov_rate'] * (float) $extra_mov * $usd_rate }}
                                             </td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['extra_mov_rate'] * (float) $extra_mov * $usd_rate * 0.15, 2) }}
+                                                {{ $calculated['extra_mov_rate'] * (float) $extra_mov * $usd_rate * 0.15 }}
                                             </td>
                                             <td class="text-right">-</td>
                                         </tr>
@@ -306,15 +307,15 @@
                                     @if ($hc)
                                         <tr>
                                             <td>HOSTING CHARGES (2N)</td>
-                                            <td class="text-right"> {{ number_format($calculated['hc_rate'], 2) }}
+                                            <td class="text-right"> {{ $calculated['hc_rate'] }}
                                             </td>
                                             <td class="text-center">{{ (float) ($hc ?? 0) }}</td>
                                             <td class="text-center">-</td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['hc_rate'] * (float) $hc * $usd_rate, 2) }}
+                                                {{ $calculated['hc_rate'] * (float) $hc * $usd_rate }}
                                             </td>
                                             <td class="text-right">
-                                                {{ number_format($calculated['hc_rate'] * (float) $hc * $usd_rate * 0.15, 2) }}
+                                                {{ $calculated['hc_rate'] * (float) $hc * $usd_rate * 0.15 }}
                                             </td>
                                             <td class="text-right">-</td>
                                         </tr>
@@ -324,15 +325,15 @@
                                         <td colspan="3" class="text-right">TOTAL</td>
                                         <td class="text-center">{{ $calculated['display_days'] }}</td>
                                         <td class="text-right">
-                                            {{ number_format($calculated['total_port'], 3) }}
+                                            {{ $calculated['total_port'] }}
                                         </td>
-                                        <td class="text-right"> {{ number_format($calculated['vat'], 2) }}</td>
-                                        <td class="text-right">{{ number_format($calculated['mlwf'], 2) }}</td>
+                                        <td class="text-right"> {{ $calculated['vat'] }}</td>
+                                        <td class="text-right">{{ $calculated['mlwf'] }}</td>
                                     </tr>
 
                                     <tr class="gross-row bg-info text-white font-weight-bold">
                                         <td colspan="6" class="text-right">GROSS</td>
-                                        <td class="text-right">{{ number_format($calculated['gross'], 2) }}</td>
+                                        <td class="text-right">{{ $calculated['gross'] }}</td>
 
                                     </tr>
                                 </tbody>
@@ -341,8 +342,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>

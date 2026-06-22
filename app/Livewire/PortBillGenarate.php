@@ -165,6 +165,7 @@ class PortBillGenarate extends Component
             ? $this->portRates->river_duse_40
             : $this->portRates->river_duse_20;
 
+
         $lift = $is40
             ? $this->portRates->lift_on_40
             : $this->portRates->lift_on_20;
@@ -258,7 +259,7 @@ class PortBillGenarate extends Component
             $store_rent_3_days = ($days - 20) + 4;
 
             $store_rent_3_amount =
-                $storage_3 * $qty * $store_rent_3_days;
+                $storage_3 * $qty * $store_rent_3_days * 4;
         } else {
 
             $store_rent_3_days = 0;
