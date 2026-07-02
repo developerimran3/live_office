@@ -97,6 +97,7 @@
                                          <input type="text" class="form-control" value="USD {{ $remainingValue }}"
                                              readonly>
                                      </div>
+
                                      @foreach ($items as $index => $item)
                                          <div class="col-md-4 my-2">
                                              <input type="text" wire:model="items.{{ $index }}.goods_name"

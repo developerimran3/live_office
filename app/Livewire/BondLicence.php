@@ -8,128 +8,118 @@ use Livewire\Component;
 
 class BondLicence extends Component
 {
-    public $goods_name;
-    public $availability;
-    public $filter_item;
+    public $type = '';
 
-    public $items = [];
-    public $allocations = [];
-    public $registers = [];
-    public $minus_tables = [];
-
+    public $be_no = '';
+    public $items = [];      // <-- array
+    public $be_date = '';
+    public $net_weight;  // <-- number
+    public $gg_set;  // <-- number
+    public $goods_name = '';
+    public $allocation = '';
+    public $register = [];
 
     public function mount()
     {
-        $this->loadData();
+
+        $usedBeNos = Bond::whereNotNull('be_no')->pluck('be_no');
+
+        $this->register = Register::whereNotIn('be_no', $usedBeNos)->get();
     }
+
+
+    public function updatedBeNo($value)
+    {
+        $register = Register::where('be_no', $value)->first();
+
+        if ($register) {
+
+            $this->be_date = $register->be_date;
+
+            $this->items = collect($register->items)->map(function ($item) {
+                return [
+                    'goods_name' => $item['goods_name'],
+                    'net_weight' => $item['net_weight'], // Register-এর value
+                    'gg_set'     => $item['gg_set'] ?? '',
+                ];
+            })->toArray();
+        } else {
+
+            $this->items = [];
+            $this->be_date = '';
+            $this->net_weight = '';
+            $this->gg_set = '';
+        }
+    }
+
+
 
 
     public function bondlicence()
     {
-        $this->validate([
-            'goods_name' => 'required',
-            'availability' => 'required|numeric|min:0',
-        ]);
+        if ($this->type == 'MINUS') {
 
-        Bond::create([
-            'goods_name' => $this->goods_name,
-            'availability' => $this->availability,
-        ]);
+            $this->validate(
+                [
+                    'be_no' => 'required',
+                    'be_date' => 'required|date',
+                    'items' => 'required|array|min:1',
+                ],
+                []
+            );
 
-        $this->reset(['goods_name', 'availability']);
-
-        $this->loadData();
-
-        session()->flash('success', 'Bond Added Successfully');
-    }
-
-
-    public function updatedFilterItem()
-    {
-        $this->loadData();
-    }
-
-
-    public function loadData()
-    {
-        // Allocation
-        $this->allocations = Bond::all();
-
-        // Registers
-        $this->registers = Register::all();
-
-
-        // Items list
-        $bondItems = Bond::pluck('goods_name')->toArray();
-
-        $registerItems = Register::pluck('items')
-            ->map(function ($items) {
-
-                if (is_string($items)) {
-                    $items = json_decode($items, true);
-                }
-
-                return collect($items ?? [])
-                    ->pluck('goods_name')
-                    ->toArray();
-            })
-            ->flatten()
-            ->toArray();
-
-
-        $this->items = collect(array_merge($bondItems, $registerItems))
-            ->filter()
-            ->unique()
-            ->values()
-            ->toArray();
-
-
-        $this->buildMinusTable();
-    }
-
-
-    public function buildMinusTable()
-    {
-        $this->minus_tables = [];
-
-        foreach ($this->items as $item_name) {
-            // filter
-            if ($this->filter_item && $this->filter_item != $item_name) {
-                continue;
+            if (Bond::where('be_no', $this->be_no)->exists()) {
+                $this->addError('be_no', 'This B/E Number has already been used.');
+                return;
             }
 
-            // total allocation
-            $allocation = $this->allocations
-                ->where('goods_name', $item_name)
-                ->sum('availability');
+            Bond::create([
+                'type'       => 'MINUS',
+                'be_no'      => $this->be_no,
+                'be_date'    => $this->be_date,
+                'goods_name' => null,
+                'allocation' => 0,
+                'items' => collect($this->items)->map(function ($item) {
+                    return [
+                        'goods_name'        => $item['goods_name'] ?? '',
+                        'net_weight'        => $item['net_weight'] ?? '',
+                    ];
+                })->toArray(),
+            ]);
+        } elseif ($this->type == 'STOCK') {
 
-            $used = 0;
-            $rows = [];
+            $this->validate([
+                'goods_name' => 'required',
+                'allocation' => 'required|numeric|min:1',
+            ]);
 
-            $registers = $this->registers->sortBy('be_date');
-
-            foreach ($registers as $reg) {
-                $items = is_string($reg->items)
-                    ? json_decode($reg->items, true)
-                    : $reg->items;
-
-                foreach ($items ?? [] as $i) {
-                    if ($i['goods_name'] == $item_name) {
-                        $used += $i['net_weight'];
-
-                        $rows[] = (object)[
-                            'be_no' => $reg->be_no,
-                            'be_date' => $reg->be_date,
-                            'used' => $i['net_weight'],
-                            'balance' => $allocation - $used,
-                        ];
-                    }
-                }
-            }
-
-            $this->minus_tables[$item_name] = $rows;
+            Bond::create([
+                'type'       => 'STOCK',
+                'be_no'      => null,
+                'be_date'    => null,
+                'goods_name' => $this->goods_name,
+                'allocation' => $this->allocation,
+                'items'      => null,
+            ]);
         }
+
+        session()->flash('success', 'Bond Licence saved successfully.');
+
+        $this->reset([
+            'be_no',
+            'be_date',
+            'items',
+            'goods_name',
+            'allocation',
+            'net_weight',
+            'type',
+        ]);
     }
+
+
+
+
+
 
 
     public function render()
